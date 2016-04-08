@@ -1,0 +1,4 @@
+suites:
+    notify_suite:
+        namespace: Alphagov\Notifications
+        psr4_prefix: Alphagov\Notifications
