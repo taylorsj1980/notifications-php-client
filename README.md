@@ -53,7 +53,7 @@ sendEmail( $to, $template, array $personalisation = array() )
 Where
 
 * **$to** A required _string_ holding the recipient's email address.
-* **$template** A required _int_ that identifies a valid template. Templates are created in the admin tools.
+* **$template** A required _string_ that identifies a valid template. Templates are created in the admin tools.
 * **$personalisation** An optional _array_ holding any personalisation placeholders required by the template.
 
 An example request would look like:
@@ -61,7 +61,7 @@ An example request would look like:
 ```php
 try {
 
-    $response = $notifyClient->sendEmail( 'betty@exmple.com', 104, [
+    $response = $notifyClient->sendEmail( 'betty@exmple.com', 'df10a23e-2c0d-4ea5-87fb-82e520cbf93c', [
         'name' => 'Betty Smith',
         'dob'  => '12 July 1968'
     ]);
@@ -87,7 +87,7 @@ Where
 	* start +44
 	* not have a leading zero
 	* not have any whitespace, punctuation etc.
-* **$template** A required _int_ that identifies a valid template. Templates are created in the admin tools.
+* **$template** A required _string_ that identifies a valid template. Templates are created in the admin tools.
 * **$personalisation** An optional _array_ holding any personalisation placeholders required by the template.
 
 An example request would look like:
@@ -95,7 +95,7 @@ An example request would look like:
 ```php
 try {
 
-    $response = $notifyClient->sendSms( '+447777111222', 105, [
+    $response = $notifyClient->sendSms( '+447777111222', 'df10a23e-2c6d-4ea5-87fb-82e520cbf93a', [
         'name' => 'Betty Smith',
         'dob'  => '12 July 1968'
     ]);
@@ -123,7 +123,7 @@ An example request would look like:
 ```php
 try {
 
-    $response = $notifyClient->getNotification( 'c32e9c89-a425-42d2-85b7-a21cd4486a2a' );
+    $response = $notifyClient->getNotification( 'c32e9c89-a423-42d2-85b7-a21cd4486a2a' );
 
 } catch (NotifyException $e){}
 ```
@@ -138,7 +138,7 @@ An instance (or sub-class) of ``Alphagov\Notifications\Exception\NotifyException
 
 The method signature is:
 ```php
-listNotifications( $filters = array() )
+listNotifications( array $filters = array() )
 ```
 
 Where

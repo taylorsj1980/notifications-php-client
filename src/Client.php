@@ -25,7 +25,7 @@ class Client {
      * @const string Current version of this client.
      * This follows Semantic Versioning (http://semver.org/)
      */
-    const VERSION = '0.5.0';
+    const VERSION = '0.6.0';
 
     /**
      * @const string The API endpoint for Notify production.
@@ -334,7 +334,7 @@ class Client {
      * @throw Exception\NotifyException | Exception\ApiException | Exception\UnexpectedValueException
      */
     private function httpPost( $path, Array $payload ){
-        
+
         $url = new Uri( $this->baseUrl . $path );
 
         $request = new Request(
