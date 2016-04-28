@@ -12,11 +12,8 @@ interface JWTAuthenticationInterface {
     /**
      * Generate a JSON Web Token.
      *
-     * @param string        $request The pre-encoded request
-     * @param string|null   $payload The pre-encoded payload
-     *
      * @return string The generated token
      */
-    public function createToken( $request, $payload = null );
+    public function createToken();
 
 }

@@ -153,7 +153,7 @@ class Client {
      * Send an SMS message.
      *
      * @param string    $to
-     * @param int       $template
+     * @param string    $template
      * @param array     $personalisation
      *
      * @return array
@@ -171,7 +171,7 @@ class Client {
      * Send an Email message.
      *
      * @param string    $to
-     * @param int       $template
+     * @param string    $template
      * @param array     $personalisation
      *
      * @return array
@@ -239,7 +239,7 @@ class Client {
      * Generates the payload expected by the API.
      *
      * @param string    $to
-     * @param int       $template
+     * @param string    $template
      * @param array     $personalisation
      *
      * @return array
@@ -262,14 +262,12 @@ class Client {
     /**
      * Generates the standard set of HTTP headers expected by the API.
      *
-     * @param string $token The JSON Web Token
-     *
      * @return array
      */
-    private function buildHeaders( $token ){
+    private function buildHeaders(){
 
         return [
-            'Authorization' => 'Bearer '.$token,
+            'Authorization' => 'Bearer '.$this->getAuthenticator()->createToken(),
             'Accept'        => 'application/json',
             'Content-type'  => 'application/json',
             'User-agent'    => 'NOTIFY-API-PHP-CLIENT/'.self::VERSION
@@ -291,10 +289,6 @@ class Client {
      */
     private function httpGet( $path, array $query = array() ){
 
-        $token = $this->getAuthenticator()->createToken( "GET {$path}" );
-
-        //---
-
         $url = new Uri( $this->baseUrl . $path );
 
         foreach( $query as $name => $value ){
@@ -306,7 +300,7 @@ class Client {
         $request = new Request(
             'GET',
             $url,
-            $this->buildHeaders( $token )
+            $this->buildHeaders()
         );
 
         try {
@@ -340,20 +334,14 @@ class Client {
      * @throw Exception\NotifyException | Exception\ApiException | Exception\UnexpectedValueException
      */
     private function httpPost( $path, Array $payload ){
-
-        $payload = json_encode( $payload );
-
-        $token = $this->getAuthenticator()->createToken( "POST {$path}", $payload );
-
-        //---
-
+        
         $url = new Uri( $this->baseUrl . $path );
 
         $request = new Request(
             'POST',
             $url,
-            $this->buildHeaders( $token ),
-            $payload
+            $this->buildHeaders(),
+            json_encode( $payload )
         );
 
         try {

@@ -34,8 +34,7 @@ class ClientSpec extends ObjectBehavior
 
         $this->httpClient = $httpClient;
 
-        $authenticator->createToken( Argument::type('string') )->willReturn( self::TEST_JWT_TOKEN );
-        $authenticator->createToken( Argument::type('string'), Argument::type('string') )->willReturn( self::TEST_JWT_TOKEN );
+        $authenticator->createToken()->willReturn( self::TEST_JWT_TOKEN );
 
         $options = [
             'baseUrl' => self::BASE_URL,
