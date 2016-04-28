@@ -214,7 +214,7 @@ class Client {
      *
      * @return mixed|null
      */
-    public function listNotifications( $filters = array() ){
+    public function listNotifications( array $filters = array() ){
 
         // Only allow the following filter keys.
         $filters = array_intersect_key( $filters, array_flip([
@@ -392,7 +392,7 @@ class Client {
 
         // The expected response should always be JSON, thus now an array.
         if( !is_array($body) ){
-            throw new Exception\ApiException( 'Malformed JSON response from server', $response->getStatusCode() );
+            throw new Exception\ApiException( 'Malformed JSON response from server', $response->getStatusCode(), $response );
         }
 
         return $body;
@@ -414,7 +414,7 @@ class Client {
         $message = "HTTP:{$response->getStatusCode()} - ";
         $message .= (isset($body['message'])) ? print_r($body['message'], true) : 'Unexpected response from server';
 
-        throw new Exception\ApiException( $message, $response->getStatusCode() );
+        throw new Exception\ApiException( $message, $response->getStatusCode(), $response );
 
     }
 

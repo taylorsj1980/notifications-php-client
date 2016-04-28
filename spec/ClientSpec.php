@@ -518,20 +518,21 @@ class ClientSpec extends ObjectBehavior
 
         $code = 500;
         $error = 'Error Reason';
+        $response = new Response(
+            $code,
+            ['Content-type'  => 'application/json'],
+            json_encode(['message' => $error])
+        );
 
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
-            new Response(
-                $code,
-                ['Content-type'  => 'application/json'],
-                json_encode(['message' => $error])
-            )
+            $response
         );
 
         //---------------------------------
         // Perform action & check result
 
         $this->shouldThrow(
-            new NotifyException\ApiException( "HTTP:{$code} - {$error}", $code )
+            new NotifyException\ApiException( "HTTP:{$code} - {$error}", $code, $response )
         )->duringSendSms( '+447834000000', 118, [ 'name'=>'Fred' ] );
 
     }
