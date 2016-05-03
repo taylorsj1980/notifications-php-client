@@ -9,6 +9,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\SignatureInvalidException;
 
 /**
+ * Tests for our JsonWebToken authenticator.
  *
  * Class JsonWebTokenSpec
  * @package spec\Alphagov\Notifications\Authentication

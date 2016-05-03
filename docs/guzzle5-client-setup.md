@@ -11,7 +11,7 @@ This shows how to setup the GOV.UK Notify using Guzzle v5.
 The Notify PHP Client can be installed with [Composer](https://getcomposer.org/). Run this command:
 
 ```sh
-composer require php-http/guzzle5-adapter alphagov/notifications-php-client
+composer require php-http/guzzle5-adapter php-http/message alphagov/notifications-php-client
 ```
 
 ## Usage

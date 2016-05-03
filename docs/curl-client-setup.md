@@ -11,7 +11,7 @@ This shows how to setup the GOV.UK Notify using Curl.
 The Notify PHP Client can be installed with [Composer](https://getcomposer.org/). Run this command:
 
 ```sh
-composer require php-http/curl-client alphagov/notifications-php-client
+composer require php-http/curl-client php-http/message alphagov/notifications-php-client
 ```
 
 ## Usage
