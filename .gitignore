@@ -4,3 +4,4 @@ composer.lock
 vendor
 tests/local
 .DS_Store
+environment.sh
