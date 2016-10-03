@@ -1,5 +1,5 @@
 <?php
-namespace spec\Alphagov\Notifications\Authentication;
+namespace spec\unit\Alphagov\Notifications\Authentication;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
