@@ -174,7 +174,21 @@ An instance (or sub-class) of ``Alphagov\Notifications\Exception\NotifyException
 
 #### Tests
 
-To run the tests:
+There are unit and integration tests that can be run to test functionality of the client.
+
+To run the unit tests:
+
+```sh
+vendor/bin/phpspec run spec/unit/ --format=pretty --verbose
+```
+
+To run the integration tests:
+
+```sh
+vendor/bin/phpspec run spec/integration/ --format=pretty --verbose
+```
+
+To run both sets of tests:
 
 ```sh
 vendor/bin/phpspec run --format=pretty
