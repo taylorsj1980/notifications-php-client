@@ -13,8 +13,7 @@ help:
 
 .PHONY: dependencies
 dependencies:  ## Install build dependencies
-	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-	/usr/local/bin/composer update
+	/usr/local/bin/composer install
 
 .PHONY: build
 build: dependencies ## Build project

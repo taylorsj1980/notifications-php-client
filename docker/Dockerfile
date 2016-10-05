@@ -8,6 +8,7 @@ RUN \
 	&& apt-get install -y --no-install-recommends zlib1g-dev \
 		make \
   && docker-php-ext-install zip \
+	&& curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \	
 	&& echo "Clean up" \
 	&& rm -rf /var/lib/apt/lists/* /tmp/*
 
