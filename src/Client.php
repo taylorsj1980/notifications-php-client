@@ -128,11 +128,15 @@ class Client {
 
             $this->setAuthenticator( $config['authenticator'] );
 
-        } elseif( isset($config['serviceId']) && isset($config['apiKey']) ){
+        } elseif( isset($config['apiKey']) ){
+
+            if( !isset($config['serviceId']) ) {
+              $config['serviceId'] = substr($config['apiKey'], -74, 36);
+            }
 
             $this->setAuthenticator(new Authentication\JsonWebToken(
                 $config['serviceId'],
-                $config['apiKey']
+                substr($config['apiKey'], -36, 36)
             ));
 
         } else {

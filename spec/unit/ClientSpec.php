@@ -125,6 +125,73 @@ class ClientSpec extends ObjectBehavior
 
     }
 
+    function it_works_with_an_api_key_only( HttpClientInterface $httpClient, JWTAuthenticationInterface $authenticator ){
+
+        //---------------------------------
+        // Test Setup
+
+        $options = $this->getConstructorOptions( $httpClient, $authenticator );
+        unset( $options['authenticator'] );
+
+        $options += [
+            'apiKey' => 'key_name-1546058f-5a25-4334-85ae-e68f2a44bbaf-522ec739-ca63-3ec5-b082-08ce08ad65e2',
+        ];
+
+        //---------------------------------
+        // Perform action
+
+        /*
+         * The below will throw an exception if a valid authenticator was not created.
+         */
+
+        $this->beConstructedWith( $options );
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                200,
+                ['Content-type'  => 'application/json'],
+                json_encode([])
+            )
+        );
+
+        $this->listNotifications();
+
+    }
+
+    function it_works_with_a_new_api_key_and_service_id( HttpClientInterface $httpClient, JWTAuthenticationInterface $authenticator ){
+
+        //---------------------------------
+        // Test Setup
+
+        $options = $this->getConstructorOptions( $httpClient, $authenticator );
+        unset( $options['authenticator'] );
+
+        $options += [
+            'serviceId' => '1546058f-5a25-4334-85ae-e68f2a44bbaf',
+            'apiKey' => 'key_name-1546058f-5a25-4334-85ae-e68f2a44bbaf-522ec739-ca63-3ec5-b082-08ce08ad65e2',
+        ];
+
+        //---------------------------------
+        // Perform action
+
+        /*
+         * The below will throw an exception if a valid authenticator was not created.
+         */
+
+        $this->beConstructedWith( $options );
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                200,
+                ['Content-type'  => 'application/json'],
+                json_encode([])
+            )
+        );
+
+        $this->listNotifications();
+
+    }
+
     //----------------------------------------------------------------------------------------------------------
     // Lookups (GETs) with expected success
 
