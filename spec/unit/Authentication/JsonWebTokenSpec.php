@@ -17,8 +17,8 @@ use Firebase\JWT\SignatureInvalidException;
 class JsonWebTokenSpec extends ObjectBehavior
 {
 
-    const SERVICE_ID    = 'XXX';
-    const API_KEY       = 'YYY';
+    const SERVICE_ID    = '00000000-0000-4000-a000-000000000000';
+    const API_KEY       = 'cccccccc-cccc-4ccc-9ccc-cccccccccccc';
 
 
     function let(){
@@ -38,14 +38,35 @@ class JsonWebTokenSpec extends ObjectBehavior
 
     }
 
+    function it_fails_with_an_invalid_service_id(){
+
+        $this->beConstructedWith( 'invalid-service-id', self::API_KEY );
+
+        $this->shouldThrow(
+            '\InvalidArgumentException'
+        )->duringInstantiation();
+
+    }
+
     function it_fails_with_an_invalid_api_key(){
 
         $this->beConstructedWith( self::SERVICE_ID, 'invalid-api-key' );
 
-        $this->createToken()->shouldBeInvalidJWSToken();
+        $this->shouldThrow(
+           '\InvalidArgumentException'
+        )->duringInstantiation();
 
     }
 
+    function it_fails_when_the_api_keys_do_not_match(){
+
+        // Create using a different API key. When checked, we use self::API_KEY, thus the token should be invalid.
+
+        $this->beConstructedWith( self::SERVICE_ID, 'f47ac10b-58cc-4372-a567-0e02b2c3d479' );
+
+        $this->createToken()->shouldBeInvalidJWSToken();
+
+    }
 
     public function getMatchers()
     {
