@@ -101,7 +101,7 @@ class ClientSpec extends ObjectBehavior
 
         $options += [
             'serviceId' => '1546058f-5a25-4334-85ae-e68f2a44bbaf',
-            'apiKey'    => '522ec739-ca63-3ec5-b082-08ce08ad65e2',
+            'apiKey'    => '522ec739-ca63-4ec5-b082-08ce08ad65e2',
         ];
 
         //---------------------------------
@@ -134,7 +134,7 @@ class ClientSpec extends ObjectBehavior
         unset( $options['authenticator'] );
 
         $options += [
-            'apiKey' => 'key_name-1546058f-5a25-4334-85ae-e68f2a44bbaf-522ec739-ca63-3ec5-b082-08ce08ad65e2',
+            'apiKey' => 'key_name-1546058f-5a25-4334-85ae-e68f2a44bbaf-522ec739-ca63-4ec5-b082-08ce08ad65e2',
         ];
 
         //---------------------------------
@@ -168,7 +168,7 @@ class ClientSpec extends ObjectBehavior
 
         $options += [
             'serviceId' => '1546058f-5a25-4334-85ae-e68f2a44bbaf',
-            'apiKey' => 'key_name-1546058f-5a25-4334-85ae-e68f2a44bbaf-522ec739-ca63-3ec5-b082-08ce08ad65e2',
+            'apiKey' => 'key_name-1546058f-5a25-4334-85ae-e68f2a44bbaf-522ec739-ca63-4ec5-b082-08ce08ad65e2',
         ];
 
         //---------------------------------
@@ -189,6 +189,23 @@ class ClientSpec extends ObjectBehavior
         );
 
         $this->listNotifications();
+
+    }
+
+    function it_fails_with_an_invalid_api_key( HttpClientInterface $httpClient, JWTAuthenticationInterface $authenticator ){
+
+        $options = $this->getConstructorOptions( $httpClient, $authenticator );
+        unset( $options['authenticator'] );
+
+        $options += [
+            'apiKey' => 'key_name-1546058f-5a25-4334-85ae-e68f2a44bbaf-522ec739-ca63-cec5-b082-08ce08ad65e2',
+        ];
+
+        $this->beConstructedWith( $options );
+
+        $this->shouldThrow(
+            '\InvalidArgumentException'
+        )->duringInstantiation();
 
     }
 

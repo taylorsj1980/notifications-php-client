@@ -130,6 +130,7 @@ class Client {
 
         } elseif( isset($config['apiKey']) ){
 
+            // If we're missing the serviceId, assume it's contained within the apiKey string.
             if( !isset($config['serviceId']) ) {
               $config['serviceId'] = substr($config['apiKey'], -73, 36);
             }
