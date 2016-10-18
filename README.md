@@ -1,9 +1,4 @@
-# GOV.UK Notify - notifications-php-client [pre-release]
-PHP client for notifications API
-
-Provided integration with the GOV.UK Notify API for sending emails and SMS messages.
-
-For more details, see: https://www.notifications.service.gov.uk/
+# GOV.UK Notify PHP client
 
 #### PSR-7 HTTP
 
@@ -21,27 +16,21 @@ The Notify PHP Client can be installed with [Composer](https://getcomposer.org/)
 composer require php-http/guzzle6-adapter alphagov/notifications-php-client
 ```
 
-## Usage
+## Getting started
 
-Assuming you've installed the package via Composer, the Notify PHP Client will be available via the autoloader.
+Assuming you’ve installed the package via Composer, the Notify PHP Client will be available via the autoloader.
 
 Create a (Guzzle v6 based) instance of the Client using:
 
 ```php
 $notifyClient = new \Alphagov\Notifications\Client([
-    'serviceId'     => '{your service id}',
-    'apiKey'        => '{your api key}',
-    'httpClient'    => new \Http\Adapter\Guzzle6\Client
+    'apiKey' => '{your api key}',
+    'httpClient' => new \Http\Adapter\Guzzle6\Client
 ]);
 ```
 
-You are then able to access the Notify API using ``$notifyClient``.
+Generate an API key by logging in to [GOV.UK Notify](https://www.notifications.service.gov.uk) and going to the **API integration** page.
 
-If you need to access an environment other than production, you can pass the base URL in via the `baseUrl` key in the constructor:
-
-```php
-'baseUrl' => '{api base url}'
-```
 
 #### Sending an email
 
