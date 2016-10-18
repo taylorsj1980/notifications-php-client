@@ -101,7 +101,7 @@ class ClientSpec extends ObjectBehavior
 
         $options += [
             'serviceId' => '1546058f-5a25-4334-85ae-e68f2a44bbaf',
-            'apiKey'    => '522ec739-ca63-3ec5-b082-08ce08ad65e2',
+            'apiKey'    => '522ec739-ca63-4ec5-b082-08ce08ad65e2',
         ];
 
         //---------------------------------
@@ -122,6 +122,90 @@ class ClientSpec extends ObjectBehavior
         );
 
         $this->listNotifications();
+
+    }
+
+    function it_works_with_an_api_key_only( HttpClientInterface $httpClient, JWTAuthenticationInterface $authenticator ){
+
+        //---------------------------------
+        // Test Setup
+
+        $options = $this->getConstructorOptions( $httpClient, $authenticator );
+        unset( $options['authenticator'] );
+
+        $options += [
+            'apiKey' => 'key_name-1546058f-5a25-4334-85ae-e68f2a44bbaf-522ec739-ca63-4ec5-b082-08ce08ad65e2',
+        ];
+
+        //---------------------------------
+        // Perform action
+
+        /*
+         * The below will throw an exception if a valid authenticator was not created.
+         */
+
+        $this->beConstructedWith( $options );
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                200,
+                ['Content-type'  => 'application/json'],
+                json_encode([])
+            )
+        );
+
+        $this->listNotifications();
+
+    }
+
+    function it_works_with_a_new_api_key_and_service_id( HttpClientInterface $httpClient, JWTAuthenticationInterface $authenticator ){
+
+        //---------------------------------
+        // Test Setup
+
+        $options = $this->getConstructorOptions( $httpClient, $authenticator );
+        unset( $options['authenticator'] );
+
+        $options += [
+            'serviceId' => '1546058f-5a25-4334-85ae-e68f2a44bbaf',
+            'apiKey' => 'key_name-1546058f-5a25-4334-85ae-e68f2a44bbaf-522ec739-ca63-4ec5-b082-08ce08ad65e2',
+        ];
+
+        //---------------------------------
+        // Perform action
+
+        /*
+         * The below will throw an exception if a valid authenticator was not created.
+         */
+
+        $this->beConstructedWith( $options );
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                200,
+                ['Content-type'  => 'application/json'],
+                json_encode([])
+            )
+        );
+
+        $this->listNotifications();
+
+    }
+
+    function it_fails_with_an_invalid_api_key( HttpClientInterface $httpClient, JWTAuthenticationInterface $authenticator ){
+
+        $options = $this->getConstructorOptions( $httpClient, $authenticator );
+        unset( $options['authenticator'] );
+
+        $options += [
+            'apiKey' => 'key_name-1546058f-5a25-4334-85ae-e68f2a44bbaf-522ec739-ca63-cec5-b082-08ce08ad65e2',
+        ];
+
+        $this->beConstructedWith( $options );
+
+        $this->shouldThrow(
+            '\InvalidArgumentException'
+        )->duringInstantiation();
 
     }
 
