@@ -1,9 +1,14 @@
 FROM php:5.6-cli
 
+ARG APT_HTTP_PROXY
+
 ENV DEBIAN_FRONTEND=noninteractive
+
+COPY etc/apt/sources.list /etc/apt/sources.list
 
 RUN \
 	echo "Install base packages" \
+	&& ([ -z "$APT_HTTP_PROXY" ] || echo "Acquire::http::Proxy \"${APT_HTTP_PROXY}\";\n" > /etc/apt/apt.conf.d/99HttpProxy) \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends \
 		zlib1g-dev \
