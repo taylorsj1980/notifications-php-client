@@ -7,4 +7,4 @@ help:
 
 .PHONY: build
 build:
-	docker build -f Dockerfile -t govuk/notify-php-client-runner .
+	docker build -f Dockerfile -t govuk/notify-php-client-runner --build-arg APT_HTTP_PROXY="${HTTP_PROXY}" .
