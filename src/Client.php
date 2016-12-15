@@ -157,18 +157,18 @@ class Client {
     /**
      * Send an SMS message.
      *
-     * @param string    $phone_number
-     * @param string    $template
+     * @param string    $phoneNumber
+     * @param string    $templateId
      * @param array     $personalisation
      * @param string    $reference
      *
      * @return array
      */
-    public function sendSms( $phone_number, $template, array $personalisation = array(), $reference = '' ){
+    public function sendSms( $phoneNumber, $templateId, array $personalisation = array(), $reference = '' ){
 
         return $this->httpPost(
             self::PATH_NOTIFICATION_SEND_SMS,
-            $this->buildPayload( 'sms', $phone_number, $template, $personalisation, $reference )
+            $this->buildPayload( 'sms', $phoneNumber, $templateId, $personalisation, $reference )
         );
 
     }
@@ -176,18 +176,18 @@ class Client {
     /**
      * Send an Email message.
      *
-     * @param string    $email_address
-     * @param string    $template
+     * @param string    $emailAddress
+     * @param string    $templateId
      * @param array     $personalisation
      * @param string    $reference
      *
      * @return array
      */
-    public function sendEmail( $email_address, $template, array $personalisation = array(), $reference = '' ){
+    public function sendEmail( $emailAddress, $templateId, array $personalisation = array(), $reference = '' ){
 
         return $this->httpPost(
             self::PATH_NOTIFICATION_SEND_EMAIL,
-            $this->buildPayload( 'email', $email_address, $template, $personalisation, $reference )
+            $this->buildPayload( 'email', $emailAddress, $templateId, $personalisation, $reference )
         );
 
     }
@@ -247,17 +247,18 @@ class Client {
     /**
      * Generates the payload expected by the API.
      *
+     * @param string    $type
      * @param string    $to
-     * @param string    $template
+     * @param string    $templateId
      * @param array     $personalisation
      * @param string    $reference
      *
      * @return array
      */
-    private function buildPayload( $type, $to, $template, array $personalisation, $reference ){
+    private function buildPayload( $type, $to, $templateId, array $personalisation, $reference ){
 
         $payload = [
-            'template_id'=> $template
+            'template_id'=> $templateId
         ];
 
         if ( $type == 'sms' ) {
