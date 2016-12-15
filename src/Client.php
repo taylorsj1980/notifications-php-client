@@ -213,9 +213,10 @@ class Client {
      * Returns a list of all notifications for the current Service ID.
      *
      * Filter supports:
+     *  - older_than
+     *  - reference
      *  - status
      *  - template_type
-     *  - page
      *
      * @param array $filters
      *
@@ -225,7 +226,7 @@ class Client {
 
         // Only allow the following filter keys.
         $filters = array_intersect_key( $filters, array_flip([
-            'page',
+            'older_than',
             'reference',
             'status',
             'template_type',

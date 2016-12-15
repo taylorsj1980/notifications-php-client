@@ -296,7 +296,12 @@ class ClientSpec extends ObjectBehavior
         //---------------------------------
         // Test Setup
 
-        $filters = ['status'=>'delivered', 'page'=>'1', 'template_type'=> 'sms', 'reference'=> 'client-ref'];
+        $filters = [
+            'older_than'=>'uuid',
+            'template_type'=> 'sms',
+            'reference'=> 'client-ref',
+            'status'=>'delivered'
+        ];
 
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
             new Response(
