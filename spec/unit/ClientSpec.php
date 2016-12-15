@@ -296,7 +296,7 @@ class ClientSpec extends ObjectBehavior
         //---------------------------------
         // Test Setup
 
-        $filters = ['status'=>'delivered', 'page'=>'1', 'template_type'=> 'sms'];
+        $filters = ['status'=>'delivered', 'page'=>'1', 'template_type'=> 'sms', 'reference'=> 'client-ref'];
 
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
             new Response(
@@ -392,8 +392,8 @@ class ClientSpec extends ObjectBehavior
         // Test Setup
 
         $payload = [
-            'to' => '+447834000000',
-            'template'=> 118,
+            'phone_number' => '+447834000000',
+            'template_id'=> 118,
             'personalisation' => [
                 'name'=>'Fred'
             ]
@@ -410,7 +410,7 @@ class ClientSpec extends ObjectBehavior
         //---------------------------------
         // Perform action
 
-        $this->sendSms( $payload['to'], $payload['template'], $payload['personalisation'] );
+        $this->sendSms( $payload['phone_number'], $payload['template_id'], $payload['personalisation'] );
 
         //---------------------------------
         // Check result
@@ -481,11 +481,12 @@ class ClientSpec extends ObjectBehavior
         // Test Setup
 
         $payload = [
-            'to' => 'text@example.com',
-            'template'=> 118,
+            'email_address' => 'text@example.com',
+            'template_id'=> 118,
             'personalisation' => [
                 'name'=>'Fred'
-            ]
+            ],
+            'reference'=>'client-ref'
         ];
 
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
@@ -499,7 +500,7 @@ class ClientSpec extends ObjectBehavior
         //---------------------------------
         // Perform action
 
-        $this->sendEmail( $payload['to'], $payload['template'], $payload['personalisation'] );
+        $this->sendEmail( $payload['email_address'], $payload['template_id'], $payload['personalisation'], $payload['reference'] );
 
         //---------------------------------
         // Check result

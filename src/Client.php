@@ -35,10 +35,10 @@ class Client {
     /**
      * Paths for API endpoints.
      */
-    const PATH_NOTIFICATION_LIST        = '/notifications';
-    const PATH_NOTIFICATION_LOOKUP      = '/notifications/%s';
-    const PATH_NOTIFICATION_SEND_SMS    = '/notifications/sms';
-    const PATH_NOTIFICATION_SEND_EMAIL  = '/notifications/email';
+    const PATH_NOTIFICATION_LIST        = '/v2/notifications';
+    const PATH_NOTIFICATION_LOOKUP      = '/v2/notifications/%s';
+    const PATH_NOTIFICATION_SEND_SMS    = '/v2/notifications/sms';
+    const PATH_NOTIFICATION_SEND_EMAIL  = '/v2/notifications/email';
 
 
     /**
@@ -157,17 +157,18 @@ class Client {
     /**
      * Send an SMS message.
      *
-     * @param string    $to
+     * @param string    $phone_number
      * @param string    $template
      * @param array     $personalisation
+     * @param string    $reference
      *
      * @return array
      */
-    public function sendSms( $to, $template, array $personalisation = array() ){
+    public function sendSms( $phone_number, $template, array $personalisation = array(), $reference = '' ){
 
         return $this->httpPost(
             self::PATH_NOTIFICATION_SEND_SMS,
-            $this->buildPayload( $to, $template, $personalisation )
+            $this->buildPayload( 'sms', $phone_number, $template, $personalisation, $reference )
         );
 
     }
@@ -175,17 +176,18 @@ class Client {
     /**
      * Send an Email message.
      *
-     * @param string    $to
+     * @param string    $email_address
      * @param string    $template
      * @param array     $personalisation
+     * @param string    $reference
      *
      * @return array
      */
-    public function sendEmail( $to, $template, array $personalisation = array() ){
+    public function sendEmail( $email_address, $template, array $personalisation = array(), $reference = '' ){
 
         return $this->httpPost(
             self::PATH_NOTIFICATION_SEND_EMAIL,
-            $this->buildPayload( $to, $template, $personalisation )
+            $this->buildPayload( 'email', $email_address, $template, $personalisation, $reference )
         );
 
     }
@@ -224,8 +226,9 @@ class Client {
         // Only allow the following filter keys.
         $filters = array_intersect_key( $filters, array_flip([
             'page',
+            'reference',
             'status',
-            'template_type'
+            'template_type',
         ]));
 
         return $this->httpGet( self::PATH_NOTIFICATION_LIST, $filters );
@@ -246,18 +249,28 @@ class Client {
      * @param string    $to
      * @param string    $template
      * @param array     $personalisation
+     * @param string    $reference
      *
      * @return array
      */
-    private function buildPayload( $to, $template, array $personalisation ){
+    private function buildPayload( $type, $to, $template, array $personalisation, $reference ){
 
         $payload = [
-            'to' => $to,
-            'template'=> $template
+            'template_id'=> $template
         ];
 
-        if( count($personalisation) > 0 ){
+        if ( $type == 'sms' ) {
+            $payload['phone_number'] = $to;
+        } else if ( $type = 'email' ) {
+            $payload['email_address'] = $to;
+        }
+
+        if( count($personalisation) > 0 ) {
             $payload['personalisation'] = $personalisation;
+        }
+
+        if ( isset($reference) && $reference != '' ) {
+            $payload['reference'] = $reference;
         }
 
         return $payload;
