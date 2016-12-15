@@ -31,53 +31,14 @@ $notifyClient = new \Alphagov\Notifications\Client([
 
 Generate an API key by logging in to [GOV.UK Notify](https://www.notifications.service.gov.uk) and going to the **API integration** page.
 
+## Send messages
 
-#### Sending an email
-
-The method signature is:
-```php
-sendEmail( $to, $template, array $personalisation = array() )
-```
-
-Where
-
-* **$to** A required _string_ holding the recipient's email address.
-* **$template** A required _string_ that identifies a valid template. Templates are created in the admin tools.
-* **$personalisation** An optional _array_ holding any personalisation placeholders required by the template.
-
-An example request would look like:
-
-```php
-try {
-
-    $response = $notifyClient->sendEmail( 'betty@exmple.com', 'df10a23e-2c0d-4ea5-87fb-82e520cbf93c', [
-        'name' => 'Betty Smith',
-        'dob'  => '12 July 1968'
-    ]);
-
-} catch (NotifyException $e){}
-```
-
-**$response** will be an _array_ containing the decoded JSON response from the Notify API. For details, see: https://www.notifications.service.gov.uk/documentation
-
-An instance (or sub-class) of ``Alphagov\Notifications\Exception\NotifyException`` will be throw if an error occurs.
-
-#### Sending an SMS
+### Text message
 
 The method signature is:
 ```php
-sendSms( $to, $template, array $personalisation = array() )
+sendSms( $phoneNumber, $templateId, array $personalisation = array(), $reference = '' )
 ```
-
-Where
-
-* **$to** A required _string_ holding the recipient's mobile number. The number must:
-	* be a UK mobile number
-	* start +44
-	* not have a leading zero
-	* not have any whitespace, punctuation etc.
-* **$template** A required _string_ that identifies a valid template. Templates are created in the admin tools.
-* **$personalisation** An optional _array_ holding any personalisation placeholders required by the template.
 
 An example request would look like:
 
@@ -92,20 +53,212 @@ try {
 } catch (NotifyException $e){}
 ```
 
-**$response** will be an _array_ containing the decoded JSON response from the Notify API. For details, see: https://www.notifications.service.gov.uk/documentation
+<details>
+<summary>
+Response
+</summary>
 
-An instance (or sub-class) of ``Alphagov\Notifications\Exception\NotifyException`` will be throw if an error occurs.
+If the request is successful, `response` will be an `array`:
 
-#### Looking up the details of a Notification
+```php
+[
+    "id": "bfb50d92-100d-4b8b-b559-14fa3b091cda",
+    "reference": None,
+    "content": [
+        "body": "Some words",
+        "from_number": "40604"
+    ],
+    "uri": "https://api.notifications.service.gov.uk/v2/notifications/ceb50d92-100d-4b8b-b559-14fa3b091cd",
+    "template": [
+        "id": "ceb50d92-100d-4b8b-b559-14fa3b091cda",
+       "version": 1,
+       "uri": "https://api.notifications.service.gov.uk/v2/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
+    ]
+]
+```
+
+Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyException``:
+<table>
+<thead>
+<tr>
+<th>`error["status_code"]`</th>
+<th>`error["message"]`</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>429</pre>
+</td>
+<td>
+<pre>
+[{
+    "error": "TooManyRequestsError",
+    "message": "Exceeded send limits (50) for today"
+}]
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>400</pre>
+</td>
+<td>
+<pre>
+[{
+    "error": "BadRequestError",
+    "message": "Can"t send to this recipient using a team-only API key"
+]}
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>400</pre>
+</td>
+<td>
+<pre>
+[{
+    "error": "BadRequestError",
+    "message": "Can"t send to this recipient when service is in trial mode
+                - see https://www.notifications.service.gov.uk/trial-mode"
+}]
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</details>
+
+### Email
+
+The method signature is:
+```php
+sendEmail( $emailAddress, $templateId, array $personalisation = array(), $reference = '' )
+```
+
+An example request would look like:
+
+```php
+try {
+
+    $response = $notifyClient->sendEmail( 'betty@exmple.com', 'df10a23e-2c0d-4ea5-87fb-82e520cbf93c', [
+        'name' => 'Betty Smith',
+        'dob'  => '12 July 1968'
+    ]);
+
+} catch (NotifyException $e){}
+```
+
+<details>
+<summary>
+Response
+</summary>
+
+If the request is successful, `response` will be an `array`:
+
+```php
+[
+    "id": "bfb50d92-100d-4b8b-b559-14fa3b091cda",
+    "reference": None,
+    "content": [
+        "subject": "Licence renewal",
+        "body": "Dear Bill, your licence is due for renewal on 3 January 2016.",
+        "from_email": "the_service@gov.uk"
+    ],
+    "uri": "https://api.notifications.service.gov.uk/v2/notifications/ceb50d92-100d-4b8b-b559-14fa3b091cd",
+    "template": [
+        "id": "ceb50d92-100d-4b8b-b559-14fa3b091cda",
+        "version": 1,
+        "uri": "https://api.notificaitons.service.gov.uk/service/your_service_id/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
+    ]
+]
+```
+
+Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyException``:
+<table>
+<thead>
+<tr>
+<th>`error["status_code"]`</th>
+<th>`error["message"]`</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>429</pre>
+</td>
+<td>
+<pre>
+[{
+    "error": "TooManyRequestsError",
+    "message": "Exceeded send limits (50) for today"
+}]
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>400</pre>
+</td>
+<td>
+<pre>
+[{
+    "error": "BadRequestError",
+    "message": "Can"t send to this recipient using a team-only API key"
+]}
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>400</pre>
+</td>
+<td>
+<pre>
+[{
+    "error": "BadRequestError",
+    "message": "Can"t send to this recipient when service is in trial mode
+                - see https://www.notifications.service.gov.uk/trial-mode"
+}]
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</details>
+
+
+### Arguments
+
+
+#### `templateId`
+
+Find by clicking **API info** for the template you want to send.
+
+#### `personalisation`
+
+If a template has placeholders you need to provide their values. For example:
+
+```php
+personalisation = [
+    'name' => 'Betty Smith',
+    'dob'  => '12 July 1968'
+]
+```
+
+Otherwise the parameter can be omitted.
+
+#### `reference`
+
+An optional identifier you generate if you don’t want to use Notify’s `id`. It can be used to identify a single  notification or a batch of notifications.
+
+## Get the status of one message
 
 The method signature is:
 ```php
 getNotification( $notificationId )
 ```
-
-Where
-
-* **$notificationId** A required _string_ holding the notifications's ID; which would have been returned in response to sending a message.
 
 An example request would look like:
 
@@ -117,47 +270,205 @@ try {
 } catch (NotifyException $e){}
 ```
 
-**$response** will be an _array_ containing the decoded JSON response from the Notify API. For details, see: https://www.notifications.service.gov.uk/documentation
+<details>
+<summary>
+Response
+</summary>
 
-Or if no notification was found for the passed ID, $response will be ``NULL``.
+If the request is successful, `response` will be an `array `:
 
-An instance (or sub-class) of ``Alphagov\Notifications\Exception\NotifyException`` will be throw if an error occurs.
+```php
+[
+    "id": "notify_id",
+    "reference": "client reference",
+    "email_address": "email address",
+    "phone_number": "phone number",
+    "line_1": "full name of a person or company",
+    "line_2": "123 The Street",
+    "line_3": "Some Area",
+    "line_4": "Some Town",
+    "line_5": "Some county",
+    "line_6": "Something else",
+    "postcode": "postcode",
+    "type": "sms|letter|email",
+    "status": "current status",
+    "template": [
+        "version": 1,
+        "id": 1,
+        "uri": "/template/{id}/{version}"
+     ],
+    "created_at": "created at",
+    "sent_at": "sent to provider at",
+]
+```
 
-#### Returning a list of Notifications
+Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyException``:
+<table>
+<thead>
+<tr>
+<th>`error["status_code"]`</th>
+<th>`error["message"]`</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>404</pre>
+</td>
+<td>
+<pre>
+[{
+    "error": "NoResultFound",
+    "message": "No result found"
+}]
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>400</pre>
+</td>
+<td>
+<pre>
+[{
+    "error": "ValidationError",
+    "message": "id is not a valid UUID"
+}]
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</details>
 
+## Get the status of all messages
 The method signature is:
 ```php
 listNotifications( array $filters = array() )
 ```
 
-Where
-
-* **$filters** An optional _array_ which applies filters to the request. A requires can use zero or more filters. Supported filtered:
-    * ``status``; with values:
-        * sending
-        * delivered
-        * failed
-    * ``template_type``; with values:
-        * email
-        * sms
-    * ``page``; takes an _int_ for pagination. Default is 1.
-
 An example request would look like:
 
 ```php
-try {
-
     $response = $notifyClient->listNotifications([
+        'older_than' => 'c32e9c89-a423-42d2-85b7-a21cd4486a2a',
+        'reference' => 'weekly-reminders',
         'status' => 'delivered',
         'template_type' => 'sms'
     ]);
-
-} catch (NotifyException $e){}
 ```
 
-**$response** will be an _array_ containing the decoded JSON response from the Notify API. For details, see: https://www.notifications.service.gov.uk/documentation
+<details>
+<summary>
+Response
+</summary>
 
-An instance (or sub-class) of ``Alphagov\Notifications\Exception\NotifyException`` will be throw if an error occurs.
+If the request is successful, `response` will be an `array`:
+
+```php
+[
+    "notifications":
+    [
+            "id": "notify_id",
+            "reference": "client reference",
+            "email_address": "email address",
+            "phone_number": "phone number",
+            "line_1": "full name of a person or company",
+            "line_2": "123 The Street",
+            "line_3": "Some Area",
+            "line_4": "Some Town",
+            "line_5": "Some county",
+            "line_6": "Something else",
+            "postcode": "postcode",
+            "type": "sms | letter | email",
+            "status": sending | delivered | permanent-failure | temporary-failure | technical-failure
+            "template": [
+            "version": 1,
+            "id": 1,
+            "uri": "/template/{id}/{version}"
+        ],
+        "created_at": "created at",
+        "sent_at": "sent to provider at",
+        ],
+        …
+  ],
+  "links": [
+     "current": "/notifications?template_type=sms&status=delivered",
+     "next": "/notifications?other_than=last_id_in_list&template_type=sms&status=delivered"
+  ]
+]
+```
+
+Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyException``:
+<table>
+<thead>
+<tr>
+<th>`error["status_code"]`</th>
+<th>`error["message"]`</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>400</pre>
+</td>
+<td>
+<pre>
+[{
+    'error': 'ValidationError',
+    'message': 'bad status is not one of [created, sending, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure]'
+}]
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>400</pre>
+</td>
+<td>
+<pre>
+[{
+    "error": "ValidationError",
+    "message": "Apple is not one of [sms, email, letter]"
+}]
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</details>
+
+### Arguments
+
+#### `older_than`
+
+If omitted all messages are returned. Otherwise you can filter to retrieve all notifications older than the given notification `id`.
+
+#### `template_type`
+
+If omitted all messages are returned. Otherwise you can filter by:
+
+* `email`
+* `sms`
+* `letter`
+
+
+#### `status`
+
+If omitted all messages are returned. Otherwise you can filter by:
+
+* `sending` - the message is queued to be sent by the provider.
+* `delivered` - the message was successfully delivered.
+* `failed` - this will return all failure statuses `permanent-failure`, `temporary-failure` and `technical-failure`.
+* `permanent-failure` - the provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list.
+* `temporary-failure` - the provider was unable to deliver message, email box was full or the phone was turned off; you can try to send the message again.
+* `technical-failure` - Notify had a technical failure; you can try to send the message again.
+
+#### `reference`
+
+
+This is the `reference` you gave at the time of sending the notification. This can be omitted to ignore the filter.
+
 
 ## Development
 
