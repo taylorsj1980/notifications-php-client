@@ -280,6 +280,8 @@ If the request is successful, `response` will be an `array `:
 ```php
 [
     "id": "notify_id",
+    "body": "Hello Foo",
+    "subject": "null|email_subject",
     "reference": "client reference",
     "email_address": "email address",
     "phone_number": "phone number",
