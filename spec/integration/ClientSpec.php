@@ -93,6 +93,11 @@ class ClientSpec extends ObjectBehavior
       $response->shouldHaveKey( 'id' );
       $response['id']->shouldBeString();
 
+      $response->shouldHaveKey( 'body' );
+      $response['body']->shouldBeString();
+      $response['body']->shouldBe("Hello Foo\n\nFunctional test help make our world a better place");
+
+      $response->shouldHaveKey( 'subject' );
       $response->shouldHaveKey( 'reference' );
       $response->shouldHaveKey( 'email_address' );
       $response['email_address']->shouldBeString();
@@ -176,6 +181,11 @@ class ClientSpec extends ObjectBehavior
       $response->shouldBeArray();
       $response->shouldHaveKey( 'id' );
       $response['id']->shouldBeString();
+
+      $response->shouldHaveKey( 'body' );
+      $response['body']->shouldBeString();
+      $response['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
+      $response->shouldHaveKey( 'subject' );
 
       $response->shouldHaveKey( 'reference' );
       $response->shouldHaveKey( 'email_address' );
