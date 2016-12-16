@@ -18,7 +18,7 @@ public function sendSms( $phoneNumber, $templateId, array $personalisation = arr
  ```php
 public function sendEmail( $emailAddress, $templateId, array $personalisation = array(), $reference = '' )
 ```
-     * Where `personalisation` and `reference` can be omitted.
+     * Where `$personalisation` and `$reference` can be omitted.
 * Updated `$this->listNotifications()`
     * Notifications can now be filtered by `reference` and `older_than`, see the README for details.
 
