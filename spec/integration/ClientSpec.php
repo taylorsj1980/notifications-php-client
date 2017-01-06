@@ -47,27 +47,34 @@ class ClientSpec extends ObjectBehavior
         ]);
 
         $response->shouldBeArray();
+        $response->shouldHaveKey( 'id' );
+        $response['id']->shouldBeString();
 
-        $response['data']->shouldBeArray();
+        $response->shouldHaveKey( 'reference' );
 
-        $response['data']->shouldHaveKey( 'notification' );
-        $response['data']->shouldHaveKey( 'body' );
-        $response['data']->shouldHaveKey( 'subject' );
-        $response['data']->shouldHaveKey( 'template_version' );
+        $response->shouldHaveKey( 'content' );
+        $response['content']->shouldBeArray();
+        $response['content']->shouldHaveKey( 'from_email' );
+        $response['content']['from_email']->shouldBeString();
+        $response['content']->shouldHaveKey( 'body' );
+        $response['content']['body']->shouldBeString();
+        $response['content']['body']->shouldBe("Hello Foo\n\nFunctional test help make our world a better place");
+        $response['content']->shouldHaveKey( 'subject' );
+        $response['content']['subject']->shouldBeString();
+        $response['content']['subject']->shouldBe("Functional Tests are good");
 
-        $response['data']['notification']->shouldBeArray();
-        $response['data']['notification']->shouldHaveKey( 'id' );
-        $response['data']['notification']['id']->shouldBeString();
+        $response->shouldHaveKey( 'template' );
+        $response['template']->shouldBeArray();
+        $response['template']->shouldHaveKey( 'id' );
+        $response['template']['id']->shouldBeString();
+        $response['template']->shouldHaveKey( 'version' );
+        $response['template']['version']->shouldBeInteger();
+        $response['template']->shouldHaveKey( 'uri' );
 
-        $response['data']['body']->shouldBeString();
-        $response['data']['body']->shouldBe("Hello Foo\n\nFunctional test help make our world a better place");
+        $response->shouldHaveKey( 'uri' );
+        $response['uri']->shouldBeString();
 
-        $response['data']['subject']->shouldBeString();
-        $response['data']['subject']->shouldBe("Functional Tests are good");
-
-        $response['data']['template_version']->shouldBeInteger();
-
-        self::$notificationId = $response['data']['notification']['id']->getWrappedObject();
+        self::$notificationId = $response['id']->getWrappedObject();
 
     }
 
@@ -82,34 +89,46 @@ class ClientSpec extends ObjectBehavior
 
       // Retrieve email notification by id and verify contents
       $response = $this->getNotification($notificationId);
+      $response->shouldBeArray();
+      $response->shouldHaveKey( 'id' );
+      $response['id']->shouldBeString();
 
-      $response->shouldHaveKey('data');
-      $response['data']->shouldBeArray();
+      $response->shouldHaveKey( 'body' );
+      $response['body']->shouldBeString();
+      $response['body']->shouldBe("Hello Foo\n\nFunctional test help make our world a better place");
 
-      $response['data']->shouldHaveKey( 'notification' );
-      $response['data']['notification']->shouldBeArray();
+      $response->shouldHaveKey( 'subject' );
+      $response->shouldHaveKey( 'reference' );
+      $response->shouldHaveKey( 'email_address' );
+      $response['email_address']->shouldBeString();
+      $response->shouldHaveKey( 'phone_number' );
+      $response->shouldHaveKey( 'line_1' );
+      $response->shouldHaveKey( 'line_2' );
+      $response->shouldHaveKey( 'line_3' );
+      $response->shouldHaveKey( 'line_4' );
+      $response->shouldHaveKey( 'line_5' );
+      $response->shouldHaveKey( 'line_6' );
+      $response->shouldHaveKey( 'postcode' );
+      $response->shouldHaveKey( 'type' );
+      $response['type']->shouldBeString();
+      $response['type']->shouldBe('email');
+      $response->shouldHaveKey( 'status' );
+      $response['status']->shouldBeString();
 
-      $response['data']['notification']->shouldHaveKey( 'id' );
-      $response['data']['notification']['id']->shouldBeString();
-      $response['data']['notification']['id']->shouldBeEqualTo($notificationId);
+      $response->shouldHaveKey( 'template' );
+      $response['template']->shouldBeArray();
+      $response['template']->shouldHaveKey( 'id' );
+      $response['template']['id']->shouldBeString();
+      $response['template']->shouldHaveKey( 'version' );
+      $response['template']['version']->shouldBeInteger();
+      $response['template']->shouldHaveKey( 'uri' );
+      $response['template']['uri']->shouldBeString();
 
-      $response['data']['notification']->shouldHaveKey( 'body' );
-      $response['data']['notification']['body']->shouldBeString();
-      $response['data']['notification']['body']->shouldBeEqualTo("Hello Foo\n\nFunctional test help make our world a better place");
+      $response->shouldHaveKey( 'created_at' );
+      $response->shouldHaveKey( 'sent_at' );
+      $response->shouldHaveKey( 'completed_at' );
 
-      $response['data']['notification']->shouldHaveKey( 'status' );
-      $response['data']['notification']['status']->shouldBeString();
-
-      $response['data']['notification']->shouldHaveKey( 'notification_type' );
-      $response['data']['notification']['notification_type']->shouldBeString();
-      $response['data']['notification']['notification_type']->shouldBeEqualTo("email");
-
-      $response['data']['notification']->shouldHaveKey( 'subject' );
-      $response['data']['notification']['subject']->shouldBeString();
-      $response['data']['notification']['subject']->shouldBeEqualTo("Functional Tests are good");
-
-      $response['data']['notification']->shouldHaveKey( 'template_version' );
-      $response['data']['notification']['template_version']->shouldBeInteger();
+      self::$notificationId = $response['id']->getWrappedObject();
 
     }
 
@@ -120,24 +139,31 @@ class ClientSpec extends ObjectBehavior
         ]);
 
         $response->shouldBeArray();
+        $response->shouldHaveKey( 'id' );
+        $response['id']->shouldBeString();
 
-        $response['data']->shouldBeArray();
+        $response->shouldHaveKey( 'reference' );
 
-        $response['data']->shouldHaveKey( 'notification' );
-        $response['data']->shouldHaveKey( 'body' );
-        $response['data']->shouldNotHaveKey( 'subject' );
-        $response['data']->shouldHaveKey( 'template_version' );
+        $response->shouldHaveKey( 'content' );
+        $response['content']->shouldBeArray();
+        $response['content']->shouldHaveKey( 'from_number' );
+        $response['content']['from_number']->shouldBeString();
+        $response['content']->shouldHaveKey( 'body' );
+        $response['content']['body']->shouldBeString();
+        $response['content']['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
 
-        $response['data']['notification']->shouldBeArray();
-        $response['data']['notification']->shouldHaveKey( 'id' );
-        $response['data']['notification']['id']->shouldBeString();
+        $response->shouldHaveKey( 'template' );
+        $response['template']->shouldBeArray();
+        $response['template']->shouldHaveKey( 'id' );
+        $response['template']['id']->shouldBeString();
+        $response['template']->shouldHaveKey( 'version' );
+        $response['template']['version']->shouldBeInteger();
+        $response['template']->shouldHaveKey( 'uri' );
 
-        $response['data']['body']->shouldBeString();
-        $response['data']['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
+        $response->shouldHaveKey( 'uri' );
+        $response['uri']->shouldBeString();
 
-        $response['data']['template_version']->shouldBeInteger();
-
-        self::$notificationId = $response['data']['notification']['id']->getWrappedObject();
+        self::$notificationId = $response['id']->getWrappedObject();
 
     }
 
@@ -152,32 +178,44 @@ class ClientSpec extends ObjectBehavior
 
       // Retrieve sms notification by id and verify contents
       $response = $this->getNotification($notificationId);
+      $response->shouldBeArray();
+      $response->shouldHaveKey( 'id' );
+      $response['id']->shouldBeString();
 
-      $response->shouldHaveKey('data');
-      $response['data']->shouldBeArray();
+      $response->shouldHaveKey( 'body' );
+      $response['body']->shouldBeString();
+      $response['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
+      $response->shouldHaveKey( 'subject' );
 
-      $response['data']->shouldHaveKey( 'notification' );
-      $response['data']['notification']->shouldBeArray();
+      $response->shouldHaveKey( 'reference' );
+      $response->shouldHaveKey( 'email_address' );
+      $response->shouldHaveKey( 'phone_number' );
+      $response['phone_number']->shouldBeString();
+      $response->shouldHaveKey( 'line_1' );
+      $response->shouldHaveKey( 'line_2' );
+      $response->shouldHaveKey( 'line_3' );
+      $response->shouldHaveKey( 'line_4' );
+      $response->shouldHaveKey( 'line_5' );
+      $response->shouldHaveKey( 'line_6' );
+      $response->shouldHaveKey( 'postcode' );
+      $response->shouldHaveKey( 'type' );
+      $response['type']->shouldBeString();
+      $response['type']->shouldBe('sms');
+      $response->shouldHaveKey( 'status' );
+      $response['status']->shouldBeString();
 
-      $response['data']['notification']->shouldHaveKey( 'id' );
-      $response['data']['notification']['id']->shouldBeString();
-      $response['data']['notification']['id']->shouldBeEqualTo($notificationId);
+      $response->shouldHaveKey( 'template' );
+      $response['template']->shouldBeArray();
+      $response['template']->shouldHaveKey( 'id' );
+      $response['template']['id']->shouldBeString();
+      $response['template']->shouldHaveKey( 'version' );
+      $response['template']['version']->shouldBeInteger();
+      $response['template']->shouldHaveKey( 'uri' );
+      $response['template']['uri']->shouldBeString();
 
-      $response['data']['notification']->shouldHaveKey( 'body' );
-      $response['data']['notification']['body']->shouldBeString();
-      $response['data']['notification']['body']->shouldBeEqualTo("Hello Foo\n\nFunctional Tests make our world a better place");
-
-      $response['data']['notification']->shouldHaveKey( 'status' );
-      $response['data']['notification']['status']->shouldBeString();
-
-      $response['data']['notification']->shouldHaveKey( 'notification_type' );
-      $response['data']['notification']['notification_type']->shouldBeString();
-      $response['data']['notification']['notification_type']->shouldBeEqualTo("sms");
-
-      $response['data']['notification']->shouldNotHaveKey( 'subject' );
-
-      $response['data']['notification']->shouldHaveKey( 'template_version' );
-      $response['data']['notification']['template_version']->shouldBeInteger();
+      $response->shouldHaveKey( 'created_at' );
+      $response->shouldHaveKey( 'sent_at' );
+      $response->shouldHaveKey( 'completed_at' );
 
     }
 
@@ -187,14 +225,10 @@ class ClientSpec extends ObjectBehavior
       $response = $this->listNotifications();
 
       $response->shouldHaveKey('links');
-      $response->shouldHaveKey('page_size');
-      $response->shouldHaveKey('notifications');
-      $response->shouldHaveKey('total');
-
       $response['links']->shouldBeArray();
-      $response['page_size']->shouldBeInteger();
+
+      $response->shouldHaveKey('notifications');
       $response['notifications']->shouldBeArray();
-      $response['total']->shouldBeInteger();
 
       $notifications = $response['notifications'];
       $total_notifications_count = count($notifications->getWrappedObject());
@@ -204,32 +238,49 @@ class ClientSpec extends ObjectBehavior
           $notification = $notifications[$i];
 
           $notification->shouldBeArray();
-
-          $notification->shouldHaveKey( 'notification_type' );
-          $notification['notification_type']->shouldBeString();
-          $notification_type = $notification['notification_type']->getWrappedObject();
-
           $notification->shouldHaveKey( 'id' );
           $notification['id']->shouldBeString();
 
-          $notification->shouldHaveKey( 'body' );
-          $notification['body']->shouldBeString();
-
+          $notification->shouldHaveKey( 'reference' );
+          $notification->shouldHaveKey( 'email_address' );
+          $notification->shouldHaveKey( 'phone_number' );
+          $notification->shouldHaveKey( 'line_1' );
+          $notification->shouldHaveKey( 'line_2' );
+          $notification->shouldHaveKey( 'line_3' );
+          $notification->shouldHaveKey( 'line_4' );
+          $notification->shouldHaveKey( 'line_5' );
+          $notification->shouldHaveKey( 'line_6' );
+          $notification->shouldHaveKey( 'postcode' );
           $notification->shouldHaveKey( 'status' );
           $notification['status']->shouldBeString();
 
-          $notification->shouldHaveKey( 'template_version' );
-          $notification['template_version']->shouldBeInteger();
+          $notification->shouldHaveKey( 'template' );
+          $notification['template']->shouldBeArray();
+          $notification['template']->shouldHaveKey( 'id' );
+          $notification['template']['id']->shouldBeString();
+          $notification['template']->shouldHaveKey( 'version' );
+          $notification['template']['version']->shouldBeInteger();
+          $notification['template']->shouldHaveKey( 'uri' );
+          $notification['template']['uri']->shouldBeString();
+
+          $notification->shouldHaveKey( 'created_at' );
+          $notification->shouldHaveKey( 'sent_at' );
+          $notification->shouldHaveKey( 'completed_at' );
+
+          $notification->shouldBeArray();
+
+          $notification->shouldHaveKey( 'type' );
+          $notification['type']->shouldBeString();
+          $notification['type']->shouldBeString();
+          $notification_type = $notification['type']->getWrappedObject();
 
           if ( $notification_type == "sms" ) {
 
-            $notification->shouldNotHaveKey( 'subject' );
+            $notification['phone_number']->shouldBeString();
 
           } elseif ( $notification_type == "email") {
 
-            $notification->shouldHaveKey( 'subject' );
-            $notification['subject']->shouldBeString();
-            $notification['subject']->shouldBeEqualTo("Functional Tests are good");
+            $notification['email_address']->shouldBeString();
 
           }
       }

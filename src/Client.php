@@ -25,7 +25,7 @@ class Client {
      * @const string Current version of this client.
      * This follows Semantic Versioning (http://semver.org/)
      */
-    const VERSION = '0.6.0';
+    const VERSION = '1.0.0';
 
     /**
      * @const string The API endpoint for Notify production.
@@ -35,10 +35,10 @@ class Client {
     /**
      * Paths for API endpoints.
      */
-    const PATH_NOTIFICATION_LIST        = '/notifications';
-    const PATH_NOTIFICATION_LOOKUP      = '/notifications/%s';
-    const PATH_NOTIFICATION_SEND_SMS    = '/notifications/sms';
-    const PATH_NOTIFICATION_SEND_EMAIL  = '/notifications/email';
+    const PATH_NOTIFICATION_LIST        = '/v2/notifications';
+    const PATH_NOTIFICATION_LOOKUP      = '/v2/notifications/%s';
+    const PATH_NOTIFICATION_SEND_SMS    = '/v2/notifications/sms';
+    const PATH_NOTIFICATION_SEND_EMAIL  = '/v2/notifications/email';
 
 
     /**
@@ -157,17 +157,18 @@ class Client {
     /**
      * Send an SMS message.
      *
-     * @param string    $to
-     * @param string    $template
+     * @param string    $phoneNumber
+     * @param string    $templateId
      * @param array     $personalisation
+     * @param string    $reference
      *
      * @return array
      */
-    public function sendSms( $to, $template, array $personalisation = array() ){
+    public function sendSms( $phoneNumber, $templateId, array $personalisation = array(), $reference = '' ){
 
         return $this->httpPost(
             self::PATH_NOTIFICATION_SEND_SMS,
-            $this->buildPayload( $to, $template, $personalisation )
+            $this->buildPayload( 'sms', $phoneNumber, $templateId, $personalisation, $reference )
         );
 
     }
@@ -175,17 +176,18 @@ class Client {
     /**
      * Send an Email message.
      *
-     * @param string    $to
-     * @param string    $template
+     * @param string    $emailAddress
+     * @param string    $templateId
      * @param array     $personalisation
+     * @param string    $reference
      *
      * @return array
      */
-    public function sendEmail( $to, $template, array $personalisation = array() ){
+    public function sendEmail( $emailAddress, $templateId, array $personalisation = array(), $reference = '' ){
 
         return $this->httpPost(
             self::PATH_NOTIFICATION_SEND_EMAIL,
-            $this->buildPayload( $to, $template, $personalisation )
+            $this->buildPayload( 'email', $emailAddress, $templateId, $personalisation, $reference )
         );
 
     }
@@ -211,9 +213,10 @@ class Client {
      * Returns a list of all notifications for the current Service ID.
      *
      * Filter supports:
+     *  - older_than
+     *  - reference
      *  - status
      *  - template_type
-     *  - page
      *
      * @param array $filters
      *
@@ -223,9 +226,10 @@ class Client {
 
         // Only allow the following filter keys.
         $filters = array_intersect_key( $filters, array_flip([
-            'page',
+            'older_than',
+            'reference',
             'status',
-            'template_type'
+            'template_type',
         ]));
 
         return $this->httpGet( self::PATH_NOTIFICATION_LIST, $filters );
@@ -243,21 +247,32 @@ class Client {
     /**
      * Generates the payload expected by the API.
      *
+     * @param string    $type
      * @param string    $to
-     * @param string    $template
+     * @param string    $templateId
      * @param array     $personalisation
+     * @param string    $reference
      *
      * @return array
      */
-    private function buildPayload( $to, $template, array $personalisation ){
+    private function buildPayload( $type, $to, $templateId, array $personalisation, $reference ){
 
         $payload = [
-            'to' => $to,
-            'template'=> $template
+            'template_id'=> $templateId
         ];
 
-        if( count($personalisation) > 0 ){
+        if ( $type == 'sms' ) {
+            $payload['phone_number'] = $to;
+        } else if ( $type = 'email' ) {
+            $payload['email_address'] = $to;
+        }
+
+        if( count($personalisation) > 0 ) {
             $payload['personalisation'] = $personalisation;
+        }
+
+        if ( isset($reference) && $reference != '' ) {
+            $payload['reference'] = $reference;
         }
 
         return $payload;
