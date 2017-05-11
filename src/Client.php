@@ -39,6 +39,10 @@ class Client {
     const PATH_NOTIFICATION_LOOKUP      = '/v2/notifications/%s';
     const PATH_NOTIFICATION_SEND_SMS    = '/v2/notifications/sms';
     const PATH_NOTIFICATION_SEND_EMAIL  = '/v2/notifications/email';
+    const PATH_TEMPLATE_LIST            = '/v2/templates';
+    const PATH_TEMPLATE_LOOKUP          = '/v2/template/%s';
+    const PATH_TEMPLATE_VERSION_LOOKUP  = '/v2/template/%s/version/%s';
+    const PATH_TEMPLATE_PREVIEW         = '/v2/template/%s/preview';
 
 
     /**
@@ -66,7 +70,7 @@ class Client {
      *  - authenticator: (JWTAuthenticationInterface)
      *      Required if 'serviceId' and 'apiKey' are not set.
      *  - serviceId: (string)
-     *      Required if 'authenticator' not set.
+     *      Optional. Deprecated, use apiKey instead.
      *  - apiKey: (string)
      *      Required if 'authenticator' not set.
      *  - baseUrl: (string)
@@ -236,6 +240,59 @@ class Client {
 
     }
 
+    /**
+     * Get a template by ID.
+     *
+     * @param string    $templateId
+     *
+     * @return array
+     */
+    public function getTemplate( $templateId ){
+        $path = sprintf( self::PATH_TEMPLATE_LOOKUP, $templateId );
+
+        return $this->httpGet( $path );
+
+    }
+
+    /**
+     * Get a template by ID and version.
+     *
+     * @param string    $templateId
+     * @param int       $version
+     *
+     * @return array
+     */
+    public function getTemplateVersion( $templateId, $version ){
+        $path = sprintf( self::PATH_TEMPLATE_VERSION_LOOKUP, $templateId, $version );
+
+        return $this->httpGet( $path );
+    }
+
+    /**
+     * Get all templates
+     *
+     * Can pass in template_type to filter templates.
+     *
+     * @param string  $template_type
+     *
+     * @return array
+     */
+    public function listTemplates( $templateType = null ){
+        return $this->httpGet( self::PATH_TEMPLATE_LIST, [ 'template_type' => $templateType ] );
+    }
+
+    /**
+     * Get a preview of a template
+     *
+     * @return array
+     */
+    public function previewTemplate( $templateId, $personalisation){
+        $path = sprintf( self::PATH_TEMPLATE_PREVIEW, $templateId );
+        $payload = [
+          'personalisation'=>$personalisation
+        ];
+        return $this->httpPost( $path, $payload );
+    }
 
     //------------------------------------------------------------------------------------
     // Internal API access methods

@@ -29,7 +29,6 @@ class ClientSpec extends ObjectBehavior
 
         $this->beConstructedWith([
             'baseUrl'       => getenv('NOTIFY_API_URL'),
-            'serviceId'     => getenv('SERVICE_ID'),
             'apiKey'        => getenv('API_KEY'),
             'httpClient'    => new \Http\Adapter\Guzzle6\Client
         ]);

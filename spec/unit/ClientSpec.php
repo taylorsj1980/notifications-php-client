@@ -626,4 +626,184 @@ class ClientSpec extends ObjectBehavior
 
     }
 
+    //----------------------------------------------------------------------------------------------------------
+    // Template lookups (GETs) with expected success
+
+    function it_generates_the_expected_request_when_looking_up_a_template(){
+
+        //---------------------------------
+        // Test Setup
+
+        $id = '35836a9e-5a97-4d99-8309-0c5a2c3dbc72';
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                200,
+                ['Content-type'  => 'application/json'],
+                '{}'
+            )
+        );
+
+        //---------------------------------
+        // Perform action
+
+        $this->getTemplate( $id );
+
+        //---------------------------------
+        // Check result
+
+        // Check the expected Request was sent.
+        $this->httpClient->sendRequest( Argument::that(function( $v ) use ($id) {
+            return $v->getUri() == self::BASE_URL . sprintf( Client::PATH_TEMPLATE_LOOKUP, $id );
+        }))->shouldHaveBeenCalled();
+
+    }
+
+    function it_generates_the_expected_request_when_looking_up_a_template_by_version(){
+
+        //---------------------------------
+        // Test Setup
+
+        $id = '35836a9e-5a97-4d99-8309-0c5a2c3dbc72';
+        $version = 1;
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                200,
+                ['Content-type'  => 'application/json'],
+                '{}'
+            )
+        );
+
+        //---------------------------------
+        // Perform action
+
+        $this->getTemplateVersion( $id, $version );
+
+        //---------------------------------
+        // Check result
+
+        // Check the expected Request was sent.
+        $this->httpClient->sendRequest( Argument::that(function( $v ) use ($id, $version) {
+            // With the correct URL
+            return $v->getUri() == self::BASE_URL . sprintf( Client::PATH_TEMPLATE_VERSION_LOOKUP, $id, $version );
+
+        }))->shouldHaveBeenCalled();
+
+    }
+
+    function it_generates_the_expected_request_when_listing_templates(){
+
+        //---------------------------------
+        // Test Setup
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                200,
+                ['Content-type'  => 'application/json'],
+                '{}'
+            )
+        );
+
+        //---------------------------------
+        // Perform action
+
+        $this->listTemplates();
+
+        //---------------------------------
+        // Check result
+
+        // Check the expected Request was sent.
+        $this->httpClient->sendRequest( Argument::that(function( $v ) {
+            // With the correct URL
+            $url = new Uri( self::BASE_URL . Client::PATH_TEMPLATE_LIST );
+            $url = URI::withQueryValue( $url, 'template_type', null );
+
+            return $v->getUri() == $url;
+        }))->shouldHaveBeenCalled();
+
+    }
+
+
+    function it_generates_the_expected_request_when_listing_templates_of_a_certain_type(){
+
+        //---------------------------------
+        // Test Setup
+
+        $templateType = 'foo';
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                200,
+                ['Content-type'  => 'application/json'],
+                '{}'
+            )
+        );
+
+        //---------------------------------
+        // Perform action
+
+        $this->listTemplates( $templateType );
+
+        //---------------------------------
+        // Check result
+
+        // Check the expected Request was sent.
+        $this->httpClient->sendRequest( Argument::that(function( $v ) use ( $templateType ){
+            // With the correct URL
+            $url = new Uri( self::BASE_URL . Client::PATH_TEMPLATE_LIST );
+            $url = URI::withQueryValue( $url, 'template_type', $templateType );
+
+            return $v->getUri() == $url;
+        }))->shouldHaveBeenCalled();
+
+    }
+
+
+    //----------------------------------------------------------------------------------------------------------
+    // Sending (POSTs) with expected success
+
+    function it_generates_the_expected_request_when_previewing_a_template(){
+
+        //---------------------------------
+        // Test Setup
+
+        $id = '35836a9e-5a97-4d99-8309-0c5a2c3dbc72';
+        $body = [
+            'personalisation' => [
+                'name'=>'Fred'
+            ]
+        ];
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                201,
+                [ 'Content-type'  => 'application/json' ],
+                '{}'
+            )
+        );
+
+        //---------------------------------
+        // Perform action
+
+        $this->previewTemplate( $id, $body['personalisation']);
+
+        //---------------------------------
+        // Check result
+
+        $this->httpClient->sendRequest( Argument::that(function( $v ) use ($id, $body) {
+            // With the correct URL
+            if( $v->getUri() != self::BASE_URL . sprintf( Client::PATH_TEMPLATE_PREVIEW, $id ) ){
+                return false;
+            }
+
+            // With the expected body.
+            if( json_decode( $v->getBody(), true ) != $body ){
+                return false;
+            }
+
+            return true;
+
+        }))->shouldHaveBeenCalled();
+
+    }
 }
