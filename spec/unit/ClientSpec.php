@@ -27,6 +27,7 @@ class ClientSpec extends ObjectBehavior
 {
     const BASE_URL = 'https://api-test';
     const TEST_JWT_TOKEN = 'jwt-token';
+    const SAMPLE_ID = '35836a9e-5a97-4d99-8309-0c5a2c3dbc72';
 
     private $httpClient;
 
@@ -217,7 +218,7 @@ class ClientSpec extends ObjectBehavior
         //---------------------------------
         // Test Setup
 
-        $id = '35836a9e-5a97-4d99-8309-0c5a2c3dbc72';
+        $id = self::SAMPLE_ID;
 
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
             new Response(
@@ -269,7 +270,7 @@ class ClientSpec extends ObjectBehavior
         //---------------------------------
         // Test Setup
 
-        $id = '35836a9e-5a97-4d99-8309-0c5a2c3dbc72';
+        $id = self::SAMPLE_ID;
 
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
             new Response(
@@ -458,7 +459,7 @@ class ClientSpec extends ObjectBehavior
         //---------------------------------
         // Test Setup
 
-        $id = '35836a9e-5a97-4d99-8309-0c5a2c3dbc72';
+        $id = self::SAMPLE_ID;
 
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
             new Response(
@@ -548,7 +549,7 @@ class ClientSpec extends ObjectBehavior
         //---------------------------------
         // Test Setup
 
-        $id = '35836a9e-5a97-4d99-8309-0c5a2c3dbc72';
+        $id = self::SAMPLE_ID;
 
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
             new Response(
@@ -606,11 +607,18 @@ class ClientSpec extends ObjectBehavior
         // Test Setup
 
         $code = 500;
-        $error = 'Error Reason';
         $response = new Response(
             $code,
             ['Content-type'  => 'application/json'],
-            json_encode(['message' => $error])
+            json_encode([
+                'status' => $code,
+                'error' => [
+                  [
+                    'error' => 'SomeErrorType',
+                    'reason' => 'Some error message'
+                  ]
+                ]
+            ])
         );
 
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
@@ -621,7 +629,7 @@ class ClientSpec extends ObjectBehavior
         // Perform action & check result
 
         $this->shouldThrow(
-            new NotifyException\ApiException( "HTTP:{$code} - {$error}", $code, $response )
+            new NotifyException\ApiException( "HTTP:{$code}", $code, $response )
         )->duringSendSms( '+447834000000', 118, [ 'name'=>'Fred' ] );
 
     }
@@ -634,7 +642,7 @@ class ClientSpec extends ObjectBehavior
         //---------------------------------
         // Test Setup
 
-        $id = '35836a9e-5a97-4d99-8309-0c5a2c3dbc72';
+        $id = self::SAMPLE_ID;
 
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
             new Response(
@@ -664,7 +672,7 @@ class ClientSpec extends ObjectBehavior
         //---------------------------------
         // Test Setup
 
-        $id = '35836a9e-5a97-4d99-8309-0c5a2c3dbc72';
+        $id = self::SAMPLE_ID;
         $version = 1;
 
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
@@ -717,7 +725,6 @@ class ClientSpec extends ObjectBehavior
         $this->httpClient->sendRequest( Argument::that(function( $v ) {
             // With the correct URL
             $url = new Uri( self::BASE_URL . Client::PATH_TEMPLATE_LIST );
-            $url = URI::withQueryValue( $url, 'template_type', null );
 
             return $v->getUri() == $url;
         }))->shouldHaveBeenCalled();
@@ -751,7 +758,7 @@ class ClientSpec extends ObjectBehavior
         $this->httpClient->sendRequest( Argument::that(function( $v ) use ( $templateType ){
             // With the correct URL
             $url = new Uri( self::BASE_URL . Client::PATH_TEMPLATE_LIST );
-            $url = URI::withQueryValue( $url, 'template_type', $templateType );
+            $url = URI::withQueryValue( $url, 'type', $templateType );
 
             return $v->getUri() == $url;
         }))->shouldHaveBeenCalled();
@@ -767,7 +774,7 @@ class ClientSpec extends ObjectBehavior
         //---------------------------------
         // Test Setup
 
-        $id = '35836a9e-5a97-4d99-8309-0c5a2c3dbc72';
+        $id = self::SAMPLE_ID;
         $body = [
             'personalisation' => [
                 'name'=>'Fred'

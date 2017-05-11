@@ -372,13 +372,11 @@ class ClientSpec extends ObjectBehavior
           $template['created_by']->shouldBeString();
           $template['version']->shouldBeInteger();
           $template['body']->shouldBeString();
-          $template['subject']->shouldBeNull();
 
           $template['type']->shouldBeString();
           $template_type = $template['type']->getWrappedObject();
 
           if ( $template_type == "sms" ) {
-
             $template['subject']->shouldBeNull();
 
           } elseif ( $template_type == "email" || $template_type == "letter" ) {

@@ -478,8 +478,7 @@ class Client {
 
         $body = json_decode($response->getBody(), true);
 
-        $message = "HTTP:{$response->getStatusCode()} - ";
-        $message .= (isset($body['errors'])) ? print_r($body['errors'], true) : 'Unexpected response from server';
+        $message = "HTTP:{$response->getStatusCode()}";
 
         throw new Exception\ApiException( $message, $response->getStatusCode(), $response );
 
