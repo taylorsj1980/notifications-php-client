@@ -517,7 +517,7 @@ This is the `reference` you gave at the time of sending the notification. This c
 ## Get a template by ID
 
 ```php
-    $response = $notifyClient->getTemplateById( 'c32e9c89-a423-42d2-85b7-a21cd4486a2a' );
+    $response = $notifyClient->getTemplate( 'c32e9c89-a423-42d2-85b7-a21cd4486a2a' );
 ```
 
 <details>
@@ -578,7 +578,7 @@ Find by clicking **API info** for the template you want to send.
 ## Get a template by ID and version
 
 ```php
-    $response = $notifyClient->getTemplateByIdAndVersion( 'c32e9c89-a423-42d2-85b7-a21cd4486a2a', 1 );
+    $response = $notifyClient->getTemplateVersion( 'c32e9c89-a423-42d2-85b7-a21cd4486a2a', 1 );
 ```
 
 <details>
