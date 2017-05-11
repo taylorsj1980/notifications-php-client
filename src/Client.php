@@ -278,7 +278,8 @@ class Client {
      * @return array
      */
     public function listTemplates( $templateType = null ){
-        return $this->httpGet( self::PATH_TEMPLATE_LIST, [ 'template_type' => $templateType ] );
+        $queryParams = is_null( $templateType ) ? [] : [ 'type' => $templateType ];
+        return $this->httpGet( self::PATH_TEMPLATE_LIST, $queryParams );
     }
 
     /**
@@ -432,6 +433,7 @@ class Client {
         //---
 
         switch( $response->getStatusCode() ){
+            case 200:
             case 201:
                 return $this->handleResponse( $response );
             default:
@@ -477,7 +479,7 @@ class Client {
         $body = json_decode($response->getBody(), true);
 
         $message = "HTTP:{$response->getStatusCode()} - ";
-        $message .= (isset($body['message'])) ? print_r($body['message'], true) : 'Unexpected response from server';
+        $message .= (isset($body['errors'])) ? print_r($body['errors'], true) : 'Unexpected response from server';
 
         throw new Exception\ApiException( $message, $response->getStatusCode(), $response );
 
