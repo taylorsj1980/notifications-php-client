@@ -15,6 +15,7 @@ RUN \
 	&& apt-get install -y --no-install-recommends \
 		zlib1g-dev \
 		make \
+		libpcre3-dev \
 	&& docker-php-ext-install zip \
 	&& curl -x "$HTTP_PROXY" -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 	&& echo "Clean up" \

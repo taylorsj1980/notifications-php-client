@@ -29,7 +29,6 @@ class ClientSpec extends ObjectBehavior
 
         $this->beConstructedWith([
             'baseUrl'       => getenv('NOTIFY_API_URL'),
-            'serviceId'     => getenv('SERVICE_ID'),
             'apiKey'        => getenv('API_KEY'),
             'httpClient'    => new \Http\Adapter\Guzzle6\Client
         ]);
@@ -285,6 +284,158 @@ class ClientSpec extends ObjectBehavior
           }
       }
 
+    }
+
+    function it_receives_the_expected_response_when_looking_up_an_email_template() {
+      $templateId = getenv('EMAIL_TEMPLATE_ID');
+
+      // Retrieve sms notification by id and verify contents
+      $response = $this->getTemplate( $templateId );
+
+      //
+      $response->shouldBeArray();
+      $response->shouldHaveKey( 'id' );
+      $response->shouldHaveKey( 'type' );
+      $response->shouldHaveKey( 'created_at' );
+      $response->shouldHaveKey( 'updated_at' );
+      $response->shouldHaveKey( 'created_by' );
+      $response->shouldHaveKey( 'version' );
+      $response->shouldHaveKey( 'body' );
+      $response->shouldHaveKey( 'subject' );
+
+      $response['id']->shouldBeString();
+      $response['id']->shouldBe( $templateId );
+      $response['type']->shouldBeString();
+      $response['type']->shouldBe( 'email' );
+      $response['version']->shouldBeInteger();
+      $response['body']->shouldBe( "Hello ((name))\n\nFunctional test help make our world a better place" );
+      $response['subject']->shouldBeString();
+      $response['subject']->shouldBe( 'Functional Tests are good' );
+    }
+
+    function it_receives_the_expected_response_when_looking_up_an_sms_template() {
+      $templateId = getenv('SMS_TEMPLATE_ID');
+
+      // Retrieve sms notification by id and verify contents
+      $response = $this->getTemplate( $templateId );
+
+      //
+      $response->shouldBeArray();
+      $response->shouldHaveKey( 'id' );
+      $response->shouldHaveKey( 'type' );
+      $response->shouldHaveKey( 'created_at' );
+      $response->shouldHaveKey( 'updated_at' );
+      $response->shouldHaveKey( 'created_by' );
+      $response->shouldHaveKey( 'version' );
+      $response->shouldHaveKey( 'body' );
+      $response->shouldHaveKey( 'subject' );
+
+      $response['id']->shouldBeString();
+      $response['id']->shouldBe( $templateId );
+      $response['type']->shouldBeString();
+      $response['type']->shouldBe( 'sms' );
+      $response['version']->shouldBeInteger();
+      $response['body']->shouldBe( "Hello ((name))\n\nFunctional Tests make our world a better place" );
+      $response['subject']->shouldBeNull();
+    }
+
+    function it_receives_the_expected_response_when_looking_up_a_template_version() {
+      $templateId = getenv('SMS_TEMPLATE_ID');
+      $version = 2;
+
+      // Retrieve sms notification by id and verify contents
+      $response = $this->getTemplateVersion( $templateId, $version );
+
+      //
+      $response->shouldBeArray();
+      $response->shouldHaveKey( 'id' );
+      $response->shouldHaveKey( 'type' );
+      $response->shouldHaveKey( 'created_at' );
+      $response->shouldHaveKey( 'updated_at' );
+      $response->shouldHaveKey( 'created_by' );
+      $response->shouldHaveKey( 'version' );
+      $response->shouldHaveKey( 'body' );
+      $response->shouldHaveKey( 'subject' );
+
+      $response['id']->shouldBeString();
+      $response['id']->shouldBe( $templateId );
+      $response['type']->shouldBeString();
+      $response['type']->shouldBe( 'sms' );
+      $response['created_at']->shouldBeString();
+      $response['created_by']->shouldBeString();
+      $response['version']->shouldBeInteger();
+      $response['version']->shouldBe( $version );
+      $response['body']->shouldBe("Functional Tests make our world a better place");
+      $response['subject']->shouldBeNull();
+    }
+
+    function it_receives_the_expected_response_when_looking_up_all_templates() {
+
+      // Retrieve all notifications and verify each is correct (email & sms)
+      $response = $this->listTemplates();
+
+      $response->shouldHaveKey('templates');
+      $response['templates']->shouldBeArray();
+
+      $templates = $response['templates'];
+      $total_notifications_count = count($templates->getWrappedObject());
+
+      for( $i = 0; $i < $total_notifications_count; $i++ ) {
+
+          $template = $templates[$i];
+
+          $template->shouldBeArray();
+          $template->shouldHaveKey( 'id' );
+          $template->shouldHaveKey( 'type' );
+          $template->shouldHaveKey( 'created_at' );
+          $template->shouldHaveKey( 'updated_at' );
+          $template->shouldHaveKey( 'created_by' );
+          $template->shouldHaveKey( 'version' );
+          $template->shouldHaveKey( 'body' );
+          $template->shouldHaveKey( 'subject' );
+
+          $template['id']->shouldBeString();
+          $template['created_at']->shouldBeString();
+          $template['created_by']->shouldBeString();
+          $template['version']->shouldBeInteger();
+          $template['body']->shouldBeString();
+
+          $template['type']->shouldBeString();
+          $template_type = $template['type']->getWrappedObject();
+
+          if ( $template_type == "sms" ) {
+            $template['subject']->shouldBeNull();
+
+          } elseif ( $template_type == "email" || $template_type == "letter" ) {
+
+            $template['subject']->shouldBeString();
+
+          }
+      }
+
+    }
+
+    function it_receives_the_expected_response_when_previewing_a_template() {
+      $templateId = getenv('SMS_TEMPLATE_ID');
+
+      // Retrieve sms notification by id and verify contents
+      $response = $this->previewTemplate( $templateId, [ 'name' => 'Foo' ]);
+
+      //
+      $response->shouldBeArray();
+      $response->shouldHaveKey( 'id' );
+      $response->shouldHaveKey( 'type' );
+      $response->shouldHaveKey( 'version' );
+      $response->shouldHaveKey( 'body' );
+      $response->shouldHaveKey( 'subject' );
+
+      $response['id']->shouldBeString();
+      $response['id']->shouldBe( $templateId );
+      $response['type']->shouldBeString();
+      $response['type']->shouldBe( 'sms' );
+      $response['version']->shouldBeInteger();
+      $response['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
+      $response['subject']->shouldBeNull();
     }
 
 }

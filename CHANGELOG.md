@@ -1,3 +1,12 @@
+## [3.1.0] - 2017-05-10
+### Changed
+
+* Added new methods for managing templates:
+    * `$this->getTemplate` - retrieve a single template
+    * `$this->getTemplateVersion` - retrieve a specific version for a desired template
+    * `$this->listTemplates` - retrieve all templates (can filter by type)
+    * `$this->previewTemplate` - preview a template with personalisation applied
+
 ## [1.0.0] - 2016-12-16
 ### Changed
 * Using v2 of the notification-api.

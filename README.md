@@ -62,17 +62,17 @@ If the request is successful, `response` will be an `array`:
 
 ```php
 [
-    "id": "bfb50d92-100d-4b8b-b559-14fa3b091cda",
-    "reference": None,
-    "content": [
-        "body": "Some words",
-        "from_number": "40604"
+    "id" => "bfb50d92-100d-4b8b-b559-14fa3b091cda",
+    "reference" => None,
+    "content" => [
+        "body" => "Some words",
+        "from_number" => "40604"
     ],
-    "uri": "https://api.notifications.service.gov.uk/v2/notifications/ceb50d92-100d-4b8b-b559-14fa3b091cd",
-    "template": [
-        "id": "ceb50d92-100d-4b8b-b559-14fa3b091cda",
-       "version": 1,
-       "uri": "https://api.notifications.service.gov.uk/v2/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
+    "uri" => "https =>//api.notifications.service.gov.uk/v2/notifications/ceb50d92-100d-4b8b-b559-14fa3b091cd",
+    "template" => [
+        "id" => "ceb50d92-100d-4b8b-b559-14fa3b091cda",
+       "version" => 1,
+       "uri" => "https://api.notifications.service.gov.uk/v2/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
     ]
 ]
 ```
@@ -92,10 +92,10 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </td>
 <td>
 <pre>
-[{
-    "error": "RateLimitError",
-    "message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"
-}]
+[[
+    "error"=> "RateLimitError",
+    "message"=> "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"
+]]
 </pre>
 </td>
 </tr>
@@ -105,10 +105,12 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </td>
 <td>
 <pre>
-[{
-    "error": "TooManyRequestsError",
-    "message": "Exceeded send limits (50) for today"
-}]
+[
+  [
+    "error" => "TooManyRequestsError",
+    "message" => "Exceeded send limits (50) for today"
+  ]
+]
 </pre>
 </td>
 </tr>
@@ -118,10 +120,12 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </td>
 <td>
 <pre>
-[{
-    "error": "BadRequestError",
-    "message": "Can"t send to this recipient using a team-only API key"
-]}
+[
+  [
+    "error" => "BadRequestError",
+    "message" => "Can"t send to this recipient using a team-only API key"
+  ]
+]
 </pre>
 </td>
 </tr>
@@ -131,11 +135,13 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </td>
 <td>
 <pre>
-[{
-    "error": "BadRequestError",
-    "message": "Can"t send to this recipient when service is in trial mode
+[
+  [
+    "error" => "BadRequestError",
+    "message" => "Can"t send to this recipient when service is in trial mode
                 - see https://www.notifications.service.gov.uk/trial-mode"
-}]
+  ]
+]
 </pre>
 </td>
 </tr>
@@ -172,18 +178,18 @@ If the request is successful, `response` will be an `array`:
 
 ```php
 [
-    "id": "bfb50d92-100d-4b8b-b559-14fa3b091cda",
-    "reference": None,
-    "content": [
-        "subject": "Licence renewal",
-        "body": "Dear Bill, your licence is due for renewal on 3 January 2016.",
-        "from_email": "the_service@gov.uk"
+    "id" => "bfb50d92-100d-4b8b-b559-14fa3b091cda",
+    "reference" => None,
+    "content" => [
+        "subject" => "Licence renewal",
+        "body" => "Dear Bill, your licence is due for renewal on 3 January 2016.",
+        "from_email" => "the_service@gov.uk"
     ],
-    "uri": "https://api.notifications.service.gov.uk/v2/notifications/ceb50d92-100d-4b8b-b559-14fa3b091cd",
-    "template": [
-        "id": "ceb50d92-100d-4b8b-b559-14fa3b091cda",
-        "version": 1,
-        "uri": "https://api.notificaitons.service.gov.uk/service/your_service_id/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
+    "uri" => "https://api.notifications.service.gov.uk/v2/notifications/ceb50d92-100d-4b8b-b559-14fa3b091cd",
+    "template" => [
+        "id" => "ceb50d92-100d-4b8b-b559-14fa3b091cda",
+        "version" => 1,
+        "uri" => "https://api.notificaitons.service.gov.uk/service/your_service_id/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
     ]
 ]
 ```
@@ -203,9 +209,10 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </td>
 <td>
 <pre>
-[{
-    "error": "RateLimitError",
-    "message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"
+[
+  [
+    "error" => "RateLimitError",
+    "message" => "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"
 }]
 </pre>
 </td>
@@ -216,9 +223,10 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </td>
 <td>
 <pre>
-[{
-    "error": "TooManyRequestsError",
-    "message": "Exceeded send limits (50) for today"
+[
+  [
+    "error" => "TooManyRequestsError",
+    "message" => "Exceeded send limits (50) for today"
 }]
 </pre>
 </td>
@@ -229,10 +237,12 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </td>
 <td>
 <pre>
-[{
-    "error": "BadRequestError",
-    "message": "Can"t send to this recipient using a team-only API key"
-]}
+[
+  [
+    "error" => "BadRequestError",
+    "message" => "Can"t send to this recipient using a team-only API key"
+  ]
+]
 </pre>
 </td>
 </tr>
@@ -242,9 +252,10 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </td>
 <td>
 <pre>
-[{
-    "error": "BadRequestError",
-    "message": "Can"t send to this recipient when service is in trial mode
+[
+  [
+    "error" => "BadRequestError",
+    "message" => "Can"t send to this recipient when service is in trial mode
                 - see https://www.notifications.service.gov.uk/trial-mode"
 }]
 </pre>
@@ -305,28 +316,28 @@ If the request is successful, `response` will be an `array `:
 
 ```php
 [
-    "id": "notify_id",
-    "body": "Hello Foo",
-    "subject": "null|email_subject",
-    "reference": "client reference",
-    "email_address": "email address",
-    "phone_number": "phone number",
-    "line_1": "full name of a person or company",
-    "line_2": "123 The Street",
-    "line_3": "Some Area",
-    "line_4": "Some Town",
-    "line_5": "Some county",
-    "line_6": "Something else",
-    "postcode": "postcode",
-    "type": "sms|letter|email",
-    "status": "current status",
-    "template": [
-        "version": 1,
-        "id": 1,
-        "uri": "/template/{id}/{version}"
+    "id" => "notify_id",
+    "body" => "Hello Foo",
+    "subject" => "null|email_subject",
+    "reference" => "client reference",
+    "email_address" => "email address",
+    "phone_number" => "phone number",
+    "line_1" => "full name of a person or company",
+    "line_2" => "123 The Street",
+    "line_3" => "Some Area",
+    "line_4" => "Some Town",
+    "line_5" => "Some county",
+    "line_6" => "Something else",
+    "postcode" => "postcode",
+    "type" => "sms|letter|email",
+    "status" => "current status",
+    "template" => [
+        "version" => 1,
+        "id" => 1,
+        "uri" => "/template/{id}/{version}"
      ],
-    "created_at": "created at",
-    "sent_at": "sent to provider at",
+    "created_at" => "created at",
+    "sent_at" => "sent to provider at",
 ]
 ```
 
@@ -345,9 +356,10 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </td>
 <td>
 <pre>
-[{
-    "error": "NoResultFound",
-    "message": "No result found"
+[
+  [
+    "error" => "NoResultFound",
+    "message" => "No result found"
 }]
 </pre>
 </td>
@@ -358,9 +370,10 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </td>
 <td>
 <pre>
-[{
-    "error": "ValidationError",
-    "message": "id is not a valid UUID"
+[
+  [
+    "error" => "ValidationError",
+    "message" => "id is not a valid UUID"
 }]
 </pre>
 </td>
@@ -397,32 +410,32 @@ If the request is successful, `response` will be an `array`:
 [
     "notifications":
     [
-            "id": "notify_id",
-            "reference": "client reference",
-            "email_address": "email address",
-            "phone_number": "phone number",
-            "line_1": "full name of a person or company",
-            "line_2": "123 The Street",
-            "line_3": "Some Area",
-            "line_4": "Some Town",
-            "line_5": "Some county",
-            "line_6": "Something else",
-            "postcode": "postcode",
-            "type": "sms | letter | email",
-            "status": sending | delivered | permanent-failure | temporary-failure | technical-failure
-            "template": [
-            "version": 1,
-            "id": 1,
-            "uri": "/template/{id}/{version}"
+            "id" => "notify_id",
+            "reference" => "client reference",
+            "email_address" => "email address",
+            "phone_number" => "phone number",
+            "line_1" => "full name of a person or company",
+            "line_2" => "123 The Street",
+            "line_3" => "Some Area",
+            "line_4" => "Some Town",
+            "line_5" => "Some county",
+            "line_6" => "Something else",
+            "postcode" => "postcode",
+            "type" => "sms | letter | email",
+            "status" => sending | delivered | permanent-failure | temporary-failure | technical-failure
+            "template" => [
+            "version" => 1,
+            "id" => 1,
+            "uri" => "/template/{id}/{version}"
         ],
-        "created_at": "created at",
-        "sent_at": "sent to provider at",
+        "created_at" => "created at",
+        "sent_at" => "sent to provider at",
         ],
         …
   ],
-  "links": [
-     "current": "/notifications?template_type=sms&status=delivered",
-     "next": "/notifications?other_than=last_id_in_list&template_type=sms&status=delivered"
+  "links" => [
+     "current" => "/notifications?template_type=sms&status=delivered",
+     "next" => "/notifications?other_than=last_id_in_list&template_type=sms&status=delivered"
   ]
 ]
 ```
@@ -442,9 +455,10 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </td>
 <td>
 <pre>
-[{
-    'error': 'ValidationError',
-    'message': 'bad status is not one of [created, sending, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure]'
+[
+  [
+    'error' => 'ValidationError',
+    'message' => 'bad status is not one of [created, sending, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure]'
 }]
 </pre>
 </td>
@@ -455,9 +469,10 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </td>
 <td>
 <pre>
-[{
-    "error": "ValidationError",
-    "message": "Apple is not one of [sms, email, letter]"
+[
+  [
+    "error" => "ValidationError",
+    "message" => "Apple is not one of [sms, email, letter]"
 }]
 </pre>
 </td>
@@ -496,6 +511,277 @@ If omitted all messages are returned. Otherwise you can filter by:
 
 
 This is the `reference` you gave at the time of sending the notification. This can be omitted to ignore the filter.
+
+
+
+## Get a template by ID
+
+```php
+    $response = $notifyClient->getTemplate( 'c32e9c89-a423-42d2-85b7-a21cd4486a2a' );
+```
+
+<details>
+<summary>
+Response
+</summary>
+
+If the request is successful, `response` will be an `array`:
+
+```php
+{
+    "id" => "template_id",
+    "type" => "sms|email|letter",
+    "created_at" => "created at",
+    "updated_at" => "updated at",
+    "version" => "version",
+    "created_by" => "someone@example.com",
+    "body" => "body",
+    "subject" => "null|email_subject"
+}
+```
+
+Otherwise the client will return an error `err`:
+<table>
+<thead>
+<tr>
+<th>`error["status_code"]`</th>
+<th>`error["errors"]`</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>404</pre>
+</td>
+<td>
+<pre>
+[
+  [
+    "error" => "NoResultFound",
+    "message" => "No result found"
+  ]
+]
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</details>
+
+### Arguments
+
+
+#### `templateId`
+
+Find by clicking **API info** for the template you want to send.
+
+## Get a template by ID and version
+
+```php
+    $response = $notifyClient->getTemplateVersion( 'c32e9c89-a423-42d2-85b7-a21cd4486a2a', 1 );
+```
+
+<details>
+<summary>
+Response
+</summary>
+
+If the request is successful, `response` will be an `array`:
+
+```php
+[
+    "id" => "template_id",
+    "type" => "sms|email|letter",
+    "created_at" => "created at",
+    "updated_at" => "updated at",
+    "version" => "version",
+    "created_by" => "someone@example.com",
+    "body" => "body",
+    "subject" => "null|email_subject"
+]
+```
+
+Otherwise the client will return an error `err`:
+<table>
+<thead>
+<tr>
+<th>`error["status_code"]`</th>
+<th>`error["errors"]`</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>404</pre>
+</td>
+<td>
+<pre>
+[
+  [
+    "error" => "NoResultFound",
+    "message" => "No result found"
+  ]
+]
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</details>
+
+### Arguments
+
+#### `templateId`
+
+Find by clicking **API info** for the template you want to send.
+
+#### `version`
+
+The version number of the template
+
+## Get all templates
+
+```php
+    $this->getAllTemplates(
+      $template_type  // optional
+    );
+```
+_This will return the latest version for each template_
+
+<details>
+<summary>
+Response
+</summary>
+
+If the request is successful, `response` will be an `array`:
+
+```php
+[
+    "templates"  => [
+        [
+            "id" => "template_id",
+            "type" => "sms|email|letter",
+            "created_at" => "created at",
+            "updated_at" => "updated at",
+            "version" => "version",
+            "created_by" => "someone@example.com",
+            "body" => "body",
+            "subject" => "null|email_subject"
+        ],
+        [
+            ... another template
+        ]
+    ]
+]
+```
+
++If no templates exist for a template type or there no templates for a service, the `response` will be a Dictionary` with an empty `templates` list element:
+
+```php
+[
+    "templates"  => []
+]
+```
+
+</details>
+
+### Arguments
+
+#### `$templateType`
+
+If omitted all messages are returned. Otherwise you can filter by:
+
+* `email`
+* `sms`
+* `letter`
+
+
+## Generate a preview template
+
+```php
+    $personalisation = [ "foo" => "bar" ];
+    $this->previewTemplate( $templateId, $personalisation );
+```
+
+<details>
+<summary>
+Response
+</summary>
+
+If the request is successful, `response` will be an `array`:
+
+```php
+[
+    "id" => "notify_id",
+    "type" => "sms|email|letter",
+    "version" => "version",
+    "body" => "Hello bar" // with substitution values,
+    "subject" => "null|email_subject"
+]
+```
+
+Otherwise the client will return an error `err`:
+<table>
+<thead>
+<tr>
+<th>`error["status_code"]`</th>
+<th>`error["errors"]`</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>400</pre>
+</td>
+<td>
+<pre>
+[
+  [
+    "error" => "BadRequestError",
+    "message" => "Missing personalisation => [name]"
+  ]
+]
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>404</pre>
+</td>
+<td>
+<pre>
+[
+  [
+    "error" => "NoResultFound",
+    "message" => "No result found"
+  ]
+]
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</details>
+
+### Arguments
+
+
+#### `$templateId`
+
+Find by clicking **API info** for the template you want to send.
+
+#### `$personalisation`
+
+If a template has placeholders you need to provide their values. For example:
+
+```php
+$personalisation = [
+    'first_name' => 'Amala',
+    'reference_number' => '300241',
+];
+```
+
+Otherwise the parameter can be omitted or `null` can be passed in its place.
 
 
 ## Development
