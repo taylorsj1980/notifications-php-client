@@ -286,7 +286,34 @@ class ClientSpec extends ObjectBehavior
 
     }
 
-    function it_receives_the_expected_response_when_looking_up_a_template() {
+    function it_receives_the_expected_response_when_looking_up_an_email_template() {
+      $templateId = getenv('EMAIL_TEMPLATE_ID');
+
+      // Retrieve sms notification by id and verify contents
+      $response = $this->getTemplate( $templateId );
+
+      //
+      $response->shouldBeArray();
+      $response->shouldHaveKey( 'id' );
+      $response->shouldHaveKey( 'type' );
+      $response->shouldHaveKey( 'created_at' );
+      $response->shouldHaveKey( 'updated_at' );
+      $response->shouldHaveKey( 'created_by' );
+      $response->shouldHaveKey( 'version' );
+      $response->shouldHaveKey( 'body' );
+      $response->shouldHaveKey( 'subject' );
+
+      $response['id']->shouldBeString();
+      $response['id']->shouldBe( $templateId );
+      $response['type']->shouldBeString();
+      $response['type']->shouldBe( 'email' );
+      $response['version']->shouldBeInteger();
+      $response['body']->shouldBe( "Hello ((name))\n\nFunctional test help make our world a better place" );
+      $response['subject']->shouldBeString();
+      $response['subject']->shouldBe( 'Functional Tests are good' );
+    }
+
+    function it_receives_the_expected_response_when_looking_up_an_sms_template() {
       $templateId = getenv('SMS_TEMPLATE_ID');
 
       // Retrieve sms notification by id and verify contents
@@ -308,7 +335,7 @@ class ClientSpec extends ObjectBehavior
       $response['type']->shouldBeString();
       $response['type']->shouldBe( 'sms' );
       $response['version']->shouldBeInteger();
-      $response['body']->shouldBe("Hello ((name))\n\nFunctional Tests make our world a better place");
+      $response['body']->shouldBe( "Hello ((name))\n\nFunctional Tests make our world a better place" );
       $response['subject']->shouldBeNull();
     }
 
