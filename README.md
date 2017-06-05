@@ -161,7 +161,7 @@ An example request would look like:
 ```php
 try {
 
-    $response = $notifyClient->sendEmail( 'betty@exmple.com', 'df10a23e-2c0d-4ea5-87fb-82e520cbf93c', [
+    $response = $notifyClient->sendEmail( 'betty@example.com', 'df10a23e-2c0d-4ea5-87fb-82e520cbf93c', [
         'name' => 'Betty Smith',
         'dob'  => '12 July 1968'
     ]);
