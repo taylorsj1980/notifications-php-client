@@ -538,10 +538,4 @@ class Client {
         $this->authenticator = $authenticator;
 
     }
-
-    public function expectException($argument1)
-    {
-        // TODO: write logic here
-    }
-
 }
