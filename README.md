@@ -290,6 +290,12 @@ Otherwise the parameter can be omitted.
 
 An optional identifier you generate if you don’t want to use Notify’s `id`. It can be used to identify a single  notification or a batch of notifications.
 
+#### `emailReplyToId`
+
+Optional. Specifies the identifier of the email reply-to address to set for the notification. The identifiers are found in your service Settings, when you 'Manage' your 'Email reply to addresses'.
+
+If you omit this argument your default email reply-to address will be set for the notification.
+
 ## Get the status of one message
 
 The method signature is:
