@@ -187,11 +187,11 @@ class Client {
      *
      * @return array
      */
-    public function sendEmail( $emailAddress, $templateId, array $personalisation = array(), $reference = '' ){
+    public function sendEmail( $emailAddress, $templateId, array $personalisation = array(), $reference = '', $emailReplyToId= NULL ){
 
         return $this->httpPost(
             self::PATH_NOTIFICATION_SEND_EMAIL,
-            $this->buildPayload( 'email', $emailAddress, $templateId, $personalisation, $reference )
+            $this->buildPayload( 'email', $emailAddress, $templateId, $personalisation, $reference, $emailReplyToId )
         );
 
     }
@@ -310,10 +310,11 @@ class Client {
      * @param string    $templateId
      * @param array     $personalisation
      * @param string    $reference
+     * @param string    $emailReplyToId
      *
      * @return array
      */
-    private function buildPayload( $type, $to, $templateId, array $personalisation, $reference ){
+    private function buildPayload( $type, $to, $templateId, array $personalisation, $reference, $emailReplyToId = NULL ){
 
         $payload = [
             'template_id'=> $templateId
@@ -331,6 +332,10 @@ class Client {
 
         if ( isset($reference) && $reference != '' ) {
             $payload['reference'] = $reference;
+        }
+
+        if ( isset($emailReplyToId) && $emailReplyToId != '' ) {
+            $payload['email_reply_to_id'] = $emailReplyToId;
         }
 
         return $payload;
@@ -532,6 +537,11 @@ class Client {
 
         $this->authenticator = $authenticator;
 
+    }
+
+    public function expectException($argument1)
+    {
+        // TODO: write logic here
     }
 
 }

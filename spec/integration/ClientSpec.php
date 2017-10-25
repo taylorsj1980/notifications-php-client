@@ -77,6 +77,56 @@ class ClientSpec extends ObjectBehavior
 
     }
 
+    function it_receives_the_expected_response_when_sending_an_email_notification_with_vaild_emailReplyToId(){
+    
+        $response = $this->sendEmail( getenv('FUNCTIONAL_TEST_EMAIL'), 
+        getenv('EMAIL_TEMPLATE_ID'), 
+        [ "name" => "Foo" ],
+        '',
+        getenv('EMAIL_REPLY_TO_ID'));
+
+        $response->shouldBeArray();
+        $response->shouldHaveKey( 'id' );
+        $response['id']->shouldBeString();
+
+        $response->shouldHaveKey( 'reference' );
+
+        $response->shouldHaveKey( 'content' );
+        $response['content']->shouldBeArray();
+        $response['content']->shouldHaveKey( 'from_email' );
+        $response['content']['from_email']->shouldBeString();
+        $response['content']->shouldHaveKey( 'body' );
+        $response['content']['body']->shouldBeString();
+        $response['content']['body']->shouldBe("Hello Foo\n\nFunctional test help make our world a better place");
+        $response['content']->shouldHaveKey( 'subject' );
+        $response['content']['subject']->shouldBeString();
+        $response['content']['subject']->shouldBe("Functional Tests are good");
+
+        $response->shouldHaveKey( 'template' );
+        $response['template']->shouldBeArray();
+        $response['template']->shouldHaveKey( 'id' );
+        $response['template']['id']->shouldBeString();
+        $response['template']->shouldHaveKey( 'version' );
+        $response['template']['version']->shouldBeInteger();
+        $response['template']->shouldHaveKey( 'uri' );
+
+        $response->shouldHaveKey( 'uri' );
+        $response['uri']->shouldBeString();
+
+        self::$notificationId = $response['id']->getWrappedObject();
+    }
+
+    function it_receives_the_expected_response_when_sending_an_email_notification_with_invaild_emailReplyToId(){
+    
+      $this->shouldThrow('Alphagov\Notifications\Exception\ApiException')->duringSendEmail( 
+        getenv('FUNCTIONAL_TEST_EMAIL'), 
+        getenv('EMAIL_TEMPLATE_ID'), 
+        [ "name" => "Foo" ],
+        '',
+        'invlaid_uuid'
+      );
+    }
+
     function it_receives_the_expected_response_when_looking_up_an_email_notification() {
 
       // Requires the 'it_receives_the_expected_response_when_sending_an_email_notification' test to have completed successfully
