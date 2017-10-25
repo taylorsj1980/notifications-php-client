@@ -79,11 +79,13 @@ class ClientSpec extends ObjectBehavior
 
     function it_receives_the_expected_response_when_sending_an_email_notification_with_vaild_emailReplyToId(){
     
-        $response = $this->sendEmail( getenv('FUNCTIONAL_TEST_EMAIL'), 
-        getenv('EMAIL_TEMPLATE_ID'), 
-        [ "name" => "Foo" ],
-        '',
-        getenv('EMAIL_REPLY_TO_ID'));
+        $response = $this->sendEmail( 
+          getenv('FUNCTIONAL_TEST_EMAIL'), 
+          getenv('EMAIL_TEMPLATE_ID'), 
+          [ "name" => "Foo" ],
+          '',
+          getenv('EMAIL_REPLY_TO_ID')
+        );
 
         $response->shouldBeArray();
         $response->shouldHaveKey( 'id' );

@@ -187,7 +187,7 @@ class Client {
      *
      * @return array
      */
-    public function sendEmail( $emailAddress, $templateId, array $personalisation = array(), $reference = '', $emailReplyToId= NULL ){
+    public function sendEmail( $emailAddress, $templateId, array $personalisation = array(), $reference = '', $emailReplyToId = NULL ){
 
         return $this->httpPost(
             self::PATH_NOTIFICATION_SEND_EMAIL,
