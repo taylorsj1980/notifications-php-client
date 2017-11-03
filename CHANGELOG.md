@@ -1,7 +1,7 @@
 ## [1.3.0] - 2017-11-03
 ### Changed
 
-* Update to NotificationsAPIClient.send_sms_notification()
+* Update to `$this->sendSms()`
     * added `smsSenderId`: an optional sms_sender_id specified when adding SMS senders under service settings. If this is not provided, the SMS sender will be the service default SMS sender. `smsSenderId` can be omitted.
 
 ## [1.2.0] - 2017-10-25

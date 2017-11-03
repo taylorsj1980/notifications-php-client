@@ -310,7 +310,6 @@ class Client {
      * @param string    $templateId
      * @param array     $personalisation
      * @param string    $reference
-     * @param string    $emailReplyToId
      *
      * @return array
      */
@@ -338,6 +337,18 @@ class Client {
 
     }
 
+    /**
+     * Generates the payload expected by the API for email adding the optional items.
+     * 
+     * @param string    $type
+     * @param string    $to
+     * @param string    $templateId
+     * @param array     $personalisation
+     * @param string    $reference
+     * @param string    $emailReplyToId
+     *
+     * @return array
+     */
     private function buildEmailPayload( $type, $to, $templateId, array $personalisation, $reference, $emailReplyToId = NULL ) {
         
         $payload = $this->buildPayload( $type, $to, $templateId, $personalisation, $reference );
@@ -350,6 +361,18 @@ class Client {
     
     }
 
+    /**
+     * Generates the payload expected by the API for sms adding the optional items.
+     * 
+     * @param string    $type
+     * @param string    $to
+     * @param string    $templateId
+     * @param array     $personalisation
+     * @param string    $reference
+     * @param string    $smsSenderId
+     *
+     * @return array
+     */
     private function buildSmsPayload( $type, $to, $templateId, array $personalisation, $reference, $smsSenderId = NULL ){
 
         $payload = $this->buildPayload( $type, $to, $templateId, $personalisation, $reference );
