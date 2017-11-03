@@ -7,3 +7,4 @@ tests/local
 environment.sh
 docker.env
 .vscode/launch.json
+environment_test.sh
