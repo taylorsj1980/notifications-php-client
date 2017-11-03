@@ -1,3 +1,10 @@
+## [1.4.0] - 2017-11-03
+### Changed
+* sendLetter added to Client.php
+    * SendLetterResponse sendLetter( $templateId, array $personalisation = array(), $reference = '' )
+    * personalisation map is required, and must contain the recipient's address details.
+    * as with sms and email, reference is optional.
+
 ## [1.3.0] - 2017-11-03
 ### Changed
 

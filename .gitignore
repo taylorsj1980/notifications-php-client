@@ -7,3 +7,7 @@ tests/local
 environment.sh
 docker.env
 .vscode/launch.json
+<<<<<<< HEAD
+=======
+environment_test.sh
+>>>>>>> Add sendLetter to client
