@@ -490,4 +490,55 @@ class ClientSpec extends ObjectBehavior
       $response['subject']->shouldBeNull();
     }
 
+    function it_receives_the_expected_response_when_sending_an_sms_notification_with_invaild_smsSenderId(){
+      
+        $this->shouldThrow('Alphagov\Notifications\Exception\ApiException')->duringSendSms( 
+          getenv('FUNCTIONAL_TEST_EMAIL'), 
+          getenv('SMS_TEMPLATE_ID'), 
+          [ "name" => "Foo" ],
+          '',
+          'invlaid_uuid'
+        );
+      }
+
+      function it_receives_the_expected_response_when_sending_an_sms_notification_with_valid_seender_id(){
+        
+        $response = $this->sendSms( 
+          getenv('FUNCTIONAL_TEST_NUMBER'), 
+          getenv('SMS_TEMPLATE_ID'), [
+              "name" => "Foo"
+          ],
+          'ref123',
+          getenv('SMS_SENDER_ID')
+        );
+
+        $response->shouldBeArray();
+        $response->shouldHaveKey( 'id' );
+        $response['id']->shouldBeString();
+
+        $response->shouldHaveKey( 'reference' );
+
+        $response->shouldHaveKey( 'content' );
+        $response['content']->shouldBeArray();
+        $response['content']->shouldHaveKey( 'from_number' );
+        $response['content']['from_number']->shouldBeString();
+        $response['content']->shouldHaveKey( 'body' );
+        $response['content']['body']->shouldBeString();
+        $response['content']['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
+
+        $response->shouldHaveKey( 'template' );
+        $response['template']->shouldBeArray();
+        $response['template']->shouldHaveKey( 'id' );
+        $response['template']['id']->shouldBeString();
+        $response['template']->shouldHaveKey( 'version' );
+        $response['template']['version']->shouldBeInteger();
+        $response['template']->shouldHaveKey( 'uri' );
+
+        $response->shouldHaveKey( 'uri' );
+        $response['uri']->shouldBeString();
+
+        self::$notificationId = $response['id']->getWrappedObject();
+
+    }
+
 }

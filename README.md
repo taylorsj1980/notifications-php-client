@@ -37,7 +37,7 @@ Generate an API key by logging in to [GOV.UK Notify](https://www.notifications.s
 
 The method signature is:
 ```php
-sendSms( $phoneNumber, $templateId, array $personalisation = array(), $reference = '' )
+sendSms( $phoneNumber, $templateId, array $personalisation = array(), $reference = '', $smsSenderId = NULL )
 ```
 
 An example request would look like:
@@ -45,10 +45,15 @@ An example request would look like:
 ```php
 try {
 
-    $response = $notifyClient->sendSms( '+447777111222', 'df10a23e-2c6d-4ea5-87fb-82e520cbf93a', [
-        'name' => 'Betty Smith',
-        'dob'  => '12 July 1968'
-    ]);
+    $response = $notifyClient->sendSms( 
+        '+447777111222', 
+        'df10a23e-2c6d-4ea5-87fb-82e520cbf93a', [
+            'name' => 'Betty Smith',
+            'dob'  => '12 July 1968'
+        ],
+        'unique_ref123',
+        '862bfaaf-9f89-43dd-aafa-2868ce2926a9'
+    );
 
 } catch (NotifyException $e){}
 ```
@@ -149,11 +154,45 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </table>
 </details>
 
+<details>
+<summary>
+Arguments
+</summary>
+
+#### `templateId`
+
+Find by clicking **API info** for the template you want to send.
+
+#### `personalisation`
+
+If a template has placeholders you need to provide their values. For example:
+
+```php
+personalisation = [
+    'name' => 'Betty Smith',
+    'dob'  => '12 July 1968'
+]
+```
+
+Otherwise the parameter can be omitted.
+
+#### `reference`
+
+An optional identifier you generate if you don’t want to use Notify’s `id`. It can be used to identify a single  notification or a batch of notifications.
+
+#### `smsSenderId`
+
+Optional. Specifies the identifier of the sms sender to set for the notification. The identifiers are found in your service Settings, when you 'Manage' your 'Text message sender'.
+
+If you omit this argument your default sms sender will be set for the notification.
+
+</details>
+
 ### Email
 
 The method signature is:
 ```php
-sendEmail( $emailAddress, $templateId, array $personalisation = array(), $reference = '' )
+sendEmail( $emailAddress, $templateId, array $personalisation = array(), $reference = '', $emailReplyToId = NULL )
 ```
 
 An example request would look like:
@@ -161,10 +200,15 @@ An example request would look like:
 ```php
 try {
 
-    $response = $notifyClient->sendEmail( 'betty@example.com', 'df10a23e-2c0d-4ea5-87fb-82e520cbf93c', [
-        'name' => 'Betty Smith',
-        'dob'  => '12 July 1968'
-    ]);
+    $response = $notifyClient->sendEmail( 
+        'betty@example.com', 
+        'df10a23e-2c0d-4ea5-87fb-82e520cbf93c', [
+            'name' => 'Betty Smith',
+            'dob'  => '12 July 1968'
+        ],
+        'unique_ref123',
+        '862bfaaf-9f89-43dd-aafa-2868ce2926a9'
+        );
 
 } catch (NotifyException $e){}
 ```
@@ -265,9 +309,10 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 </table>
 </details>
 
-
-### Arguments
-
+<details>
+<summary>
+Arguments
+</summary>
 
 #### `templateId`
 
@@ -295,6 +340,8 @@ An optional identifier you generate if you don’t want to use Notify’s `id`. 
 Optional. Specifies the identifier of the email reply-to address to set for the notification. The identifiers are found in your service Settings, when you 'Manage' your 'Email reply to addresses'.
 
 If you omit this argument your default email reply-to address will be set for the notification.
+
+</details>
 
 ## Get the status of one message
 
