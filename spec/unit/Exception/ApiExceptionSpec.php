@@ -41,6 +41,7 @@ class ApiExceptionSpec extends ObjectBehavior
     // Test constructor variations
 
     function it_provides_access_to_error_details(){
+      $this->getCode()->shouldBe( 400 );
       $this->getErrorMessage()->shouldBeString();
       $this->getErrorMessage()->shouldBe( 'BadRequestError: "Missing personalisation: name"' );
       $this->getErrors()->shouldBeArray();

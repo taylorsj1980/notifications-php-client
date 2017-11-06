@@ -86,8 +86,8 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 <table>
 <thead>
 <tr>
-<th>`error["status_code"]`</th>
-<th>`error["message"]`</th>
+<th>`exc->getCode()`</th>
+<th>`exc->getErrors()`</th>
 </tr>
 </thead>
 <tbody>
@@ -242,8 +242,8 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 <table>
 <thead>
 <tr>
-<th>`error["status_code"]`</th>
-<th>`error["message"]`</th>
+<th>`exc->getCode()`</th>
+<th>`exc->getErrors()`</th>
 </tr>
 </thead>
 <tbody>
@@ -257,7 +257,8 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
   [
     "error" => "RateLimitError",
     "message" => "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"
-}]
+  ]
+]
 </pre>
 </td>
 </tr>
@@ -271,7 +272,8 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
   [
     "error" => "TooManyRequestsError",
     "message" => "Exceeded send limits (50) for today"
-}]
+  ]
+]
 </pre>
 </td>
 </tr>
