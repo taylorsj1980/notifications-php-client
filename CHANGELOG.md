@@ -1,8 +1,14 @@
+## [1.3.0] - 2017-11-03
+### Changed
+
+* Update to `$this->sendSms()`
+    * added `smsSenderId`: an optional sms_sender_id specified when adding SMS senders under service settings. If this is not provided, the SMS sender will be the service default SMS sender. `smsSenderId` can be omitted.
+
 ## [1.2.0] - 2017-10-25
 ### Changed
 
 * Update to `$this->sendEmail()`
-    * added `email_reply_to_id`: an optional email_reply_to_id specified when adding Email reply to addresses under service settings, if this is not provided the reply to email will be the service default reply to email. `email_reply_to_id` can be omitted.
+    * added `emailReplyToId`: an optional email_reply_to_id specified when adding Email reply to addresses under service settings, if this is not provided the reply to email will be the service default reply to email. `emailReplyToId` can be omitted.
 
 ## [1.1.0] - 2017-05-10
 ### Changed

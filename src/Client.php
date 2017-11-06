@@ -25,7 +25,7 @@ class Client {
      * @const string Current version of this client.
      * This follows Semantic Versioning (http://semver.org/)
      */
-    const VERSION = '1.2.0';
+    const VERSION = '1.3.0';
 
     /**
      * @const string The API endpoint for Notify production.
@@ -168,11 +168,11 @@ class Client {
      *
      * @return array
      */
-    public function sendSms( $phoneNumber, $templateId, array $personalisation = array(), $reference = '' ){
+    public function sendSms( $phoneNumber, $templateId, array $personalisation = array(), $reference = '', $smsSenderId = NULL ){
 
         return $this->httpPost(
             self::PATH_NOTIFICATION_SEND_SMS,
-            $this->buildPayload( 'sms', $phoneNumber, $templateId, $personalisation, $reference )
+            $this->buildSmsPayload( 'sms', $phoneNumber, $templateId, $personalisation, $reference, $smsSenderId)
         );
 
     }
@@ -191,7 +191,7 @@ class Client {
 
         return $this->httpPost(
             self::PATH_NOTIFICATION_SEND_EMAIL,
-            $this->buildPayload( 'email', $emailAddress, $templateId, $personalisation, $reference, $emailReplyToId )
+            $this->buildEmailPayload( 'email', $emailAddress, $templateId, $personalisation, $reference, $emailReplyToId )
         );
 
     }
@@ -310,11 +310,10 @@ class Client {
      * @param string    $templateId
      * @param array     $personalisation
      * @param string    $reference
-     * @param string    $emailReplyToId
      *
      * @return array
      */
-    private function buildPayload( $type, $to, $templateId, array $personalisation, $reference, $emailReplyToId = NULL ){
+    private function buildPayload( $type, $to, $templateId, array $personalisation, $reference ){
 
         $payload = [
             'template_id'=> $templateId
@@ -334,8 +333,52 @@ class Client {
             $payload['reference'] = $reference;
         }
 
+        return $payload;
+
+    }
+
+    /**
+     * Generates the payload expected by the API for email adding the optional items.
+     * 
+     * @param string    $type
+     * @param string    $to
+     * @param string    $templateId
+     * @param array     $personalisation
+     * @param string    $reference
+     * @param string    $emailReplyToId
+     *
+     * @return array
+     */
+    private function buildEmailPayload( $type, $to, $templateId, array $personalisation, $reference, $emailReplyToId = NULL ) {
+        
+        $payload = $this->buildPayload( $type, $to, $templateId, $personalisation, $reference );
+
         if ( isset($emailReplyToId) && $emailReplyToId != '' ) {
             $payload['email_reply_to_id'] = $emailReplyToId;
+        }
+
+        return $payload;
+    
+    }
+
+    /**
+     * Generates the payload expected by the API for sms adding the optional items.
+     * 
+     * @param string    $type
+     * @param string    $to
+     * @param string    $templateId
+     * @param array     $personalisation
+     * @param string    $reference
+     * @param string    $smsSenderId
+     *
+     * @return array
+     */
+    private function buildSmsPayload( $type, $to, $templateId, array $personalisation, $reference, $smsSenderId = NULL ){
+
+        $payload = $this->buildPayload( $type, $to, $templateId, $personalisation, $reference );
+        
+        if ( isset($smsSenderId) && $smsSenderId != '' ) {
+            $payload['sms_sender_id'] = $smsSenderId;
         }
 
         return $payload;

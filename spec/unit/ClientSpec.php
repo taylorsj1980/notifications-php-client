@@ -481,6 +481,33 @@ class ClientSpec extends ObjectBehavior
 
     }
 
+    function it_receives_the_expected_response_when_sending_sms_with_sms_sender_id(){
+        
+        //---------------------------------
+        // Test Setup
+
+        $id = self::SAMPLE_ID;
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                201,
+                ['Content-type'  => 'application/json'],
+                json_encode(['notification_id' => $id])
+            )
+        );
+
+        //---------------------------------
+        // Perform action
+
+        $response = $this->sendSms( '+447834000000', 118, [ 'name'=>'Fred' ], 'ref123', '1234567' );
+
+        //---------------------------------
+        // Check result
+
+        $response->shouldHaveKeyWithValue('notification_id', $id);
+
+    }
+
     function it_generates_the_expected_request_when_sending_email(){
 
         //---------------------------------
