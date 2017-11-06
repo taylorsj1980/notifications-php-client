@@ -528,7 +528,7 @@ class Client {
 
         $message = "HTTP:{$response->getStatusCode()}";
 
-        throw new Exception\ApiException( $message, $response->getStatusCode(), $response );
+        throw new Exception\ApiException( $message, $response->getStatusCode(), $body, $response );
 
     }
 

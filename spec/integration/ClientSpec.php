@@ -8,6 +8,7 @@ use Prophecy\Argument;
 use Alphagov\Notifications\Authentication\JWTAuthenticationInterface;
 use Alphagov\Notifications\Client;
 use Alphagov\Notifications\Exception\UnexpectedValueException;
+use Alphagov\Notifications\Exception\ApiException;
 
 use GuzzleHttp\Psr7\Uri;
 use Http\Client\HttpClient as HttpClientInterface;
@@ -78,10 +79,10 @@ class ClientSpec extends ObjectBehavior
     }
 
     function it_receives_the_expected_response_when_sending_an_email_notification_with_vaild_emailReplyToId(){
-    
-        $response = $this->sendEmail( 
-          getenv('FUNCTIONAL_TEST_EMAIL'), 
-          getenv('EMAIL_TEMPLATE_ID'), 
+
+        $response = $this->sendEmail(
+          getenv('FUNCTIONAL_TEST_EMAIL'),
+          getenv('EMAIL_TEMPLATE_ID'),
           [ "name" => "Foo" ],
           '',
           getenv('EMAIL_REPLY_TO_ID')
@@ -119,10 +120,10 @@ class ClientSpec extends ObjectBehavior
     }
 
     function it_receives_the_expected_response_when_sending_an_email_notification_with_invaild_emailReplyToId(){
-    
-      $this->shouldThrow('Alphagov\Notifications\Exception\ApiException')->duringSendEmail( 
-        getenv('FUNCTIONAL_TEST_EMAIL'), 
-        getenv('EMAIL_TEMPLATE_ID'), 
+
+      $this->shouldThrow('Alphagov\Notifications\Exception\ApiException')->duringSendEmail(
+        getenv('FUNCTIONAL_TEST_EMAIL'),
+        getenv('EMAIL_TEMPLATE_ID'),
         [ "name" => "Foo" ],
         '',
         'invlaid_uuid'
@@ -491,54 +492,66 @@ class ClientSpec extends ObjectBehavior
     }
 
     function it_receives_the_expected_response_when_sending_an_sms_notification_with_invaild_smsSenderId(){
-      
-        $this->shouldThrow('Alphagov\Notifications\Exception\ApiException')->duringSendSms( 
-          getenv('FUNCTIONAL_TEST_EMAIL'), 
-          getenv('SMS_TEMPLATE_ID'), 
-          [ "name" => "Foo" ],
-          '',
-          'invlaid_uuid'
-        );
-      }
+      $this->shouldThrow('Alphagov\Notifications\Exception\ApiException')->duringSendSms(
+        getenv('FUNCTIONAL_TEST_EMAIL'),
+        getenv('SMS_TEMPLATE_ID'),
+        [ "name" => "Foo" ],
+        '',
+        'invlaid_uuid'
+      );
+    }
 
-      function it_receives_the_expected_response_when_sending_an_sms_notification_with_valid_seender_id(){
-        
-        $response = $this->sendSms( 
-          getenv('FUNCTIONAL_TEST_NUMBER'), 
-          getenv('SMS_TEMPLATE_ID'), [
-              "name" => "Foo"
-          ],
-          'ref123',
-          getenv('SMS_SENDER_ID')
-        );
+    function it_receives_the_expected_response_when_sending_an_sms_notification_with_valid_seender_id(){
 
-        $response->shouldBeArray();
-        $response->shouldHaveKey( 'id' );
-        $response['id']->shouldBeString();
+      $response = $this->sendSms(
+        getenv('FUNCTIONAL_TEST_NUMBER'),
+        getenv('SMS_TEMPLATE_ID'), [
+            "name" => "Foo"
+        ],
+        'ref123',
+        getenv('SMS_SENDER_ID')
+      );
 
-        $response->shouldHaveKey( 'reference' );
+      $response->shouldBeArray();
+      $response->shouldHaveKey( 'id' );
+      $response['id']->shouldBeString();
 
-        $response->shouldHaveKey( 'content' );
-        $response['content']->shouldBeArray();
-        $response['content']->shouldHaveKey( 'from_number' );
-        $response['content']['from_number']->shouldBeString();
-        $response['content']->shouldHaveKey( 'body' );
-        $response['content']['body']->shouldBeString();
-        $response['content']['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
+      $response->shouldHaveKey( 'reference' );
 
-        $response->shouldHaveKey( 'template' );
-        $response['template']->shouldBeArray();
-        $response['template']->shouldHaveKey( 'id' );
-        $response['template']['id']->shouldBeString();
-        $response['template']->shouldHaveKey( 'version' );
-        $response['template']['version']->shouldBeInteger();
-        $response['template']->shouldHaveKey( 'uri' );
+      $response->shouldHaveKey( 'content' );
+      $response['content']->shouldBeArray();
+      $response['content']->shouldHaveKey( 'from_number' );
+      $response['content']['from_number']->shouldBeString();
+      $response['content']->shouldHaveKey( 'body' );
+      $response['content']['body']->shouldBeString();
+      $response['content']['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
 
-        $response->shouldHaveKey( 'uri' );
-        $response['uri']->shouldBeString();
+      $response->shouldHaveKey( 'template' );
+      $response['template']->shouldBeArray();
+      $response['template']->shouldHaveKey( 'id' );
+      $response['template']['id']->shouldBeString();
+      $response['template']->shouldHaveKey( 'version' );
+      $response['template']['version']->shouldBeInteger();
+      $response['template']->shouldHaveKey( 'uri' );
 
-        self::$notificationId = $response['id']->getWrappedObject();
+      $response->shouldHaveKey( 'uri' );
+      $response['uri']->shouldBeString();
+
+      self::$notificationId = $response['id']->getWrappedObject();
 
     }
 
+    function it_exposes_error_details() {
+      $caught = false;
+      try {
+        // missing personalisation
+        $response = $this->sendEmail( getenv('FUNCTIONAL_TEST_EMAIL'), getenv('EMAIL_TEMPLATE_ID'), [] );
+      } catch (ApiException $e) {
+        assert('$e->getCode() == 400;');
+        assert('$e->getErrorMessage() == \'BadRequestError: "Missing personalisation: name"\';');
+        assert('$e->getErrors()[0][\'error\'] == \'BadRequestError\'');
+        $caught = true;
+      }
+      assert('$caught == true;');
+    }
 }
