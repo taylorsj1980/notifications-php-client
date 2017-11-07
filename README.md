@@ -400,8 +400,8 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 <table>
 <thead>
 <tr>
-<th>`error["status_code"]`</th>
-<th>`error["message"]`</th>
+<th>`exc->getCode()`</th>
+<th>`exc->getErrors()`</th>
 </tr>
 </thead>
 <tbody>
@@ -426,10 +426,11 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 <td>
 <pre>
 [
-  [
-    "error" => "TooManyRequestsError",
-    "message" => "Exceeded send limits (50) for today"
-}]
+    [
+        "error" => "TooManyRequestsError",
+        "message" => "Exceeded send limits (50) for today"
+    ]
+]
 </pre>
 </td>
 </tr>
@@ -455,11 +456,12 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 <td>
 <pre>
 [
-  [
-    "error" => "BadRequestError",
-    "message" => "Can"t send to this recipient when service is in trial mode
-                - see https://www.notifications.service.gov.uk/trial-mode"
-}]
+    [
+        "error" => "BadRequestError",
+        "message" => "Can"t send to this recipient when service is in trial mode
+                    - see https://www.notifications.service.gov.uk/trial-mode"
+    ]
+]
 </pre>
 </td>
 </tr>
@@ -550,8 +552,8 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 <table>
 <thead>
 <tr>
-<th>`error["status_code"]`</th>
-<th>`error["message"]`</th>
+<th>`exc->getCode()`</th>
+<th>`exc->getErrors()`</th>
 </tr>
 </thead>
 <tbody>
@@ -649,8 +651,8 @@ Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyExcep
 <table>
 <thead>
 <tr>
-<th>`error["status_code"]`</th>
-<th>`error["message"]`</th>
+<th>`exc->getCode()`</th>
+<th>`exc->getErrors()`</th>
 </tr>
 </thead>
 <tbody>
