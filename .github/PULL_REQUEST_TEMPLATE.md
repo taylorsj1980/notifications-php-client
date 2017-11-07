@@ -9,4 +9,4 @@
 - [x] I’ve used the pull request template
 - [ ] I’ve written unit tests for these changes
 - [ ] I’ve update the documentation (in `README.md`)
-- [ ] I’ve bumped the version number (in `composer.json`)
+- [ ] I’ve bumped the version number (in `composer.json` and `const VERSION` in `src/Client.php`)
