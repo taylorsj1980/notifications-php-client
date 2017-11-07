@@ -599,12 +599,12 @@ class ClientSpec extends ObjectBehavior
     }
 
     function it_receives_the_expected_response_when_sending_email_with_valid_emailReplyToId(){
-        
+
                 //---------------------------------
                 // Test Setup
-        
+
                 $id = self::SAMPLE_ID;
-        
+
                 $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
                     new Response(
                         201,
@@ -612,17 +612,17 @@ class ClientSpec extends ObjectBehavior
                         json_encode(['notification_id' => $id])
                     )
                 );
-        
+
                 //---------------------------------
                 // Perform action
-        
+
                 $response = $this->sendEmail( 'text@example.com', 118, [ 'name'=>'Fred' ], '',  uniqid() );
-        
+
                 //---------------------------------
                 // Check result
-        
+
                 $response->shouldHaveKeyWithValue('notification_id', $id);
-        
+
             }
 
 
@@ -661,18 +661,19 @@ class ClientSpec extends ObjectBehavior
         // Test Setup
 
         $code = 500;
+        $body = [
+          'status' => $code,
+          'errors' => [
+            [
+              'error' => 'SomeErrorType',
+              'message' => 'Some error message'
+            ]
+          ]
+        ];
         $response = new Response(
             $code,
             ['Content-type'  => 'application/json'],
-            json_encode([
-                'status' => $code,
-                'error' => [
-                  [
-                    'error' => 'SomeErrorType',
-                    'reason' => 'Some error message'
-                  ]
-                ]
-            ])
+            json_encode($body)
         );
 
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
@@ -683,7 +684,7 @@ class ClientSpec extends ObjectBehavior
         // Perform action & check result
 
         $this->shouldThrow(
-            new NotifyException\ApiException( "HTTP:{$code}", $code, $response )
+            new NotifyException\ApiException( "HTTP:{$code}", $code, $body, $response )
         )->duringSendSms( '+447834000000', 118, [ 'name'=>'Fred' ] );
 
     }

@@ -25,7 +25,7 @@ class Client {
      * @const string Current version of this client.
      * This follows Semantic Versioning (http://semver.org/)
      */
-    const VERSION = '1.3.0';
+    const VERSION = '1.4.0';
 
     /**
      * @const string The API endpoint for Notify production.
@@ -339,7 +339,7 @@ class Client {
 
     /**
      * Generates the payload expected by the API for email adding the optional items.
-     * 
+     *
      * @param string    $type
      * @param string    $to
      * @param string    $templateId
@@ -350,7 +350,7 @@ class Client {
      * @return array
      */
     private function buildEmailPayload( $type, $to, $templateId, array $personalisation, $reference, $emailReplyToId = NULL ) {
-        
+
         $payload = $this->buildPayload( $type, $to, $templateId, $personalisation, $reference );
 
         if ( isset($emailReplyToId) && $emailReplyToId != '' ) {
@@ -358,12 +358,12 @@ class Client {
         }
 
         return $payload;
-    
+
     }
 
     /**
      * Generates the payload expected by the API for sms adding the optional items.
-     * 
+     *
      * @param string    $type
      * @param string    $to
      * @param string    $templateId
@@ -376,7 +376,7 @@ class Client {
     private function buildSmsPayload( $type, $to, $templateId, array $personalisation, $reference, $smsSenderId = NULL ){
 
         $payload = $this->buildPayload( $type, $to, $templateId, $personalisation, $reference );
-        
+
         if ( isset($smsSenderId) && $smsSenderId != '' ) {
             $payload['sms_sender_id'] = $smsSenderId;
         }
@@ -528,7 +528,7 @@ class Client {
 
         $message = "HTTP:{$response->getStatusCode()}";
 
-        throw new Exception\ApiException( $message, $response->getStatusCode(), $response );
+        throw new Exception\ApiException( $message, $response->getStatusCode(), $body, $response );
 
     }
 

@@ -1,8 +1,15 @@
-## [1.3.0] - 2017-11-03
+## [1.4.0] - 2017-11-07
 ### Changed
 
 * Update to `$this->sendSms()`
     * added `smsSenderId`: an optional sms_sender_id specified when adding SMS senders under service settings. If this is not provided, the SMS sender will be the service default SMS sender. `smsSenderId` can be omitted.
+
+## [1.3.0] - 2017-11-06
+### Changed
+
+* Update to `Alphagov\Notifications\Exception\ApiException` - added two new methods
+    * added `getErrors()` to retrieve the original errors array from the json response.
+    * added `getErrorMessage()` to retrieve a nicely formatted message
 
 ## [1.2.0] - 2017-10-25
 ### Changed
