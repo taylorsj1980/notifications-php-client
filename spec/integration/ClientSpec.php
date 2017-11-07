@@ -592,6 +592,58 @@ class ClientSpec extends ObjectBehavior
       self::$notificationId = $response['id']->getWrappedObject();
 
     }
+ 
+    function it_receives_the_expected_response_when_sending_a_letter_notification(){
+
+      $payload = [
+          'template_id'=> getenv('LETTER_TEMPLATE_ID'),
+          'personalisation' => [ 
+              'name'=>'Fred',
+              'address_line_1' => 'Foo',
+              'address_line_2' => 'Bar',
+              'postcode' => 'Baz'
+          ],
+          'reference'=>'client-ref'
+      ];
+
+      //---------------------------------
+      // Perform action
+
+      $response = $this->sendLetter( $payload['template_id'], $payload['personalisation'], $payload['reference']);
+
+      $response->shouldBeArray();
+      $response->shouldHaveKey( 'id' );
+      $response['id']->shouldBeString();
+
+      $response->shouldHaveKey( 'reference' );
+      $response['reference']->shouldBe("client-ref");
+
+      $response->shouldHaveKey( 'content' );
+      $response['content']->shouldBeArray();
+      $response['content']->shouldHaveKey( 'body' );
+      $response['content']['body']->shouldBeString();
+      $response['content']['body']->shouldBe("Hello Foo");
+      $response['content']->shouldHaveKey( 'subject' );
+      $response['content']['subject']->shouldBeString();
+      $response['content']['subject']->shouldBe("Main heading");
+
+      $response->shouldHaveKey( 'template' );
+      $response['template']->shouldBeArray();
+      $response['template']->shouldHaveKey( 'id' );
+      $response['template']['id']->shouldBeString();
+      $response['template']->shouldHaveKey( 'version' );
+      $response['template']['version']->shouldBeInteger();
+      $response['template']->shouldHaveKey( 'uri' );
+
+      $response->shouldHaveKey( 'uri' );
+      $response['uri']->shouldBeString();
+
+      $response->shouldHaveKey( 'scheduled_for' );
+      $response['scheduled_for']->shouldBe(null);
+
+      self::$notificationId = $response['id']->getWrappedObject();
+
+    }
 
     function it_exposes_error_details() {
       $caught = false;
