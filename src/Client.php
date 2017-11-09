@@ -25,7 +25,7 @@ class Client {
      * @const string Current version of this client.
      * This follows Semantic Versioning (http://semver.org/)
      */
-    const VERSION = '1.4.0';
+    const VERSION = '1.5.0';
 
     /**
      * @const string The API endpoint for Notify production.
@@ -39,6 +39,7 @@ class Client {
     const PATH_NOTIFICATION_LOOKUP      = '/v2/notifications/%s';
     const PATH_NOTIFICATION_SEND_SMS    = '/v2/notifications/sms';
     const PATH_NOTIFICATION_SEND_EMAIL  = '/v2/notifications/email';
+    const PATH_NOTIFICATION_SEND_LETTER = '/v2/notifications/letter';
     const PATH_TEMPLATE_LIST            = '/v2/templates';
     const PATH_TEMPLATE_LOOKUP          = '/v2/template/%s';
     const PATH_TEMPLATE_VERSION_LOOKUP  = '/v2/template/%s/version/%s';
@@ -197,6 +198,26 @@ class Client {
     }
 
     /**
+     * Send a Letter
+     *
+     * @param string    $templateId
+     * @param array     $personalisation
+     * @param string    $reference
+     *
+     * @return array
+     */
+    public function sendLetter( $templateId, array $personalisation = array(), $reference = '' ){
+        
+        $payload = $this->buildPayload( 'letter', '', $templateId, $personalisation, $reference );
+
+        return $this->httpPost(
+            self::PATH_NOTIFICATION_SEND_LETTER,
+            $payload
+        );
+        
+    }
+
+    /**
      * Returns details about the passed notification ID.
      *
      * NULL is returned if no notification is found for the ID.
@@ -321,7 +342,7 @@ class Client {
 
         if ( $type == 'sms' ) {
             $payload['phone_number'] = $to;
-        } else if ( $type = 'email' ) {
+        } else if ( $type == 'email' ) {
             $payload['email_address'] = $to;
         }
 
