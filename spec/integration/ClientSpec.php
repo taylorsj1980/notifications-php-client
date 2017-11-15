@@ -58,7 +58,7 @@ class ClientSpec extends ObjectBehavior
         $response['content']['from_email']->shouldBeString();
         $response['content']->shouldHaveKey( 'body' );
         $response['content']['body']->shouldBeString();
-        $response['content']['body']->shouldBe("Hello Foo\n\nFunctional test help make our world a better place");
+        $response['content']['body']->shouldBe("Hello Foo\r\n\r\nFunctional test help make our world a better place");
         $response['content']->shouldHaveKey( 'subject' );
         $response['content']['subject']->shouldBeString();
         $response['content']['subject']->shouldBe("Functional Tests are good");
@@ -100,7 +100,7 @@ class ClientSpec extends ObjectBehavior
         $response['content']['from_email']->shouldBeString();
         $response['content']->shouldHaveKey( 'body' );
         $response['content']['body']->shouldBeString();
-        $response['content']['body']->shouldBe("Hello Foo\n\nFunctional test help make our world a better place");
+        $response['content']['body']->shouldBe("Hello Foo\r\n\r\nFunctional test help make our world a better place");
         $response['content']->shouldHaveKey( 'subject' );
         $response['content']['subject']->shouldBeString();
         $response['content']['subject']->shouldBe("Functional Tests are good");
@@ -147,7 +147,7 @@ class ClientSpec extends ObjectBehavior
 
       $response->shouldHaveKey( 'body' );
       $response['body']->shouldBeString();
-      $response['body']->shouldBe("Hello Foo\n\nFunctional test help make our world a better place");
+      $response['body']->shouldBe("Hello Foo\r\n\r\nFunctional test help make our world a better place");
 
       $response->shouldHaveKey( 'subject' );
       $response->shouldHaveKey( 'reference' );
@@ -202,7 +202,7 @@ class ClientSpec extends ObjectBehavior
         $response['content']['from_number']->shouldBeString();
         $response['content']->shouldHaveKey( 'body' );
         $response['content']['body']->shouldBeString();
-        $response['content']['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
+        $response['content']['body']->shouldBe("Hello Foo\r\n\r\nFunctional Tests make our world a better place");
 
         $response->shouldHaveKey( 'template' );
         $response['template']->shouldBeArray();
@@ -236,7 +236,7 @@ class ClientSpec extends ObjectBehavior
 
       $response->shouldHaveKey( 'body' );
       $response['body']->shouldBeString();
-      $response['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
+      $response['body']->shouldBe("Hello Foo\r\n\r\nFunctional Tests make our world a better place");
       $response->shouldHaveKey( 'subject' );
 
       $response->shouldHaveKey( 'reference' );
@@ -361,7 +361,7 @@ class ClientSpec extends ObjectBehavior
       $response['type']->shouldBeString();
       $response['type']->shouldBe( 'email' );
       $response['version']->shouldBeInteger();
-      $response['body']->shouldBe( "Hello ((name))\n\nFunctional test help make our world a better place" );
+      $response['body']->shouldBe( "Hello ((name))\r\n\r\nFunctional test help make our world a better place" );
       $response['subject']->shouldBeString();
       $response['subject']->shouldBe( 'Functional Tests are good' );
     }
@@ -388,7 +388,7 @@ class ClientSpec extends ObjectBehavior
       $response['type']->shouldBeString();
       $response['type']->shouldBe( 'sms' );
       $response['version']->shouldBeInteger();
-      $response['body']->shouldBe( "Hello ((name))\n\nFunctional Tests make our world a better place" );
+      $response['body']->shouldBe( "Hello ((name))\r\n\r\nFunctional Tests make our world a better place" );
       $response['subject']->shouldBeNull();
     }
 
@@ -487,7 +487,7 @@ class ClientSpec extends ObjectBehavior
       $response['type']->shouldBeString();
       $response['type']->shouldBe( 'sms' );
       $response['version']->shouldBeInteger();
-      $response['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
+      $response['body']->shouldBe("Hello Foo\r\n\r\nFunctional Tests make our world a better place");
       $response['subject']->shouldBeNull();
     }
 
@@ -524,7 +524,7 @@ class ClientSpec extends ObjectBehavior
       $response['content']['from_number']->shouldBeString();
       $response['content']->shouldHaveKey( 'body' );
       $response['content']['body']->shouldBeString();
-      $response['content']['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
+      $response['content']['body']->shouldBe("Hello Foo\r\n\r\nFunctional Tests make our world a better place");
 
       $response->shouldHaveKey( 'template' );
       $response['template']->shouldBeArray();
