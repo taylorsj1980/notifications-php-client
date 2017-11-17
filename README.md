@@ -410,6 +410,7 @@ try {
 #### Response
 
 If the request is successful, `response` will be an `array `.
+
 <details>
 <summary>
 Click here to expand for more information.
