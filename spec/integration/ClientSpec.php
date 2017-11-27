@@ -502,6 +502,11 @@ class ClientSpec extends ObjectBehavior
     }
 
     function it_receives_the_expected_response_when_sending_an_sms_notification_with_valid_seender_id(){
+      $this->beConstructedWith([
+        'baseUrl'       => getenv('NOTIFY_API_URL'),
+        'apiKey'        => getenv('API_SENDING_KEY'),
+        'httpClient'    => new \Http\Adapter\Guzzle6\Client
+      ]);
 
       $response = $this->sendSms(
         getenv('FUNCTIONAL_TEST_NUMBER'),
