@@ -13,6 +13,7 @@ This documentation is for developers interested in using this PHP client to inte
 * [Get a template by ID and version](#get-a-template-by-id-and-version)
 * [Get all templates](#get-all-templates)
 * [Generate a preview template](#generate-a-preview-template)
+* [Get received text messages](#get-received-text-messages)
 * [Development](#development)
 * [License](#license)
 
@@ -504,8 +505,7 @@ Click here to expand for more information.
 
 ```php
 [
-    "notifications":
-    [
+    "notifications" => [
             "id" => "notify_id",
             "reference" => "client reference",
             "email_address" => "email address",
@@ -531,7 +531,7 @@ Click here to expand for more information.
   ],
   "links" => [
      "current" => "/notifications?template_type=sms&status=delivered",
-     "next" => "/notifications?other_than=last_id_in_list&template_type=sms&status=delivered"
+     "next" => "/notifications?older_than=last_id_in_list&template_type=sms&status=delivered"
   ]
 ]
 ```
@@ -554,7 +554,7 @@ Click here to expand for more information.
 
 ##### `older_than`
 
-If omitted all messages are returned. Otherwise you can filter to retrieve all notifications older than the given notification `id`.
+If omitted 250 of the most recent messages are returned. Otherwise the next 250  messages older than the given notification id are returned.
 
 ##### `template_type`
 
@@ -874,5 +874,70 @@ $personalisation = [
 ```
 
 Otherwise the parameter can be omitted or `null` can be passed in its place.
+
+</details>
+
+## Get received text messages
+
+#### Method
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
+```php
+    $this->listReceivedTexts(
+      $older_than  // optional
+    );
+```
+
+</details>
+
+#### Response
+
+If the request is successful, `response` will be an `array`.
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
+
+```php
+[
+    "received_text_messages" => [
+        [
+            "id" => "notify_id",
+            "user_number" => "user number",
+            "notify_number" => "notify number",
+            "created_at" => "created at",
+            "service_id" => "service id",
+            "content" => "text content"
+        ],
+        [
+            ... another received text message
+        ]
+    ]
+  ],
+  "links" => [
+     "current" => "/received-text-messages",
+     "next" => "/received-text-messages?older_than=last_id_in_list"
+  ]
+]
+```
+
+</details>
+
+#### Arguments
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
+##### `$older_than`
+
+If omitted 250 of the most recently received text messages are returned. Otherwise the next 250 received text messages older than the given id are returned.
 
 </details>

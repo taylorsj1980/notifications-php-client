@@ -1,3 +1,10 @@
+## [1.6.0] - 2017-11-27
+### Changed
+
+* Added `$this->listReceivedTexts()`
+    * an optional `older_than` argument can be specified to retrieve the next 250 received text messages older than the given
+    received text id. If omitted 250 of the most recent received text messages are returned.
+
 ## [1.5.0] - 2017-11-07
 ### Changed
 
