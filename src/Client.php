@@ -40,6 +40,7 @@ class Client {
     const PATH_NOTIFICATION_SEND_SMS    = '/v2/notifications/sms';
     const PATH_NOTIFICATION_SEND_EMAIL  = '/v2/notifications/email';
     const PATH_NOTIFICATION_SEND_LETTER = '/v2/notifications/letter';
+    const PATH_RECEIVED_TEXT_LIST       = '/v2/received-text-messages';
     const PATH_TEMPLATE_LIST            = '/v2/templates';
     const PATH_TEMPLATE_LOOKUP          = '/v2/template/%s';
     const PATH_TEMPLATE_VERSION_LOOKUP  = '/v2/template/%s/version/%s';
@@ -256,8 +257,29 @@ class Client {
             'status',
             'template_type',
         ]));
-
+                
         return $this->httpGet( self::PATH_NOTIFICATION_LIST, $filters );
+
+    }
+
+    /**
+     * Returns a list of all received texts for the current Service ID.
+     *
+     * Filter supports:
+     *  - older_than
+     *
+     * @param array $filters
+     *
+     * @return mixed|null
+     */
+    public function listReceivedTexts( array $filters = array() ){
+
+        // Only allow the following filter keys.
+        $filters = array_intersect_key( $filters, array_flip([
+            'older_than'
+        ]));
+
+        return $this->httpGet( self::PATH_RECEIVED_TEXT_LIST, $filters );
 
     }
 
