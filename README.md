@@ -876,7 +876,3 @@ $personalisation = [
 Otherwise the parameter can be omitted or `null` can be passed in its place.
 
 </details>
-
-## License
-
-The Notify PHP Client is released under the MIT license, a copy of which can be found in [LICENSE](LICENSE.txt).
