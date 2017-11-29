@@ -51,7 +51,7 @@ Generate an API key by logging in to [GOV.UK Notify](https://www.notifications.s
 
 ### Text message
 
-#### Method 
+#### Method
 
 <details>
 <summary>
@@ -68,8 +68,8 @@ An example request would look like:
 ```php
 try {
 
-    $response = $notifyClient->sendSms( 
-        '+447777111222', 
+    $response = $notifyClient->sendSms(
+        '+447777111222',
         'df10a23e-2c6d-4ea5-87fb-82e520cbf93a', [
             'name' => 'Betty Smith',
             'dob'  => '12 July 1968'
@@ -177,8 +177,8 @@ An example request would look like:
 ```php
 try {
 
-    $response = $notifyClient->sendEmail( 
-        'betty@example.com', 
+    $response = $notifyClient->sendEmail(
+        'betty@example.com',
         'df10a23e-2c0d-4ea5-87fb-82e520cbf93c', [
             'name' => 'Betty Smith',
             'dob'  => '12 July 1968'
@@ -292,9 +292,9 @@ An example request would look like:
 ```php
 try {
 
-    $response = $notifyClient->sendEmail( 
-        'df10a23e-2c0d-4ea5-87fb-82e520cbf93c', 
-        [ 
+    $response = $notifyClient->sendEmail(
+        'df10a23e-2c0d-4ea5-87fb-82e520cbf93c',
+        [
             'name'=>'Fred',
             'address_line_1' => 'Foo',
             'address_line_2' => 'Bar',
@@ -305,7 +305,7 @@ try {
 
 } catch (NotifyException $e){}
 ```
- 
+
 </details>
 
 
@@ -609,7 +609,7 @@ This is the `reference` you gave at the time of sending the notification. This c
 
 ## Get a template by ID
 
-#### Method 
+#### Method
 
 <details>
 <summary>
@@ -877,31 +877,6 @@ Otherwise the parameter can be omitted or `null` can be passed in its place.
 
 </details>
 
-## Development
-
-#### Tests
-
-There are unit and integration tests that can be run to test functionality of the client.
-
-To run the unit tests:
-
-```sh
-vendor/bin/phpspec run spec/unit/ --format=pretty --verbose
-```
-
-To run the integration tests:
-
-```sh
-vendor/bin/phpspec run spec/integration/ --format=pretty --verbose
-```
-
-To run both sets of tests:
-
-```sh
-vendor/bin/phpspec run --format=pretty
-```
-
 ## License
 
 The Notify PHP Client is released under the MIT license, a copy of which can be found in [LICENSE](LICENSE.txt).
-
