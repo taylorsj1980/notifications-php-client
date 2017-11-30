@@ -28,7 +28,7 @@ class ClientSpec extends ObjectBehavior
 
     function let(){
 
-        $this->beConstructedWith([
+      $this->beConstructedWith([
             'baseUrl'       => getenv('NOTIFY_API_URL'),
             'apiKey'        => getenv('API_KEY'),
             'httpClient'    => new \Http\Adapter\Guzzle6\Client
@@ -502,6 +502,11 @@ class ClientSpec extends ObjectBehavior
     }
 
     function it_receives_the_expected_response_when_sending_an_sms_notification_with_valid_seender_id(){
+      $this->beConstructedWith([
+        'baseUrl'       => getenv('NOTIFY_API_URL'),
+        'apiKey'        => getenv('API_SENDING_KEY'),
+        'httpClient'    => new \Http\Adapter\Guzzle6\Client
+      ]);
 
       $response = $this->sendSms(
         getenv('FUNCTIONAL_TEST_NUMBER'),
@@ -599,5 +604,43 @@ class ClientSpec extends ObjectBehavior
         $caught = true;
       }
       assert('$caught == true;');
+    }
+
+    function it_receives_the_expected_response_when_looking_up_received_texts() {
+      $this->beConstructedWith([
+        'baseUrl'       => getenv('NOTIFY_API_URL'),
+        'apiKey'        => getenv('INBOUND_SMS_QUERY_KEY'),
+        'httpClient'    => new \Http\Adapter\Guzzle6\Client
+      ]);
+
+      $response = $this->listReceivedTexts();
+
+      $response->shouldHaveKey('received_text_messages');
+      $response['received_text_messages']->shouldBeArray();
+
+      $received_texts = $response['received_text_messages'];
+
+      $received_texts_count = count($received_texts->getWrappedObject());
+
+      assert('$received_texts_count > 0;');
+
+      for( $i = 0; $i < $received_texts_count; $i++ ) {
+
+          $received_text = $received_texts[$i];
+          $received_text->shouldBeArray();
+          $received_text->shouldHaveKey( 'id' );
+          $received_text->shouldHaveKey( 'service_id' );
+          $received_text->shouldHaveKey( 'created_at' );
+          $received_text->shouldHaveKey( 'user_number' );
+          $received_text->shouldHaveKey( 'notify_number' );
+          $received_text->shouldHaveKey( 'content' );
+          
+          $received_text['id']->shouldBeString();
+          $received_text['service_id']->shouldBeString();
+          $received_text['created_at']->shouldBeString();
+          $received_text['user_number']->shouldBeString();
+          $received_text['notify_number']->shouldBeString();
+          $received_text['content']->shouldBeString();
+      }
     }
 }

@@ -389,6 +389,100 @@ class ClientSpec extends ObjectBehavior
 
     }
 
+    function it_generates_the_expected_request_when_listing_received_texts(){
+
+        //---------------------------------
+        // Test Setup
+
+        $filters = [
+            'older_than'=>'uuid'
+        ];
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                200,
+                ['Content-type'  => 'application/json'],
+                json_encode(['received_text_messages' => array()])
+            )
+        );
+
+        //---------------------------------
+        // Perform action
+
+        $this->listReceivedTexts( $filters );
+
+        //---------------------------------
+        // Check result
+
+        // Check the expected Request was sent.
+        $this->httpClient->sendRequest( Argument::that(function( $v ) use ($filters) {
+
+            // Check a request was sent.
+            if( !( $v instanceof RequestInterface ) ){
+                return false;
+            }
+
+            //---
+
+            $url = new Uri( self::BASE_URL . Client::PATH_RECEIVED_TEXT_LIST );
+
+            foreach( $filters as $name => $value ){
+                $url = URI::withQueryValue($url, $name, $value );
+            }
+
+            // With the correct URL
+            if( $v->getUri() != $url ){
+                return false;
+            }
+
+            //---
+
+            // Include the correct token header
+            if( $v->getHeader('Authorization') != [ 'Bearer '.self::TEST_JWT_TOKEN ] ){
+                return false;
+            }
+
+            // And correct Content-type
+            if( $v->getHeader('Content-type') != [ 'application/json' ] ){
+                return false;
+            }
+
+            return true;
+
+        }))->shouldHaveBeenCalled();
+
+    }
+
+    function it_receives_the_expected_response_when_listing_received_texts(){
+
+        //---------------------------------
+        // Test Setup
+
+        $data = [[
+            'created_at'=> '2016-04-06T11:06:10.260722+00:00',
+            'id' => '217ce465-d16a-4179-928d-c1a73eb3f377'
+        ]];
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                200,
+                ['Content-type'  => 'application/json'],
+                json_encode(['received_text_messages' => $data])
+            )
+        );
+
+        //---------------------------------
+        // Perform action
+
+        $response = $this->listReceivedTexts();
+
+        //---------------------------------
+        // Check result
+
+        $response->shouldHaveKeyWithValue('received_text_messages', $data);
+
+    }
+
     //----------------------------------------------------------------------------------------------------------
     // Sending (POSTs) with expected success
 
