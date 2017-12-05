@@ -1,7 +1,7 @@
 ## [1.6.2] - 2017-12-05
 ### Changed
 
-* Removed redundant dependency - `php-http/client-implementation`
+* Moved dependency on client to require-dev - `php-http/guzzle6-adapter`
 
 ## [1.6.1] - 2017-12-05
 ### Changed
