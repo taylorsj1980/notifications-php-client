@@ -1,3 +1,13 @@
+## [1.6.2] - 2017-12-05
+### Changed
+
+* Removed redundant dependency - `php-http/client-implementation`
+
+## [1.6.1] - 2017-12-05
+### Changed
+
+* Removed versions from `composer.json` to make it easier to install for users.
+
 ## [1.6.0] - 2017-11-27
 ### Changed
 
