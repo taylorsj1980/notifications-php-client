@@ -202,7 +202,7 @@ class ClientSpec extends ObjectBehavior
         $response['content']['from_number']->shouldBeString();
         $response['content']->shouldHaveKey( 'body' );
         $response['content']['body']->shouldBeString();
-        $response['content']['body']->shouldBe("Hello Foo\r\n\r\nFunctional Tests make our world a better place");
+        $response['content']['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
 
         $response->shouldHaveKey( 'template' );
         $response['template']->shouldBeArray();
@@ -236,7 +236,7 @@ class ClientSpec extends ObjectBehavior
 
       $response->shouldHaveKey( 'body' );
       $response['body']->shouldBeString();
-      $response['body']->shouldBe("Hello Foo\r\n\r\nFunctional Tests make our world a better place");
+      $response['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
       $response->shouldHaveKey( 'subject' );
 
       $response->shouldHaveKey( 'reference' );
@@ -487,7 +487,7 @@ class ClientSpec extends ObjectBehavior
       $response['type']->shouldBeString();
       $response['type']->shouldBe( 'sms' );
       $response['version']->shouldBeInteger();
-      $response['body']->shouldBe("Hello Foo\r\n\r\nFunctional Tests make our world a better place");
+      $response['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
       $response['subject']->shouldBeNull();
     }
 
@@ -529,7 +529,7 @@ class ClientSpec extends ObjectBehavior
       $response['content']['from_number']->shouldBeString();
       $response['content']->shouldHaveKey( 'body' );
       $response['content']['body']->shouldBeString();
-      $response['content']['body']->shouldBe("Hello Foo\r\n\r\nFunctional Tests make our world a better place");
+      $response['content']['body']->shouldBe("Hello Foo\n\nFunctional Tests make our world a better place");
 
       $response->shouldHaveKey( 'template' );
       $response['template']->shouldBeArray();
@@ -542,12 +542,12 @@ class ClientSpec extends ObjectBehavior
       $response->shouldHaveKey( 'uri' );
       $response['uri']->shouldBeString();
     }
- 
+
     function it_receives_the_expected_response_when_sending_a_letter_notification(){
 
       $payload = [
           'template_id'=> getenv('LETTER_TEMPLATE_ID'),
-          'personalisation' => [ 
+          'personalisation' => [
               'name'=>'Fred',
               'address_line_1' => 'Foo',
               'address_line_2' => 'Bar',
@@ -634,7 +634,7 @@ class ClientSpec extends ObjectBehavior
           $received_text->shouldHaveKey( 'user_number' );
           $received_text->shouldHaveKey( 'notify_number' );
           $received_text->shouldHaveKey( 'content' );
-          
+
           $received_text['id']->shouldBeString();
           $received_text['service_id']->shouldBeString();
           $received_text['created_at']->shouldBeString();
