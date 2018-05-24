@@ -6,8 +6,6 @@ ARG NO_PROXY
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-COPY etc/apt/sources.list /etc/apt/sources.list
-
 RUN \
 	echo "Install base packages" \
 	&& ([ -z "$HTTP_PROXY" ] || echo "Acquire::http::Proxy \"${HTTP_PROXY}\";" > /etc/apt/apt.conf.d/99HttpProxy) \
