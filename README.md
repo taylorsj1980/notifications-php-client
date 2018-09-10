@@ -440,6 +440,7 @@ Click here to expand for more information.
         "uri" => "/template/{id}/{version}"
      ],
     "created_at" => "created at",
+    "created_by_name" => "A name",  // name of the person who sent the notification if sent manually
     "sent_at" => "sent to provider at",
 ]
 ```
@@ -525,6 +526,7 @@ Click here to expand for more information.
             "uri" => "/template/{id}/{version}"
         ],
         "created_at" => "created at",
+        "created_by_name" => "A name",  // name of the person who sent the notification if sent manually
         "sent_at" => "sent to provider at",
         ],
         …
@@ -636,6 +638,7 @@ Click here to expand for more information.
 ```php
 {
     "id" => "template_id",
+    "name" => "Template name"
     "type" => "sms|email|letter",
     "created_at" => "created at",
     "updated_at" => "updated at",
@@ -694,6 +697,7 @@ Click here to expand for more information.
 ```php
 [
     "id" => "template_id",
+    "name" => "Template name"
     "type" => "sms|email|letter",
     "created_at" => "created at",
     "updated_at" => "updated at",
@@ -761,6 +765,7 @@ Click here to expand for more information.
     "templates"  => [
         [
             "id" => "template_id",
+            "name" => "Template name"
             "type" => "sms|email|letter",
             "created_at" => "created at",
             "updated_at" => "updated at",
