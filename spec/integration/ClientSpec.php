@@ -387,6 +387,9 @@ class ClientSpec extends ObjectBehavior
       $response['id']->shouldBe( $templateId );
       $response['type']->shouldBeString();
       $response['type']->shouldBe( 'sms' );
+      $response['name']->shouldBeString();
+      $response['name']->shouldBe( 'Client Functional test sms template' );
+      $response['created_by']->shouldBeString();
       $response['version']->shouldBeInteger();
       $response['body']->shouldBe( "Hello ((name))\r\n\r\nFunctional Tests make our world a better place" );
       $response['subject']->shouldBeNull();
@@ -414,8 +417,11 @@ class ClientSpec extends ObjectBehavior
       $response['id']->shouldBe( $templateId );
       $response['type']->shouldBeString();
       $response['type']->shouldBe( 'sms' );
+      $response['name']->shouldBeString();
+      $response['name']->shouldBe( 'Client Functional test sms template' );
       $response['created_at']->shouldBeString();
       $response['created_by']->shouldBeString();
+      $response['created_by']->shouldBe( 'notify-tests-preview+client_funct_tests@digital.cabinet-office.gov.uk' );
       $response['version']->shouldBeInteger();
       $response['version']->shouldBe( $version );
       $response['body']->shouldBe("Functional Tests make our world a better place");
@@ -439,6 +445,7 @@ class ClientSpec extends ObjectBehavior
 
           $template->shouldBeArray();
           $template->shouldHaveKey( 'id' );
+          $template->shouldHaveKey( 'name' );
           $template->shouldHaveKey( 'type' );
           $template->shouldHaveKey( 'created_at' );
           $template->shouldHaveKey( 'updated_at' );
