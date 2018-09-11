@@ -599,6 +599,25 @@ class ClientSpec extends ObjectBehavior
       $response['scheduled_for']->shouldBe(null);
     }
 
+    function it_receives_the_expected_response_when_sending_a_precompiled_letter_notification(){
+
+      $reference = 'my_ref_1234';
+
+      //---------------------------------
+      // Perform action
+
+      $file_contents = file_get_contents( './spec/integration/one_page_pdf.pdf' );
+
+      $response = $this->sendPrecompiledLetter( $reference, $file_contents );
+
+      $response->shouldBeArray();
+      $response->shouldHaveKey( 'id' );
+      $response['id']->shouldBeString();
+
+      $response->shouldHaveKey( 'reference' );
+      $response['reference']->shouldBe("my_ref_1234");
+    }
+
     function it_exposes_error_details() {
       $caught = false;
       try {

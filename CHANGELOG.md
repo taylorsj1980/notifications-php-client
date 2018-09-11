@@ -1,3 +1,13 @@
+## [1.7.0] - 2018-09-11
+### Changed
+
+* Added support for document uploads in sendEmailNotification.
+    * Call `$this->prepareUpload`, and add the return value to your `$personalisation` array.
+* The client can now send PDF files which conform to the Notify printing template
+    * call the `SendLetterResponse sendLetter( $reference, $pdf_data )` function
+    * `$reference` must be provided to identify the document
+    * `$pdf_data` is a string, as returned from `file_get_contents` for example
+
 ## [1.6.2] - 2017-12-05
 ### Changed
 
@@ -19,7 +29,7 @@
 ### Changed
 
 * sendLetter added to Client.php
-    * SendLetterResponse sendLetter( $templateId, array $personalisation = array(), $reference = '' )
+    * `SendLetterResponse sendLetter( $templateId, array $personalisation = array(), $reference = '' )`
     * personalisation map is required, and must contain the recipient's address details.
     * as with sms and email, reference is optional.
 
