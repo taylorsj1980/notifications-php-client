@@ -130,6 +130,28 @@ class ClientSpec extends ObjectBehavior
       );
     }
 
+    function it_receives_the_expected_response_when_sending_an_email_notification_with_an_uploaded_document(){
+
+        $file_contents = file_get_contents( './spec/integration/one_page_pdf.pdf' );
+
+        $response = $this->sendEmail( getenv('FUNCTIONAL_TEST_EMAIL'), getenv('EMAIL_TEMPLATE_ID'), [
+            "name" => $this->prepareUpload( $file_contents )
+        ]);
+
+        $response->shouldBeArray();
+        $response->shouldHaveKey( 'id' );
+        $response['id']->shouldBeString();
+
+        $response->shouldHaveKey( 'reference' );
+
+        $response->shouldHaveKey( 'content' );
+        $response['content']->shouldBeArray();;
+        $response['content']->shouldHaveKey( 'body' );
+        $response['content']['body']->shouldBeString();
+        $response['content']['body']->shouldContain("https://documents.");
+
+    }
+
     function it_receives_the_expected_response_when_looking_up_an_email_notification() {
 
       // Requires the 'it_receives_the_expected_response_when_sending_an_email_notification' test to have completed successfully
