@@ -274,6 +274,83 @@ If you omit this argument your default email reply-to address will be set for th
 </details>
 
 
+### Send a document by email
+Send files without the need for email attachments.
+
+To send a document by email, add a placeholder field to the template then upload a file. The placeholder field will contain a secure link to download the document.
+
+[Contact the GOV.UK Notify team](https://www.notifications.service.gov.uk/support) to enable this function for your service.
+
+#### Add a placeholder field to the template
+
+In Notify, use double brackets to add a placeholder field to the email template. For example:
+
+"Download your document at: ((link_to_document))"
+
+
+#### Upload your document
+˜
+The document you upload must be a PDF file smaller than 2MB.
+
+Pass the file object as a value into the personalisation argument. For example:
+
+```php
+try {
+    $file_data = file_get_contents('/path/to/my/file.pdf');
+
+    $response = $notifyClient->sendEmail(
+        'betty@example.com',
+        'df10a23e-2c0d-4ea5-87fb-82e520cbf93c',
+        [
+            'name' => 'Betty Smith',
+            'dob'  => '12 July 1968',
+            'link_to_document' => $notifyClient->prepareUpload( $file_data )
+        ]
+    );
+
+} catch (NotifyException $e){}
+```
+
+### Response
+
+If the request to the client is successful, the client returns a response `object`, with a following `body` attribute:
+
+```php
+[
+    "id" => "bfb50d92-100d-4b8b-b559-14fa3b091cda",
+    "reference" => None,
+    "content" => [
+        "subject" => "SUBJECT TEXT",
+        "body" => "MESSAGE TEXT",
+        "from_email" => "SENDER EMAIL
+    ],
+    "uri" => "https://api.notifications.service.gov.uk/v2/notifications/ceb50d92-100d-4b8b-b559-14fa3b091cd",
+    "template" => [
+        "id" => "ceb50d92-100d-4b8b-b559-14fa3b091cda",
+        "version" => 1,
+        "uri" => "https://api.notificaitons.service.gov.uk/service/your_service_id/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
+    ]
+]
+```
+
+### Error codes
+
+If the request is not successful, the client returns an error `error object`:
+
+|error.status_code|error.message|How to fix|
+|:---|:---|:---|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient using a team-only API key"`<br>`]}`|Use the correct type of [API key](#api-keys)|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Unsupported document type '{}'. Supported types are: {}"`<br>`}]`|The document you upload must be a PDF file|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Document didn't pass the virus scan"`<br>`}]`|The document you upload must be virus free|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct type of [API key](#api-keys)|
+|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM/TEST/LIVE of 3000 requests per 60 seconds"`<br>`}]`|Refer to [API rate limits](#api-rate-limits) for more information|
+|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number|
+|`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification.|
+|`N/A`|`"Document is larger than 2MB."`|The document you tried to upload was above the 2MB limit.|
+
+
 ### Letter
 
 #### Method
@@ -293,7 +370,7 @@ An example request would look like:
 ```php
 try {
 
-    $response = $notifyClient->sendEmail(
+    $response = $notifyClient->sendLetter(
         'df10a23e-2c0d-4ea5-87fb-82e520cbf93c',
         [
             'name'=>'Fred',
@@ -379,6 +456,66 @@ An optional identifier you generate if you don’t want to use Notify’s `id`. 
 
 
 </details>
+
+## Send a precompiled Letter
+
+This is an invitation-only feature. Contact the GOV.UK Notify team on the [support page](https://www.notifications.service.gov.uk/support) or through the [Slack channel](https://ukgovernmentdigital.slack.com/messages/govuk-notify) for more information.
+
+### Method
+
+```php
+response = notifications_client.send_precompiled_letter_notification(
+    $reference,      # Reference to identify the notification
+    $pdf_file        # PDF File object
+)
+```
+
+### Arguments
+
+##### `$reference` (required)
+
+A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
+
+#### `$pdf_data` (required)
+
+The precompiled letter must be a PDF file.
+
+```php
+$file_contents = file_get_contents("path/to/pdf_file");
+try {
+
+    $response = $notifyClient->sendLetter(
+        'unique_ref123',
+        $file_contents
+    );
+
+} catch (NotifyException $e){}
+```
+
+### Response
+
+If the request to the client is successful, the client returns a `dict`:
+
+```php
+[
+  "id" => "740e5834-3a29-46b4-9a6f-16142fde533a",
+  "reference" => "unique_ref123"
+]
+```
+
+### Error codes
+
+If the request is not successful, the client returns an HTTPError containing the relevant error code.
+
+|error.status_code|error.message|How to fix|
+|:---|:---|:---|
+|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type live of 10 requests per 20 seconds"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
+|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (50) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters with a team api key"`<br>`]}`|Use the correct type of [API key](#api-keys)|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send precompiled letters"`<br>`]}`|This is an invitation-only feature. Contact the GOV.UK Notify team on the [support page](https://www.notifications.service.gov.uk/support) or through the [Slack channel](https://ukgovernmentdigital.slack.com/messages/govuk-notify) for more information|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Letter content is not a valid PDF"`<br>`]}`|PDF file format is required|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "reference is a required property"`<br>`}]`|Add a `reference` argument to the method call|
 
 
 ## Get the status of one message

@@ -25,7 +25,7 @@ class Client {
      * @const string Current version of this client.
      * This follows Semantic Versioning (http://semver.org/)
      */
-    const VERSION = '1.6.2';
+    const VERSION = '1.7.0';
 
     /**
      * @const string The API endpoint for Notify production.
@@ -208,14 +208,37 @@ class Client {
      * @return array
      */
     public function sendLetter( $templateId, array $personalisation = array(), $reference = '' ){
-        
+
         $payload = $this->buildPayload( 'letter', '', $templateId, $personalisation, $reference );
 
         return $this->httpPost(
             self::PATH_NOTIFICATION_SEND_LETTER,
             $payload
         );
-        
+
+    }
+
+    /**
+     * Send a precompiled letter.
+     * Example usage: sendPrecompiledLetter($templateId, $ref, file_get_contents(<PATH TO FILE>)))
+     *
+     * @param string    $templateId
+     * @param string    $reference
+     * @param string    $pdf_data
+     *
+     * @return array
+     */
+    public function sendPrecompiledLetter( $reference, $pdf_data ){
+        $payload = [
+          'reference' => $reference,
+          'content' => base64_encode($pdf_data)
+        ];
+
+        return $this->httpPost(
+            self::PATH_NOTIFICATION_SEND_LETTER,
+            $payload
+        );
+
     }
 
     /**
@@ -257,7 +280,7 @@ class Client {
             'status',
             'template_type',
         ]));
-                
+
         return $this->httpGet( self::PATH_NOTIFICATION_LIST, $filters );
 
     }
@@ -338,6 +361,22 @@ class Client {
         return $this->httpPost( $path, $payload );
     }
 
+    /**
+     * Prepare a file before adding it to the $personalisation array for the sendEmail function
+     *
+     * @param string $file_contents
+     *
+     * @return string
+     */
+    public function prepareUpload( $file_contents ){
+        if ( strlen($file_contents) > ( 2 * 1024 * 1024 )) {
+            throw new Exception\InvalidArgumentException( 'Document is larger than 2MB.' );
+        }
+        return [
+            "file" => base64_encode($file_contents)
+        ];
+    }
+
     //------------------------------------------------------------------------------------
     // Internal API access methods
 
@@ -368,7 +407,7 @@ class Client {
             $payload['email_address'] = $to;
         }
 
-        if( count($personalisation) > 0 ) {
+        if ( count($personalisation) > 0 ) {
             $payload['personalisation'] = $personalisation;
         }
 

@@ -576,7 +576,7 @@ class ClientSpec extends ObjectBehavior
     }
 
     function it_receives_the_expected_response_when_sending_sms_with_sms_sender_id(){
-        
+
         //---------------------------------
         // Test Setup
 
@@ -718,6 +718,16 @@ class ClientSpec extends ObjectBehavior
                 $response->shouldHaveKeyWithValue('notification_id', $id);
 
             }
+
+
+    function it_generates_the_expected_request_when_preparing_file_for_upload(){
+        $this->prepareUpload('%PDF-1.5 testpdf')->shouldReturn( [ 'file' => 'JVBERi0xLjUgdGVzdHBkZg==' ] );
+    }
+
+
+    function it_raises_an_exception_when_preparing_file_for_upload_if_file_too_big(){
+        $this->shouldThrow(NotifyException\InvalidArgumentException::class)->duringPrepareUpload(str_repeat( "a", 3 * 1024 * 1024 ));
+    }
 
 
     //----------------------------------------------------------------------------------------------------------
@@ -969,7 +979,7 @@ class ClientSpec extends ObjectBehavior
         // Test Setup
 
         $id = self::SAMPLE_ID;
-        
+
         $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
             new Response(
                 201,
@@ -981,12 +991,12 @@ class ClientSpec extends ObjectBehavior
         //---------------------------------
         // Perform action
 
-        $response = $this->sendLetter( 118, [ 
+        $response = $this->sendLetter( 118, [
                 'name'=>'Fred',
                 'address_line_1' => 'Foo',
                 'address_line_2' => 'Bar',
                 'postcode' => 'Baz'
-            ] 
+            ]
         );
 
         //---------------------------------
@@ -997,13 +1007,13 @@ class ClientSpec extends ObjectBehavior
     }
 
     function it_generates_the_expected_request_when_sending_letter(){
-        
+
         //---------------------------------
         // Test Setup
 
         $payload = [
             'template_id'=> 118,
-            'personalisation' => [ 
+            'personalisation' => [
                 'name'=>'Fred',
                 'address_line_1' => 'Foo',
                 'address_line_2' => 'Bar',
@@ -1024,6 +1034,94 @@ class ClientSpec extends ObjectBehavior
         // Perform action
 
         $this->sendLetter( $payload['template_id'], $payload['personalisation'], $payload['reference']);
+
+        //---------------------------------
+        // Check result
+
+        $this->httpClient->sendRequest( Argument::that(function( $v ) use ($payload) {
+
+            // Check a request was sent.
+            if( !( $v instanceof RequestInterface ) ){
+                return false;
+            }
+
+            // With the correct URL
+            if( $v->getUri() != self::BASE_URL . Client::PATH_NOTIFICATION_SEND_LETTER ){
+                return false;
+            }
+
+            // Include the correct token header
+            if( $v->getHeader('Authorization') != [ 'Bearer '.self::TEST_JWT_TOKEN ] ){
+                return false;
+            }
+
+            // And correct Content-type
+            if( $v->getHeader('Content-type') != [ 'application/json' ] ){
+                return false;
+            }
+
+            // With the expected body.
+            if( json_decode( $v->getBody(), true ) != $payload ){
+                return false;
+            }
+
+            return true;
+
+        }))->shouldHaveBeenCalled();
+
+    }
+
+    function it_receives_the_expected_response_when_sending_a_precompiled_letter(){
+
+        //---------------------------------
+        // Test Setup
+
+        $id = self::SAMPLE_ID;
+        $ref = 'my_ref_1234';
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                201,
+                ['Content-type'  => 'application/json'],
+                json_encode(['notification_id' => $id, 'reference' => $ref])
+            )
+        );
+
+        //---------------------------------
+        // Perform action
+
+        $response = $this->sendPrecompiledLetter( $ref, '%PDF-1.5 testpdf' );
+
+        //---------------------------------
+        // Check result
+
+        $response->shouldHaveKeyWithValue('notification_id', $id);
+        $response->shouldHaveKeyWithValue('reference', $ref);
+
+    }
+
+    function it_generates_the_expected_request_when_sending_a_precompiled_letter(){
+
+        //---------------------------------
+        // Test Setup
+
+        $payload = [
+            'reference' => 'my_ref_1234',
+            'content' => 'JVBERi0xLjUgdGVzdHBkZg=='
+        ];
+
+        $this->httpClient->sendRequest( Argument::type('Psr\Http\Message\RequestInterface') )->willReturn(
+            new Response(
+                201,
+                [ 'Content-type'  => 'application/json' ],
+                json_encode([ 'notification_id' => 'xxx' ])
+            )
+        );
+
+        //---------------------------------
+        // Perform action
+
+        $this->sendPrecompiledLetter( $payload['reference'], '%PDF-1.5 testpdf' );
 
         //---------------------------------
         // Check result
