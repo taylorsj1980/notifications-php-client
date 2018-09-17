@@ -725,6 +725,11 @@ class ClientSpec extends ObjectBehavior
     }
 
 
+    function it_raises_an_exception_when_preparing_file_for_upload_if_file_too_big(){
+        $this->shouldThrow(NotifyException\InvalidArgumentException::class)->duringPrepareUpload(str_repeat( "a", 3 * 1024 * 1024 ));
+    }
+
+
     //----------------------------------------------------------------------------------------------------------
     // Actions with expected errors
 

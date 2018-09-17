@@ -369,9 +369,12 @@ class Client {
      * @return string
      */
     public function prepareUpload( $file_contents ){
-      return [
-        "file" => base64_encode($file_contents)
-      ];
+        if ( strlen($file_contents) > ( 2 * 1024 * 1024 )) {
+            throw new Exception\InvalidArgumentException( 'Document is larger than 2MB.' );
+        }
+        return [
+            "file" => base64_encode($file_contents)
+        ];
     }
 
     //------------------------------------------------------------------------------------
@@ -404,7 +407,7 @@ class Client {
             $payload['email_address'] = $to;
         }
 
-        if( count($personalisation) > 0 ) {
+        if ( count($personalisation) > 0 ) {
             $payload['personalisation'] = $personalisation;
         }
 
