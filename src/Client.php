@@ -589,7 +589,7 @@ class Client {
 
         // The expected response should always be JSON, thus now an array.
         if( !is_array($body) ){
-            throw new Exception\ApiException( 'Malformed JSON response from server', $response->getStatusCode(), $response );
+            throw new Exception\ApiException( 'Malformed JSON response from server', $response->getStatusCode(), $body, $response );
         }
 
         return $body;
