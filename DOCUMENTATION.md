@@ -1,43 +1,44 @@
-# GOV.UK Notify PHP client
+_Speak to Leo Hemsted_
 
-This documentation is for developers interested in using this PHP client to integrate their government service with GOV.UK Notify.
+# PHP client documentation
 
-## Table of Contents
+This documentation is for developers interested in using the GOV.UK Notify PHP client to send emails, text messages or letters.
 
-* [Installation](#installation)
-* [Getting started](#getting-started)
-* [Send messages](#send-messages)
-* [Get the status of one message](#get-the-status-of-one-message)
-* [Get the status of all messages](#get-the-status-of-all-messages)
-* [Get a template by ID](#get-a-template-by-id)
-* [Get a template by ID and version](#get-a-template-by-id-and-version)
-* [Get all templates](#get-all-templates)
-* [Generate a preview template](#generate-a-preview-template)
-* [Get received text messages](#get-received-text-messages)
-* [Development](#development)
-* [License](#license)
+# Set up the client
 
-## Installation
+## Install the client
 
-The Notify PHP Client can be installed with [Composer](https://getcomposer.org/). Run this command:
+You must install the Notify PHP Client with [Composer](https://getcomposer.org/).
+
+1. [Download and install Composer](https://getcomposer.org/download/).
+
+1. Run the following in the command line:
 
 ```sh
 composer require php-http/guzzle6-adapter alphagov/notifications-php-client
 ```
+_OR?_
 
-### PSR-7 HTTP
+```php
+composer require php-http/guzzle6-adapter alphagov/notifications-php-client
+```
 
-The Notify PHP Client is based on a PSR-7 HTTP model. You therefore need to pick your preferred HTTP Client library to use.
+The GOV.UK Notify PHP client is based on a [PSR-7 HTTP model](https://www.php-fig.org/psr/psr-7/) [external link]. You must pick your preferred HTTP Client library to use. _how do you decide this?_
 
-We will show examples here using the Guzzle v6 Adapter.
+All examples in this documentation use the [Guzzle v6 Adapter](https://github.com/php-http/guzzle6-adapter). _why? what about other guzzles?_
 
 Setup instructions are also available for [Curl](docs/curl-client-setup.md) and [Guzzle v5](docs/guzzle5-client-setup.md).
+_where?_
 
-## Getting started
+Refer to the [client changelog](https://github.com/alphagov/notifications-python-client/blob/master/CHANGELOG.md) for the client version number and the latest updates.
 
-Assuming you’ve installed the package via Composer, the Notify PHP Client will be available via the autoloader.
+## Create a new instance of the client
 
-Create a (Guzzle v6 based) instance of the Client using:
+The Notify PHP Client is available via the [autoloader](https://getcomposer.org/doc/01-basic-usage.md#autoloading) in Composer.
+_Is the autoloader part of Composer?_
+_Run / Add this code to your application / Do something else to / create a Guzzle v6 instance of the client:_
+_How does autoloading relate to the code below?_
+
 
 ```php
 $notifyClient = new \Alphagov\Notifications\Client([
@@ -46,25 +47,23 @@ $notifyClient = new \Alphagov\Notifications\Client([
 ]);
 ```
 
-Generate an API key by logging in to [GOV.UK Notify](https://www.notifications.service.gov.uk) and going to the **API integration** page.
+To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. You can find more information in the [API keys](#api-keys) section of this documentation.
 
-## Send messages
+# Send a message
 
-### Text message
+You can use GOV.UK Notify to send text messages, emails and letters.
 
-#### Method
+## Send a text message
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+### Method
 
-The method signature is:
 ```php
 sendSms( $phoneNumber, $templateId, array $personalisation = array(), $reference = '', $smsSenderId = NULL  )
 ```
 
-An example request would look like:
+_why is smsSenderId = NULL? is this just an example?_
+
+Example request:
 
 ```php
 try {
@@ -82,16 +81,74 @@ try {
 } catch (NotifyException $e){}
 ```
 
-</details>
+_use this example to fill in example arguments?_
 
-#### Response
+```php
+try {
 
-If the request is successful, `response` will be an `array`.
+    $response = $notifyClient->sendSms(
+        '+447777111222',
+        'df10a23e-2c6d-4ea5-87fb-82e520cbf93a'
+    );
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+} catch (NotifyException $e){}
+```
+
+### Arguments
+
+#### $phoneNumber (required)
+
+The phone number of the recipient of the text message. This can be a UK or international number.
+
+#### $templateId (required)
+
+Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __Templates__ page to find the template ID.
+
+#### $personalisation (optional)
+
+If a template has placeholder fields for personalised information such as name or reference number, you must provide their values in a dictionary with key value pairs. For example:
+
+```php
+$personalisation[
+    'name' => 'Amala',
+    'application_date'  => '2018-01-01'
+],
+```
+
+You can leave out this argument if a template does not have any placeholder fields for personalised information.
+
+#### $reference (optional)
+
+A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. For example:
+
+```php
+$reference='STRING',
+```
+You can leave out this argument if you do not have a reference.
+
+#### $smsSenderId (optional)
+
+A unique identifier of the sender of the text message notification. You can find this information on the __Text Message sender__ settings screen:
+
+1. Sign into your GOV.UK Notify account.
+1. Go to __Settings__.
+1. If you need to change to another service, select __Switch service__ in the top right corner of the screen and select the correct one.
+1. Go to the __Text Messages__ section and select __Manage__ on the __Text Message sender__ row.
+
+You can then either:
+
+- copy the sender ID that you want to use and paste it into the method
+- select __Change__ to change the default sender that the service will use, and select __Save__
+
+```php
+$smsSenderId='8e222534-7f05-4972-86e3-17c5d9f894e2'
+```
+
+You can leave out this argument if your service only has one text message sender, or if you want to use the default sender.
+
+### Response
+
+If the request to the client is successful, the client returns an `array`:
 
 ```php
 [
@@ -109,71 +166,35 @@ Click here to expand for more information.
     ]
 ]
 ```
-Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyException``:
 
-|`exc->getCode()`|`exc->getErrors()`|
-|:---|:---|
-|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"`<br>`}]`|
-|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (50) for today"`<br>`}]`|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can"t send to this recipient using a team-only API key"`<br>`]}`|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can"t send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|
+If you are using the [test API key](#test), all your messages will come back as delivered.
 
-</details>
+All messages sent using the [team and whitelist](#team-and-whitelist) or [live](#live) keys will appear on your dashboard.
 
-#### Arguments
+### Error codes
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code.
 
-##### `$phoneNumber`
-The mobile number the SMS notification is sent to.
+_is is Alphagov\Notifications\Exception\NotifyException or something else?_
 
-##### `$templateId`
+|`exc->getCode()`|`exc->getErrors()`|How to fix|
+|:---|:---|:---|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient using a team-only API key"`<br>`]}`|Use the correct type of [API key](#api-keys)|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
+|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM/TEST/LIVE of 3000 requests per 60 seconds"`<br>`}]`|Refer to [API rate limits](#api-rate-limits) for more information|
+|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number|
+|`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification.|
 
-Find by clicking **API info** for the template you want to send.
+## Send an email
 
-##### `$reference`
-An optional identifier you generate if you don’t want to use Notify’s `id`. It can be used to identify a single  notification or a batch of notifications.
+### Method
 
-##### `$personalisation`
-
-If a template has placeholders, you need to provide their values, for example:
-
-```php
-personalisation = [
-    'name' => 'Betty Smith',
-    'dob'  => '12 July 1968'
-]
-```
-
-Otherwise the parameter can be omitted.
-
-##### `smsSenderId`
-
-Optional. Specifies the identifier of the sms sender to set for the notification. The identifiers are found in your service Settings, when you 'Manage' your 'Text message sender'.
-
-If you omit this argument your default sms sender will be set for the notification.
-
-</details>
-
-
-### Email
-
-#### Method
-
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
-
-The method signature is:
 ```php
 sendEmail( $emailAddress, $templateId, array $personalisation = array(), $reference = '', $emailReplyToId = NULL )
 ```
-
-An example request would look like:
+_why is emailReplyToId = NULL?_
 
 ```php
 try {
@@ -191,90 +212,60 @@ try {
 } catch (NotifyException $e){}
 ```
 
-</details>
 
+### Arguments
 
-#### Response
+#### $emailAddress (required)
 
-If the request is successful, `response` will be an `array`.
+The email address of the recipient.
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+#### $templateId (required)
 
-```php
-[
-    "id" => "bfb50d92-100d-4b8b-b559-14fa3b091cda",
-    "reference" => None,
-    "content" => [
-        "subject" => "Licence renewal",
-        "body" => "Dear Bill, your licence is due for renewal on 3 January 2016.",
-        "from_email" => "the_service@gov.uk"
-    ],
-    "uri" => "https://api.notifications.service.gov.uk/v2/notifications/ceb50d92-100d-4b8b-b559-14fa3b091cd",
-    "template" => [
-        "id" => "ceb50d92-100d-4b8b-b559-14fa3b091cda",
-        "version" => 1,
-        "uri" => "https://api.notificaitons.service.gov.uk/service/your_service_id/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
-    ]
-]
-```
+Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk) and go to the __Templates__ page to find the template ID.
 
-Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyException``:
+#### $personalisation (optional)
 
-|`exc->getCode()`|`exc->getErrors()`|
-|:---|:---|
-|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"`<br>`}]`|
-|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (50) for today"`<br>`}]`|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can"t send to this recipient using a team-only API key"`<br>`]}`|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can"t send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|
-
-
-</details>
-
-
-#### Arguments
-
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
-
-##### `$emailAddress`
-The email address the email notification is sent to.
-
-##### `$templateId`
-
-Find by clicking **API info** for the template you want to send.
-
-##### `$personalisation`
-
-If a template has placeholders you need to provide their values. For example:
+If a template has placeholder fields for personalised information such as name or reference number, you need to provide their values in a dictionary with key value pairs. For example:
 
 ```php
-personalisation = [
-    'name' => 'Betty Smith',
-    'dob'  => '12 July 1968'
-]
+$personalisation[
+    'name' => 'Amala',
+    'application_date'  => '2018-01-01'
+],
 ```
 
-Otherwise the parameter can be omitted.
+You can leave out this argument if a template does not have any placeholder fields for personalised information.
 
-##### `$reference`
+#### $reference (optional)
 
-An optional identifier you generate if you don’t want to use Notify’s `id`. It can be used to identify a single  notification or a batch of notifications.
+A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications.
 
-##### `$emailReplyToId`
+```php
+$reference='STRING', # optional string - identifies notification(s)
+```
 
-Optional. Specifies the identifier of the email reply-to address to set for the notification. The identifiers are found in your service Settings, when you 'Manage' your 'Email reply to addresses'.
+You can leave out this argument if you do not have a reference.
 
-If you omit this argument your default email reply-to address will be set for the notification.
+#### $emailReplyToId (optional)
 
-</details>
+This is an email reply-to address specified by you to receive replies from your users. Your service cannot go live until you set up at least one of these email addresses. To set up:
 
+1. Sign into your GOV.UK Notify account.
+1. Go to __Settings__.
+1. If you need to change to another service, select __Switch service__ in the top right corner of the screen and select the correct one.
+1. Go to the Email section and select __Manage__ on the __Email reply-to addresses__ row.
+1. Select __Change__ to specify the email address to receive replies, and select __Save__.
+
+For example:
+
+```php
+$emailReplyToId='8e222534-7f05-4972-86e3-17c5d9f894e2' # optional UUID string
+```
+
+You can leave out this argument if your service only has one email reply-to address, or you want to use the default email address.
 
 ### Send a document by email
+
 Send files without the need for email attachments.
 
 To send a document by email, add a placeholder field to the template then upload a file. The placeholder field will contain a secure link to download the document.
@@ -287,9 +278,8 @@ In Notify, use double brackets to add a placeholder field to the email template.
 
 "Download your document at: ((link_to_document))"
 
-
 #### Upload your document
-˜
+
 The document you upload must be a PDF file smaller than 2MB.
 
 Pass the file object as a value into the personalisation argument. For example:
@@ -313,9 +303,9 @@ try {
 
 ### Response
 
-If the request to the client is successful, the client returns a response `object`, with a following `body` attribute:
+If the request to the client is successful, the client returns an `object`:
 
-```php
+```
 [
     "id" => "bfb50d92-100d-4b8b-b559-14fa3b091cda",
     "reference" => None,
@@ -333,9 +323,10 @@ If the request to the client is successful, the client returns a response `objec
 ]
 ```
 
+
 ### Error codes
 
-If the request is not successful, the client returns an error `error object`:
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code.
 
 |error.status_code|error.message|How to fix|
 |:---|:---|:---|
@@ -348,29 +339,25 @@ If the request is not successful, the client returns an error `error object`:
 |`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM/TEST/LIVE of 3000 requests per 60 seconds"`<br>`}]`|Refer to [API rate limits](#api-rate-limits) for more information|
 |`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number|
 |`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification.|
-|`N/A`|`"Document is larger than 2MB."`|The document you tried to upload was above the 2MB limit.|
 
+## Send a letter
 
-### Letter
+When your service first signs up to GOV.UK Notify, you’ll start in trial mode. You can only send letters in live mode. You must ask GOV.UK Notify to make your service live.
 
-#### Method
+1. Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/).
+1. Select __Using Notify__.
+1. Select __requesting to go live__.
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+### Method
 
-The method signature is:
 ```php
 sendLetter( $templateId, array $personalisation = array(), $reference = '' )
 ```
 
-An example request would look like:
-
 ```php
 try {
 
-    $response = $notifyClient->sendLetter(
+    $response = $notifyClient->sendEmail(
         'df10a23e-2c0d-4ea5-87fb-82e520cbf93c',
         [
             'name'=>'Fred',
@@ -384,17 +371,56 @@ try {
 } catch (NotifyException $e){}
 ```
 
-</details>
+### Arguments
 
+#### $templateId (required)
 
-#### Response
+Sign in to GOV.UK Notify and go to the __Templates page__ to find the template ID.
 
-If the request is successful, `response` will be an `array`.
+#### $personalisation (required)
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+The personalisation argument always contains the following required parameters for the letter recipient's address:
+
+- `address_line_1`
+- `address_line_2`
+- `postcode`
+
+Any other placeholder fields included in the letter template also count as required parameters. You need to provide their values in a dictionary with key value pairs. For example:
+
+```php
+personalisation=
+          [
+            'name'=>'Fred',
+            'address_line_1' => '123 High Street',
+            'address_line_2' => 'Richmond',
+            'postcode' => 'W4 1FH'
+          ]
+```
+
+#### reference (optional)
+
+A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. For example:
+
+```php
+reference='STRING' # optional string - identifies notification(s)
+```
+
+#### personalisation (optional)
+
+The following parameters in the letter recipient's address are optional:
+
+```python
+personalisation={
+    'address_line_3': '123 High Street', 	
+    'address_line_4': 'Richmond upon Thames', 	
+    'address_line_5': 'London', 		
+    'address_line_6': 'Middlesex',
+}
+```
+
+### Response
+
+If the request to the client is successful, the client returns an `array`:
 
 ```php
 [
@@ -408,54 +434,27 @@ Click here to expand for more information.
     "template" => [
         "id" => "ceb50d92-100d-4b8b-b559-14fa3b091cda",
         "version" => 1,
-        "uri" => "https://api.notificaitons.service.gov.uk/service/your_service_id/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
+        "uri" => "https://api.notifications.service.gov.uk/service/your_service_id/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
     ],
     "scheduled_for" => null
 ]
 ```
 
-Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyException``:
+### Error codes
 
-|`exc->getCode()`|`exc->getErrors()`|
-|:---|:---|
-|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"`<br>`}]`|
-|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (50) for today"`<br>`}]`|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can"t send to this recipient using a team-only API key"`<br>`]}`|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can"t send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code.
 
-</details>
+|error.status_code|error.message|How to fix|
+|:---|:---|:---|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters with a team api key"`<br>`]}`|Use the correct type of [API key](#api-keys)|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in  [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "personalisation address_line_1 is a required property"`<br>`}]`|Ensure that your template has a field for the first line of the address, check [personalisation](#send-a-letter-arguments-personalisation-optional) for more information.|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
+|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM/TEST/LIVE of 3000 requests per 60 seconds"`<br>`}]`|Refer to [API rate limits](#api-rate-limits) for more information|
+|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number|
+|`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification.|
 
-
-#### Arguments
-
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
-
-##### `templateId`
-
-Find by clicking **API info** for the template you want to send.
-
-##### `personalisation`
-
-If a template has placeholders you need to provide their values. For example:
-
-```php
-personalisation = [
-    'name' => 'Betty Smith',
-    'dob'  => '12 July 1968'
-]
-```
-
-Otherwise the parameter can be omitted.
-
-##### `reference`
-
-An optional identifier you generate if you don’t want to use Notify’s `id`. It can be used to identify a single  notification or a batch of notifications.
-
-
-</details>
 
 ## Send a precompiled Letter
 
@@ -472,11 +471,11 @@ response = notifications_client.send_precompiled_letter_notification(
 
 ### Arguments
 
-##### `$reference` (required)
+##### `reference` (required)
 
 A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
 
-#### `$pdf_data` (required)
+#### `pdf_file` (required)
 
 The precompiled letter must be a PDF file.
 
@@ -518,21 +517,50 @@ If the request is not successful, the client returns an HTTPError containing the
 |`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "reference is a required property"`<br>`}]`|Add a `reference` argument to the method call|
 
 
+# Get message status
+
+Message status depends on the type of message that you have sent.
+
+You can only get the status of messages that are 7 days old or less.
+
+## Status - text and email
+
+|Status|Information|
+|:---|:---|
+|Created|The message is queued to be sent to the provider. The notification usually remains in this state for a few seconds.|
+|Sending|The message is queued to be sent by the provider to the recipient, and GOV.UK Notify is waiting for delivery information.|
+|Delivered|The message was successfully delivered.|
+|Failed|This covers all failure statuses:<br>- `permanent-failure` - "The provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list"<br>- `temporary-failure` - "The provider was unable to deliver message, email inbox was full or phone was turned off; you can try to send the message again"<br>- `technical-failure` - "Notify had a technical failure; you can try to send the message again"|
+
+## Status - text only
+
+|Status|Information|
+|:---|:---|
+|Pending|GOV.UK Notify received a callback from the provider but the device has not yet responded. Another callback from the provider determines the final status of the notification.|
+|Sent|The text message was delivered internationally. This only applies to text messages sent to non-UK phone numbers. GOV.UK Notify may not receive additional status updates depending on the recipient's country and telecoms provider.|
+
+## Status - letter
+
+|Status|information|
+|:---|:---|
+|Failed|The only failure status that applies to letters is `technical-failure`. GOV.UK Notify had an unexpected error while sending to our printing provider.|
+|Accepted|GOV.UK Notify is printing and posting the letter.|
+|Received|The provider has received the letter to deliver.|
+
+## Status - pre-compiled letter
+
+|Status|information|
+|:---|:---|
+|pending-virus-check|GOV.UK Notify virus scan of the pre-compiled letter file is not yet complete.|
+|virus-scan-failed|GOV.UK Notify virus scan has identified a potential virus in the pre-compiled letter file.|
+
 ## Get the status of one message
 
-#### Method
+### Method
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
-
-The method signature is:
 ```php
 getNotification( $notificationId )
 ```
-
-An example request would look like:
 
 ```php
 try {
@@ -542,17 +570,22 @@ try {
 } catch (NotifyException $e){}
 ```
 
-</details>
+### Arguments
 
+#### notification_id (required)
 
-#### Response
+The ID of the notification. You can find the notification ID in the response to the [original notification method call](/python.html#get-the-status-of-one-message-response).
 
-If the request is successful, `response` will be an `array `.
+You can also find it in your [GOV.UK Notify Dashboard](https://www.notifications.service.gov.uk).
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+1. Sign into GOV.UK Notify and select __Dashboard__.
+1. Select either __emails sent__, __text messages sent__, or __letters sent__.
+1. Select the relevant notification.
+1. Copy the notification ID from the end of the page URL, for example `https://www.notifications.service.gov.uk/services/af90d4cb-ae88-4a7c-a197-5c30c7db423b/notification/ID`.
+
+### Response
+
+If the request to the client is successful, the client will return a `dict`:
 
 ```php
 [
@@ -577,48 +610,33 @@ Click here to expand for more information.
         "uri" => "/template/{id}/{version}"
      ],
     "created_at" => "created at",
-    "created_by_name" => "A name",  // name of the person who sent the notification if sent manually
     "sent_at" => "sent to provider at",
 ]
 ```
 
-Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyException``:
+### Error codes
 
-|`error["status_code"]`|`error["message"]`|
-|:---|:---|
-|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No result found"`<br>`}]`|
-|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "id is not a valid UUID"`<br>`}]`|
+If the request is not successful, the client will return an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code:
 
-</details>
+|error.status_code|error.message|How to fix|
+|:---|:---|:---|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "id is not a valid UUID"`<br>`}]`|Check the notification ID|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
+|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No result found"`<br>`}]`|Check the notification ID|
 
-#### Arguments
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+## Get the status of multiple messages
 
-##### `$notificationId`
+This API call returns one page of up to 250 messages and statuses. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the `older_than` argument.
 
-The ID of the notification.
+You can only get the status of messages that are 7 days old or less.
 
-</details>
+### Method
 
-## Get the status of all messages
-
-#### Method
-
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
-
-The method signature is:
 ```php
 listNotifications( array $filters = array() )
 ```
-
-An example request would look like:
 
 ```php
     $response = $notifyClient->listNotifications([
@@ -629,17 +647,59 @@ An example request would look like:
     ]);
 ```
 
-</details>
+You can leave out the `older_than` argument to get the 250 most recent messages.
 
+To get older messages, pass the ID of an older notification into the older_than argument. This returns the next 250 oldest messages from the specified notification ID.
 
-#### Response
+### Arguments
 
-If the request is successful, `response` will be an `array`.
+You can leave out any of these arguments to ignore these filters.
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+#### template_type (optional)
+
+You can filter by:
+
+* `email`
+* `sms`
+* `letter`
+
+#### status (optional)
+
+| status | description | text | email | letter |
+|:--- |:--- |:--- |:--- |:--- |
+|`created` |The message is queued to be sent to the provider|Yes|Yes||
+|`sending` |The message is queued to be sent to the recipient by the provider|Yes|Yes||
+|`delivered`|The message was successfully delivered|Yes|Yes||
+|`failed`|This will return all failure statuses:<br>- `permanent-failure`<br>- `temporary-failure`<br>- `technical-failure`|Yes|Yes||
+|`permanent-failure`|The provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list|Yes|Yes||
+|`temporary-failure`|The provider was unable to deliver message, email inbox was full or phone was turned off; you can try to send the message again|Yes|Yes||
+|`technical-failure`|Email or text message: Notify had a technical failure; you can try to send the message again. <br><br>Letter: Notify had an unexpected error while sending to our printing provider. <br><br>You can omit this argument to ignore this filter.|Yes|Yes||
+|`accepted`|Notify is printing and posting the letter|||Yes|
+|`received`|The provider has received the letter to deliver|||Yes|
+
+#### reference (optional)
+
+A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications.
+
+```php
+reference='STRING' # optional string - identifies notification(s)
+```
+
+#### older_than (optional)
+
+Input the ID of a notification into this argument. If you use this argument, the method returns the next 250 received notifications older than the given ID.
+
+```php
+older_than='740e5834-3a29-46b4-9a6f-16142fde533a' # optional string - notification ID
+```
+
+If you leave out this argument, the method returns the most recent 250 notifications.
+
+The client only returns notifications that are 7 days old or less. If the notification specified in this argument is older than 7 days, the client returns an empty response.
+
+### Response
+
+If the request to the client is successful, the client returns an `array`.
 
 ```php
 [
@@ -663,7 +723,6 @@ Click here to expand for more information.
             "uri" => "/template/{id}/{version}"
         ],
         "created_at" => "created at",
-        "created_by_name" => "A name",  // name of the person who sent the notification if sent manually
         "sent_at" => "sent to provider at",
         ],
         …
@@ -675,107 +734,43 @@ Click here to expand for more information.
 ]
 ```
 
-Otherwise the client will raise a ``Alphagov\Notifications\Exception\NotifyException``:
+### Error codes
 
-|`error["status_code"]`|`error["message"]`|
-|:---|:---|
-|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "bad status is not one of [created, sending, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure]"`<br>`}]`|
-|`400`|`[{`<br>`"error": "Apple is not one of [sms, email, letter]"`<br>`}]`|
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code:
 
-</details>
+|error.status_code|error.message|How to fix|
+|:---|:---|:---|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "bad status is not one of [created, sending, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure]"`<br>`}]`|Contact the Notify team|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "Apple is not one of [sms, email, letter]"`<br>`}]`|Contact the Notify team|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
 
-#### Arguments
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
-
-##### `older_than`
-
-If omitted 250 of the most recent messages are returned. Otherwise the next 250  messages older than the given notification id are returned.
-
-##### `template_type`
-
-If omitted all messages are returned. Otherwise you can filter by:
-
-* `email`
-* `sms`
-* `letter`
-
-##### `status`
-
-__email__
-
-You can filter by:
-
-* `sending` - the message is queued to be sent by the provider.
-* `delivered` - the message was successfully delivered.
-* `failed` - this will return all failure statuses `permanent-failure`, `temporary-failure` and `technical-failure`.
-* `permanent-failure` - the provider was unable to deliver message, email does not exist; remove this recipient from your list.
-* `temporary-failure` - the provider was unable to deliver message, email box was full; you can try to send the message again.
-* `technical-failure` - Notify had a technical failure; you can try to send the message again.
-
-You can omit this argument to ignore this filter.
-
-__text message__
-
-You can filter by:
-
-* `sending` - the message is queued to be sent by the provider.
-* `delivered` - the message was successfully delivered.
-* `failed` - this will return all failure statuses `permanent-failure`, `temporary-failure` and `technical-failure`.
-* `permanent-failure` - the provider was unable to deliver message, phone number does not exist; remove this recipient from your list.
-* `temporary-failure` - the provider was unable to deliver message, the phone was turned off; you can try to send the message again.
-* `technical-failure` - Notify had a technical failure; you can try to send the message again.
-
-You can omit this argument to ignore this filter.
-
-__letter__
-
-You can filter by:
-
-* `accepted` - Notify is in the process of printing and posting the letter
-* `technical-failure` - Notify had an unexpected error while sending to our printing provider
-
-You can omit this argument to ignore this filter.
-
-##### `reference`
-
-This is the `reference` you gave at the time of sending the notification. This can be omitted to ignore the filter.
-
-</details>
+# Get a template
 
 ## Get a template by ID
 
-#### Method
+### Method
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+This returns the latest version of the template.
 
 ```php
-    $response = $notifyClient->getTemplate( 'templateId' );
+$response = $notifyClient->getTemplate( 'templateId' );
 ```
 
-</details>
+### Arguments
 
+#### templateId (required)
 
-#### Response
+The ID of the template. Sign into GOV.UK Notify and go to the __Templates__ page to find this.
 
-If the request is successful, `response` will be an `array`.
+### Response
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
-
+If the request to the client is successful, the client returns an `array`.
 
 ```php
 {
     "id" => "template_id",
-    "name" => "Template name"
     "type" => "sms|email|letter",
     "created_at" => "created at",
     "updated_at" => "updated at",
@@ -786,55 +781,46 @@ Click here to expand for more information.
 }
 ```
 
-|`error["status_code"]`|`error["errors"]`|
-|:---|:---|
-|`404`|`[{`<br>`"error" => "NoResultFound",`<br>`"message" => "No result found"`<br>`}]`|
+### Error codes
 
-</details>
+If the request is not successful, the client returns an `xyz` containing the relevant error code:
 
+_a what?_
 
-#### Arguments
+|error.status_code|error.message|How to fix|
+|:---|:---|:---|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
+|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No Result Found"`<br>`}]`|Check your [template ID](#get-a-template-by-id-arguments-template-id-required)|
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
-
-##### `templateId`
-
-Find by clicking **API info** for the template you want to send.
-
-</details>
 
 ## Get a template by ID and version
 
-#### Method
+### Method
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+This returns the latest version of the template.
 
 ```php
-    $response = $notifyClient->getTemplateVersion( 'templateId', 1 );
+$response = $notifyClient->getTemplateVersion( 'templateId', 1 );
 ```
 
-</details>
+### Arguments
 
+#### templateId (required)
 
-#### Response
+The ID of the template. Sign in to GOV.UK Notify and go to the __Templates__ page to find this.
 
-If the request is successful, `response` will be an `array`.
+#### version (required)
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+The version number of the template.
+
+### Response
+
+If the request to the client is successful, the client returns an `array`.
 
 ```php
 [
     "id" => "template_id",
-    "name" => "Template name"
     "type" => "sms|email|letter",
     "created_at" => "created at",
     "updated_at" => "updated at",
@@ -845,64 +831,48 @@ Click here to expand for more information.
 ]
 ```
 
-|`error["status_code"]`|`error["errors"]`|
-|:---|:---|
-|`404`|`[{`<br>`"error" => "NoResultFound",`<br>`"message" => "No result found"`<br>`}]`|
+### Error codes
 
-</details>
+If the request is not successful, the client returns an `what?` containing the relevant error code:
 
+|error.status_code|error.message|How to fix|
+|:---|:---|:---|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
+|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No Result Found"`<br>`}]`|Check your [template ID](#get-a-template-by-id-and-version-arguments-template-id-required) and [version](#version-required)|
 
-#### Arguments
-
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
-
-##### `templateId`
-
-Find by clicking **API info** for the template you want to send.
-
-##### `version`
-
-The version number of the template
-
-</details>
 
 ## Get all templates
 
-#### Method
+### Method
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+This returns the latest version of all templates.
 
 ```php
     $this->getAllTemplates(
       $template_type  // optional
     );
 ```
-This will return the latest version for each template
 
-</details>
+### Arguments
 
+#### template_type (optional)
 
-#### Response
+If omitted, the method returns all templates. Otherwise you can filter by:
 
-If the request is successful, `response` will be an `array`.
+- `email`
+- `sms`
+- `letter`
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+### Response
+
+If the request to the client is successful, the client returns an `array`.
 
 ```php
 [
     "templates"  => [
         [
             "id" => "template_id",
-            "name" => "Template name"
             "type" => "sms|email|letter",
             "created_at" => "created at",
             "updated_at" => "updated at",
@@ -918,7 +888,7 @@ Click here to expand for more information.
 ]
 ```
 
-If no templates exist for a template type or there no templates for a service, the `response` will be a Dictionary` with an empty `templates` list element:
+If no templates exist for a template type or there no templates for a service, the client returns a `dictionary` with an empty `templates` list element:
 
 ```php
 [
@@ -926,53 +896,42 @@ If no templates exist for a template type or there no templates for a service, t
 ]
 ```
 
-</details>
-
-
-#### Arguments
-
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
-
-##### `$templateType`
-
-If omitted all messages are returned. Otherwise you can filter by:
-
-* `email`
-* `sms`
-* `letter`
-
-</details>
-
+_is this true?_
 
 ## Generate a preview template
 
-#### Method
+### Method
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+This generates a preview version of a template.
 
 ```php
     $personalisation = [ "foo" => "bar" ];
     $this->previewTemplate( $templateId, $personalisation );
 ```
 
-</details>
+The parameters in the personalisation argument must match the placeholder fields in the actual template. The API notification client will ignore any extra fields in the method.
 
+### Arguments
 
-#### Response
+#### template_id (required)
 
-If the request is successful, `response` will be an `array`.
+The ID of the template. Sign into GOV.UK Notify and go to the __Templates__ page.
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+#### personalisation (required)
 
+If a template has placeholder fields for personalised information such as name or reference number, you need to provide their values in a dictionary with key value pairs. For example:
+
+```php
+$personalisation = [
+    'first_name' => 'Amala',
+    'reference_number' => '300241',
+];
+```
+_can be excluded or have null?_
+
+### Response
+
+If the request to the client is successful, the client returns an `array`.
 
 ```php
 [
@@ -984,49 +943,25 @@ Click here to expand for more information.
 ]
 ```
 
-|`error["status_code"]`|`error["errors"]`|
-|:---|:---|
-|`400`|`[{`<br>`"error" => "BadRequestError",`<br>`"message" => "Missing personalisation => [name]"`<br>`}]`|
-|`404`|`[{`<br>`"error" => "NoResultFound",`<br>`"message" => "No result found"`<br>`}]`|
+### Error codes
+
+If the request is not successful, the client returns an `HTTPError` containing the relevant error code:
+
+|error.status_code|error.message|Notes|
+|:---|:---|:---|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Missing personalisation: [PERSONALISATION FIELD]"`<br>`}]`|Check that the personalisation arguments in the method match the placeholder fields in the template|
+|`400`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No result found"`<br>`}]`|Check the [template ID](#generate-a-preview-template-arguments-template-id-required)|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
 
 
-</details>
+# Get received text messages
 
+This API call returns one page of up to 250 received text messages. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the older_than argument.
 
-#### Arguments
+You can only get the status of messages that are 7 days old or less.
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
-
-##### `$templateId`
-
-Find by clicking **API info** for the template you want to send.
-
-##### `$personalisation`
-
-If a template has placeholders you need to provide their values. For example:
-
-```php
-$personalisation = [
-    'first_name' => 'Amala',
-    'reference_number' => '300241',
-];
-```
-
-Otherwise the parameter can be omitted or `null` can be passed in its place.
-
-</details>
-
-## Get received text messages
-
-#### Method
-
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+### Method
 
 ```php
     $this->listReceivedTexts(
@@ -1034,17 +969,27 @@ Click here to expand for more information.
     );
 ```
 
-</details>
+To get older messages, pass the ID of an older notification into the older_than argument. This returns the next oldest messages from the specified notification ID.
 
-#### Response
+If you leave out the older_than argument, the client returns the most recent 250 notifications.
 
-If the request is successful, `response` will be an `array`.
+### Arguments
 
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
+#### older_than (optional)
 
+Input the ID of a received text message into this argument. If you use this argument, the client returns the next 250 received text messages older than the given ID. For example:
+
+```php
+$older_than: '8e222534-7f05-4972-86e3-17c5d9f894e2'
+```
+
+If you leave out the older_than argument, the client returns the most recent 250 notifications.
+
+The client only returns notifications that are 7 days old or less. If the notification specified in this argument is older than 7 days, the client returns an empty collection response.
+
+### Response
+
+If the request to the client is successful, the client will return an `array` of received text messages.
 
 ```php
 [
@@ -1068,18 +1013,3 @@ Click here to expand for more information.
   ]
 ]
 ```
-
-</details>
-
-#### Arguments
-
-<details>
-<summary>
-Click here to expand for more information.
-</summary>
-
-##### `$older_than`
-
-If omitted 250 of the most recently received text messages are returned. Otherwise the next 250 received text messages older than the given id are returned.
-
-</details>
