@@ -4,50 +4,102 @@ _Speak to Leo Hemsted_
 
 This documentation is for developers interested in using the GOV.UK Notify PHP client to send emails, text messages or letters.
 
-# Set up the client
+# Installation and getting started
 
-## Install the client
+The Notify PHP Client is based on a [PSR-7 HTTP model](https://www.php-fig.org/psr/psr-7/) [external link]. You must select your preferred HTTP Client library. We provide installation instructions for the [Guzzle v5 and v6](http://docs.guzzlephp.org/en/stable/) and [Curl](http://php.net/manual/en/book.curl.php) [external links] clients.
 
-You must install the Notify PHP Client with [Composer](https://getcomposer.org/).
+## Guzzle v6
 
-1. [Download and install Composer](https://getcomposer.org/download/).
+The Notify PHP Client is installed with [Composer](https://getcomposer.org/).
 
-1. Run the following in the command line:
+Run the following in the command line to install the client:
 
 ```sh
 composer require php-http/guzzle6-adapter alphagov/notifications-php-client
 ```
-_OR?_
 
-```php
-composer require php-http/guzzle6-adapter alphagov/notifications-php-client
-```
+The Notify PHP Client is then available via the [autoloader](https://getcomposer.org/doc/01-basic-usage.md#autoloading) [external link].
 
-The GOV.UK Notify PHP client is based on a [PSR-7 HTTP model](https://www.php-fig.org/psr/psr-7/) [external link]. You must pick your preferred HTTP Client library to use. _how do you decide this?_
+Add the following code to your application to create a new instance of the client:
 
-All examples in this documentation use the [Guzzle v6 Adapter](https://github.com/php-http/guzzle6-adapter). _why? what about other guzzles?_
-
-Setup instructions are also available for [Curl](docs/curl-client-setup.md) and [Guzzle v5](docs/guzzle5-client-setup.md).
-_where?_
-
-Refer to the [client changelog](https://github.com/alphagov/notifications-python-client/blob/master/CHANGELOG.md) for the client version number and the latest updates.
-
-## Create a new instance of the client
-
-The Notify PHP Client is available via the [autoloader](https://getcomposer.org/doc/01-basic-usage.md#autoloading) in Composer.
-_Is the autoloader part of Composer?_
-_Run / Add this code to your application / Do something else to / create a Guzzle v6 instance of the client:_
-_How does autoloading relate to the code below?_
-
-
-```php
+```sh
 $notifyClient = new \Alphagov\Notifications\Client([
     'apiKey' => '{your api key}',
     'httpClient' => new \Http\Adapter\Guzzle6\Client
 ]);
 ```
 
-To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. You can find more information in the [API keys](#api-keys) section of this documentation.
+To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. Refer to the [API keys](#api-keys) section of this documentation for more information.
+
+## Guzzle v5
+
+The Notify PHP Client is installed with [Composer](https://getcomposer.org/).
+
+Run the following in the command line to install the client:
+
+```sh
+composer require php-http/guzzle5-adapter php-http/message alphagov/notifications-php-client
+```
+
+The Notify PHP Client is then available via the [autoloader](https://getcomposer.org/doc/01-basic-usage.md#autoloading) [external link].
+
+Add the following code to your application to create a new instance of the client:
+
+```sh
+$notifyClient = new \Alphagov\Notifications\Client([
+    'serviceId'     => '{your service id}',
+    'apiKey'        => '{your api key}',
+    'httpClient'    => new \Http\Adapter\Guzzle5\Client(
+        new \GuzzleHttp\Client,
+        new \Http\Message\MessageFactory\GuzzleMessageFactory
+    ),
+]);
+```
+
+Access the Notify API by running `$notifyClient`.
+
+To access a non-production environment, pass the base URL in via the `baseUrl` key in the constructor by running:
+
+```sh
+'baseUrl' => '{api base url}'
+```
+
+To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. Refer to the [API keys](#api-keys) section of this documentation for more information.
+
+## Curl
+
+The Notify PHP Client is installed with [Composer](https://getcomposer.org/).
+
+Run the following in the command line to install the client:
+
+```sh
+composer require php-http/curl-client php-http/message alphagov/notifications-php-client
+```
+
+The Notify PHP Client is then available via the [autoloader](https://getcomposer.org/doc/01-basic-usage.md#autoloading) [external link].
+
+Add the following code to your application to create a new instance of the client:
+
+```sh
+$notifyClient = new \Alphagov\Notifications\Client([
+    'serviceId'     => '{your service id}',
+    'apiKey'        => '{your api key}',
+    'httpClient'    => new \Http\Client\Curl\Client(
+        new \Http\Message\MessageFactory\GuzzleMessageFactory,
+        new \Http\Message\StreamFactory\GuzzleStreamFactory
+    ),
+]);
+```
+
+Access the Notify API by running `$notifyClient`.
+
+To access a non-production environment, pass the base URL in via the `baseUrl` key in the constructor by running:
+
+```sh
+'baseUrl' => '{api base url}'
+```
+
+To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. Refer to the [API keys](#api-keys) section of this documentation for more information.
 
 # Send a message
 
