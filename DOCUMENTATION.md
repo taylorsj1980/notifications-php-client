@@ -63,6 +63,7 @@ To access a non-production environment, pass the base URL in via the `baseUrl` k
 ```sh
 'baseUrl' => '{api base url}'
 ```
+_do we need to tell people this?_
 
 To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. Refer to the [API keys](#api-keys) section of this documentation for more information.
 
@@ -98,6 +99,7 @@ To access a non-production environment, pass the base URL in via the `baseUrl` k
 ```sh
 'baseUrl' => '{api base url}'
 ```
+_do we need to tell people this?_
 
 To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. Refer to the [API keys](#api-keys) section of this documentation for more information.
 
@@ -113,9 +115,7 @@ You can use GOV.UK Notify to send text messages, emails and letters.
 sendSms( $phoneNumber, $templateId, array $personalisation = array(), $reference = '', $smsSenderId = NULL  )
 ```
 
-_why is smsSenderId = NULL? is this just an example?_
-
-Example request:
+For example:
 
 ```php
 try {
@@ -133,8 +133,6 @@ try {
 } catch (NotifyException $e){}
 ```
 
-_use this example to fill in example arguments?_
-
 ```php
 try {
 
@@ -148,15 +146,15 @@ try {
 
 ### Arguments
 
-#### $phoneNumber (required)
+#### phoneNumber (required)
 
 The phone number of the recipient of the text message. This can be a UK or international number.
 
-#### $templateId (required)
+#### templateId (required)
 
 Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __Templates__ page to find the template ID.
 
-#### $personalisation (optional)
+#### personalisation (optional)
 
 If a template has placeholder fields for personalised information such as name or reference number, you must provide their values in a dictionary with key value pairs. For example:
 
@@ -169,7 +167,7 @@ $personalisation[
 
 You can leave out this argument if a template does not have any placeholder fields for personalised information.
 
-#### $reference (optional)
+#### reference (optional)
 
 A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. For example:
 
@@ -178,7 +176,7 @@ $reference='STRING',
 ```
 You can leave out this argument if you do not have a reference.
 
-#### $smsSenderId (optional)
+#### smsSenderId (optional)
 
 A unique identifier of the sender of the text message notification. You can find this information on the __Text Message sender__ settings screen:
 
@@ -227,9 +225,7 @@ All messages sent using the [team and whitelist](#team-and-whitelist) or [live](
 
 If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code.
 
-_is is Alphagov\Notifications\Exception\NotifyException or something else?_
-
-|`exc->getCode()`|`exc->getErrors()`|How to fix|
+|exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient using a team-only API key"`<br>`]}`|Use the correct type of [API key](#api-keys)|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
@@ -246,7 +242,7 @@ _is is Alphagov\Notifications\Exception\NotifyException or something else?_
 ```php
 sendEmail( $emailAddress, $templateId, array $personalisation = array(), $reference = '', $emailReplyToId = NULL )
 ```
-_why is emailReplyToId = NULL?_
+For example:
 
 ```php
 try {
@@ -271,11 +267,11 @@ try {
 
 The email address of the recipient.
 
-#### $templateId (required)
+#### templateId (required)
 
 Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk) and go to the __Templates__ page to find the template ID.
 
-#### $personalisation (optional)
+#### personalisation (optional)
 
 If a template has placeholder fields for personalised information such as name or reference number, you need to provide their values in a dictionary with key value pairs. For example:
 
@@ -288,7 +284,7 @@ $personalisation[
 
 You can leave out this argument if a template does not have any placeholder fields for personalised information.
 
-#### $reference (optional)
+#### reference (optional)
 
 A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications.
 
@@ -298,7 +294,7 @@ $reference='STRING', # optional string - identifies notification(s)
 
 You can leave out this argument if you do not have a reference.
 
-#### $emailReplyToId (optional)
+#### emailReplyToId (optional)
 
 This is an email reply-to address specified by you to receive replies from your users. Your service cannot go live until you set up at least one of these email addresses. To set up:
 
@@ -311,7 +307,7 @@ This is an email reply-to address specified by you to receive replies from your 
 For example:
 
 ```php
-$emailReplyToId='8e222534-7f05-4972-86e3-17c5d9f894e2' # optional UUID string
+$emailReplyToId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
 You can leave out this argument if your service only has one email reply-to address, or you want to use the default email address.
@@ -320,13 +316,15 @@ You can leave out this argument if your service only has one email reply-to addr
 
 Send files without the need for email attachments.
 
-To send a document by email, add a placeholder field to the template then upload a file. The placeholder field will contain a secure link to download the document.
+To send a document by email, add a placeholder field to the template and then upload a file. The placeholder field will contain a secure link to download the document.
 
 [Contact the GOV.UK Notify team](https://www.notifications.service.gov.uk/support) to enable this function for your service.
 
 #### Add a placeholder field to the template
 
-In Notify, use double brackets to add a placeholder field to the email template. For example:
+1. Sign into [GOV.UK Notify](https://www.notifications.service.gov.uk/). 
+1. Go to the __Templates__ page and select the relevant email template.
+1. Add a placeholder field to the email template using double brackets. For example:
 
 "Download your document at: ((link_to_document))"
 
@@ -380,7 +378,7 @@ If the request to the client is successful, the client returns an `object`:
 
 If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code.
 
-|error.status_code|error.message|How to fix|
+|exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient using a team-only API key"`<br>`]}`|Use the correct type of [API key](#api-keys)|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
@@ -405,6 +403,7 @@ When your service first signs up to GOV.UK Notify, you’ll start in trial mode.
 ```php
 sendLetter( $templateId, array $personalisation = array(), $reference = '' )
 ```
+For example:
 
 ```php
 try {
@@ -425,11 +424,11 @@ try {
 
 ### Arguments
 
-#### $templateId (required)
+#### templateId (required)
 
 Sign in to GOV.UK Notify and go to the __Templates page__ to find the template ID.
 
-#### $personalisation (required)
+#### personalisation (required)
 
 The personalisation argument always contains the following required parameters for the letter recipient's address:
 
@@ -442,10 +441,11 @@ Any other placeholder fields included in the letter template also count as requi
 ```php
 personalisation=
           [
-            'name'=>'Fred',
             'address_line_1' => '123 High Street',
             'address_line_2' => 'Richmond',
-            'postcode' => 'W4 1FH'
+            'postcode' => 'W4 1FH',
+            'name' => 'John Smith',
+            'application_id' => '4134325'
           ]
 ```
 
@@ -454,14 +454,14 @@ personalisation=
 A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. For example:
 
 ```php
-reference='STRING' # optional string - identifies notification(s)
+reference='STRING' 
 ```
 
 #### personalisation (optional)
 
 The following parameters in the letter recipient's address are optional:
 
-```python
+```php
 personalisation={
     'address_line_3': '123 High Street', 	
     'address_line_4': 'Richmond upon Thames', 	
@@ -496,7 +496,7 @@ If the request to the client is successful, the client returns an `array`:
 
 If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code.
 
-|error.status_code|error.message|How to fix|
+|exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters with a team api key"`<br>`]}`|Use the correct type of [API key](#api-keys)|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in  [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
@@ -516,20 +516,20 @@ This is an invitation-only feature. Contact the GOV.UK Notify team on the [suppo
 
 ```php
 response = notifications_client.send_precompiled_letter_notification(
-    $reference,      # Reference to identify the notification
-    $pdf_file        # PDF File object
+    $reference,
+    $pdf_file
 )
 ```
 
 ### Arguments
 
-##### `reference` (required)
+##### reference (required)
 
 A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
 
-#### `pdf_file` (required)
+#### pdf_file (required)
 
-The precompiled letter must be a PDF file.
+The precompiled letter must be a PDF file. The method sends the contents of the file to GOV.UK Notify.
 
 ```php
 $file_contents = file_get_contents("path/to/pdf_file");
@@ -556,9 +556,9 @@ If the request to the client is successful, the client returns a `dict`:
 
 ### Error codes
 
-If the request is not successful, the client returns an HTTPError containing the relevant error code.
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code.
 
-|error.status_code|error.message|How to fix|
+|exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
 |`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type live of 10 requests per 20 seconds"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
 |`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (50) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number|
@@ -613,6 +613,8 @@ You can only get the status of messages that are 7 days old or less.
 ```php
 getNotification( $notificationId )
 ```
+
+For example:
 
 ```php
 try {
@@ -670,7 +672,7 @@ If the request to the client is successful, the client will return a `dict`:
 
 If the request is not successful, the client will return an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code:
 
-|error.status_code|error.message|How to fix|
+|exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
 |`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "id is not a valid UUID"`<br>`}]`|Check the notification ID|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
@@ -790,7 +792,7 @@ If the request to the client is successful, the client returns an `array`.
 
 If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code:
 
-|error.status_code|error.message|How to fix|
+|exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
 |`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "bad status is not one of [created, sending, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure]"`<br>`}]`|Contact the Notify team|
 |`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "Apple is not one of [sms, email, letter]"`<br>`}]`|Contact the Notify team|
@@ -835,11 +837,9 @@ If the request to the client is successful, the client returns an `array`.
 
 ### Error codes
 
-If the request is not successful, the client returns an `xyz` containing the relevant error code:
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code:
 
-_a what?_
-
-|error.status_code|error.message|How to fix|
+|exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
@@ -885,9 +885,9 @@ If the request to the client is successful, the client returns an `array`.
 
 ### Error codes
 
-If the request is not successful, the client returns an `what?` containing the relevant error code:
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code:
 
-|error.status_code|error.message|How to fix|
+|exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
@@ -940,15 +940,13 @@ If the request to the client is successful, the client returns an `array`.
 ]
 ```
 
-If no templates exist for a template type or there no templates for a service, the client returns a `dictionary` with an empty `templates` list element:
+If no templates exist for a template type or there no templates for a service, the client returns a `dict` with an empty `templates` list element:
 
 ```php
 [
     "templates"  => []
 ]
 ```
-
-_is this true?_
 
 ## Generate a preview template
 
@@ -979,7 +977,6 @@ $personalisation = [
     'reference_number' => '300241',
 ];
 ```
-_can be excluded or have null?_
 
 ### Response
 
@@ -997,9 +994,9 @@ If the request to the client is successful, the client returns an `array`.
 
 ### Error codes
 
-If the request is not successful, the client returns an `HTTPError` containing the relevant error code:
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code:
 
-|error.status_code|error.message|Notes|
+|exc->getCode()|exc->getErrors()|Notes|
 |:---|:---|:---|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Missing personalisation: [PERSONALISATION FIELD]"`<br>`}]`|Check that the personalisation arguments in the method match the placeholder fields in the template|
 |`400`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No result found"`<br>`}]`|Check the [template ID](#generate-a-preview-template-arguments-template-id-required)|
