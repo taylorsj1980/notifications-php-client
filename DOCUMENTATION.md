@@ -1,5 +1,3 @@
-_Speak to Leo Hemsted_
-
 # PHP client documentation
 
 This documentation is for developers interested in using the GOV.UK Notify PHP client to send emails, text messages or letters.
@@ -58,13 +56,6 @@ $notifyClient = new \Alphagov\Notifications\Client([
 
 Access the Notify API by running `$notifyClient`.
 
-To access a non-production environment, pass the base URL in via the `baseUrl` key in the constructor by running:
-
-```sh
-'baseUrl' => '{api base url}'
-```
-_do we need to tell people this?_
-
 To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. Refer to the [API keys](#api-keys) section of this documentation for more information.
 
 ## Curl
@@ -93,13 +84,6 @@ $notifyClient = new \Alphagov\Notifications\Client([
 ```
 
 Access the Notify API by running `$notifyClient`.
-
-To access a non-production environment, pass the base URL in via the `baseUrl` key in the constructor by running:
-
-```sh
-'baseUrl' => '{api base url}'
-```
-_do we need to tell people this?_
 
 To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. Refer to the [API keys](#api-keys) section of this documentation for more information.
 
@@ -159,10 +143,10 @@ Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to 
 If a template has placeholder fields for personalised information such as name or reference number, you must provide their values in a dictionary with key value pairs. For example:
 
 ```php
-$personalisation[
+$personalisation = [
     'name' => 'Amala',
     'application_date'  => '2018-01-01'
-],
+];
 ```
 
 You can leave out this argument if a template does not have any placeholder fields for personalised information.
@@ -172,7 +156,7 @@ You can leave out this argument if a template does not have any placeholder fiel
 A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. For example:
 
 ```php
-$reference='STRING',
+$reference = 'STRING',
 ```
 You can leave out this argument if you do not have a reference.
 
@@ -214,7 +198,7 @@ If the request to the client is successful, the client returns an `array`:
        "version" => 1,
        "uri" => "https://api.notifications.service.gov.uk/v2/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
     ]
-]
+];
 ```
 
 If you are using the [test API key](#test), all your messages will come back as delivered.
@@ -276,10 +260,10 @@ Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk) and go to t
 If a template has placeholder fields for personalised information such as name or reference number, you need to provide their values in a dictionary with key value pairs. For example:
 
 ```php
-$personalisation[
+$personalisation = [
     'name' => 'Amala',
     'application_date'  => '2018-01-01'
-],
+];
 ```
 
 You can leave out this argument if a template does not have any placeholder fields for personalised information.
@@ -289,7 +273,7 @@ You can leave out this argument if a template does not have any placeholder fiel
 A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications.
 
 ```php
-$reference='STRING', # optional string - identifies notification(s)
+$reference = 'STRING',
 ```
 
 You can leave out this argument if you do not have a reference.
@@ -353,7 +337,7 @@ try {
 
 ### Response
 
-If the request to the client is successful, the client returns an `object`:
+If the request to the client is successful, the client returns an `array`:
 
 ```
 [
@@ -370,7 +354,7 @@ If the request to the client is successful, the client returns an `object`:
         "version" => 1,
         "uri" => "https://api.notificaitons.service.gov.uk/service/your_service_id/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
     ]
-]
+];
 ```
 
 
@@ -439,14 +423,14 @@ The personalisation argument always contains the following required parameters f
 Any other placeholder fields included in the letter template also count as required parameters. You need to provide their values in a dictionary with key value pairs. For example:
 
 ```php
-personalisation=
+$personalisation =
           [
             'address_line_1' => '123 High Street',
             'address_line_2' => 'Richmond',
             'postcode' => 'W4 1FH',
             'name' => 'John Smith',
             'application_id' => '4134325'
-          ]
+          ];
 ```
 
 #### reference (optional)
@@ -454,7 +438,7 @@ personalisation=
 A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. For example:
 
 ```php
-reference='STRING' 
+$reference = 'STRING',
 ```
 
 #### personalisation (optional)
@@ -462,12 +446,13 @@ reference='STRING'
 The following parameters in the letter recipient's address are optional:
 
 ```php
-personalisation={
-    'address_line_3': '123 High Street', 	
-    'address_line_4': 'Richmond upon Thames', 	
-    'address_line_5': 'London', 		
-    'address_line_6': 'Middlesex',
-}
+$personalisation = 
+    [
+    'address_line_3' => '123 High Street', 	
+    'address_line_4' => 'Richmond upon Thames', 	
+    'address_line_5' => 'London', 		
+    'address_line_6' => 'Middlesex',
+    ];
 ```
 
 ### Response
@@ -489,7 +474,7 @@ If the request to the client is successful, the client returns an `array`:
         "uri" => "https://api.notifications.service.gov.uk/service/your_service_id/templates/bfb50d92-100d-4b8b-b559-14fa3b091cda"
     ],
     "scheduled_for" => null
-]
+];
 ```
 
 ### Error codes
@@ -518,7 +503,7 @@ This is an invitation-only feature. Contact the GOV.UK Notify team on the [suppo
 response = notifications_client.send_precompiled_letter_notification(
     $reference,
     $pdf_file
-)
+);
 ```
 
 ### Arguments
@@ -526,6 +511,10 @@ response = notifications_client.send_precompiled_letter_notification(
 ##### reference (required)
 
 A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
+
+```php
+$reference = 'STRING',
+```
 
 #### pdf_file (required)
 
@@ -545,13 +534,13 @@ try {
 
 ### Response
 
-If the request to the client is successful, the client returns a `dict`:
+If the request to the client is successful, the client returns an `array`:
 
 ```php
 [
   "id" => "740e5834-3a29-46b4-9a6f-16142fde533a",
   "reference" => "unique_ref123"
-]
+];
 ```
 
 ### Error codes
@@ -639,7 +628,7 @@ You can also find it in your [GOV.UK Notify Dashboard](https://www.notifications
 
 ### Response
 
-If the request to the client is successful, the client will return a `dict`:
+If the request to the client is successful, the client returns an `array`:
 
 ```php
 [
@@ -665,7 +654,7 @@ If the request to the client is successful, the client will return a `dict`:
      ],
     "created_at" => "created at",
     "sent_at" => "sent to provider at",
-]
+];
 ```
 
 ### Error codes
@@ -736,7 +725,7 @@ You can filter by:
 A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications.
 
 ```php
-reference='STRING' # optional string - identifies notification(s)
+$reference = 'STRING',
 ```
 
 #### older_than (optional)
@@ -785,7 +774,7 @@ If the request to the client is successful, the client returns an `array`.
      "current" => "/notifications?template_type=sms&status=delivered",
      "next" => "/notifications?older_than=last_id_in_list&template_type=sms&status=delivered"
   ]
-]
+];
 ```
 
 ### Error codes
@@ -823,7 +812,7 @@ The ID of the template. Sign into GOV.UK Notify and go to the __Templates__ page
 If the request to the client is successful, the client returns an `array`.
 
 ```php
-{
+[
     "id" => "template_id",
     "type" => "sms|email|letter",
     "created_at" => "created at",
@@ -832,7 +821,7 @@ If the request to the client is successful, the client returns an `array`.
     "created_by" => "someone@example.com",
     "body" => "body",
     "subject" => "null|email_subject"
-}
+];
 ```
 
 ### Error codes
@@ -880,7 +869,7 @@ If the request to the client is successful, the client returns an `array`.
     "created_by" => "someone@example.com",
     "body" => "body",
     "subject" => "null|email_subject"
-]
+];
 ```
 
 ### Error codes
@@ -937,7 +926,7 @@ If the request to the client is successful, the client returns an `array`.
             ... another template
         ]
     ]
-]
+];
 ```
 
 If no templates exist for a template type or there no templates for a service, the client returns a `dict` with an empty `templates` list element:
@@ -945,7 +934,7 @@ If no templates exist for a template type or there no templates for a service, t
 ```php
 [
     "templates"  => []
-]
+];
 ```
 
 ## Generate a preview template
@@ -989,7 +978,7 @@ If the request to the client is successful, the client returns an `array`.
     "version" => "version",
     "body" => "Hello bar" // with substitution values,
     "subject" => "null|email_subject"
-]
+];
 ```
 
 ### Error codes
@@ -1029,7 +1018,7 @@ If you leave out the older_than argument, the client returns the most recent 250
 Input the ID of a received text message into this argument. If you use this argument, the client returns the next 250 received text messages older than the given ID. For example:
 
 ```php
-$older_than: '8e222534-7f05-4972-86e3-17c5d9f894e2'
+$older_than = '8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
 If you leave out the older_than argument, the client returns the most recent 250 notifications.
@@ -1038,7 +1027,7 @@ The client only returns notifications that are 7 days old or less. If the notifi
 
 ### Response
 
-If the request to the client is successful, the client will return an `array` of received text messages.
+If the request to the client is successful, the client returns an `array`.
 
 ```php
 [
@@ -1060,5 +1049,5 @@ If the request to the client is successful, the client will return an `array` of
      "current" => "/received-text-messages",
      "next" => "/received-text-messages?older_than=last_id_in_list"
   ]
-]
+];
 ```
