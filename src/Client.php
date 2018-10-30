@@ -25,7 +25,7 @@ class Client {
      * @const string Current version of this client.
      * This follows Semantic Versioning (http://semver.org/)
      */
-    const VERSION = '1.7.0';
+    const VERSION = '1.7.1';
 
     /**
      * @const string The API endpoint for Notify production.
@@ -589,7 +589,7 @@ class Client {
 
         // The expected response should always be JSON, thus now an array.
         if( !is_array($body) ){
-            throw new Exception\ApiException( 'Malformed JSON response from server', $response->getStatusCode(), $response );
+            throw new Exception\ApiException( 'Malformed JSON response from server', $response->getStatusCode(), $body, $response );
         }
 
         return $body;
