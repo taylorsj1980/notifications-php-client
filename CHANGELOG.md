@@ -1,3 +1,8 @@
+## [1.8.0] - 2018-11-01
+### Changed
+
+* Added support for httplug 2.0
+
 ## [1.7.0] - 2018-09-11
 ### Changed
 

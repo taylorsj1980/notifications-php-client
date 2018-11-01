@@ -25,7 +25,7 @@ class Client {
      * @const string Current version of this client.
      * This follows Semantic Versioning (http://semver.org/)
      */
-    const VERSION = '1.7.1';
+    const VERSION = '1.8.0';
 
     /**
      * @const string The API endpoint for Notify production.
