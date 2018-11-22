@@ -2,88 +2,82 @@
 
 This documentation is for developers interested in using the GOV.UK Notify PHP client to send emails, text messages or letters.
 
-# Installation and getting started
+# Set up the client
 
-The Notify PHP Client is based on a [PSR-7 HTTP model](https://www.php-fig.org/psr/psr-7/) [external link]. You must select your preferred HTTP Client library. We provide installation instructions for the [Guzzle v5 and v6](http://docs.guzzlephp.org/en/stable/) and [Curl](http://php.net/manual/en/book.curl.php) [external links] clients.
+The Notify PHP Client is based on a [PSR-7 HTTP model](https://www.php-fig.org/psr/psr-7/) [external link]. To install it, you must select your preferred HTTP client. You can follow these instructions to use [Guzzle v6 and v5](http://docs.guzzlephp.org/en/stable/) and [cURL](http://php.net/manual/en/book.curl.php) [external links].
 
 ## Guzzle v6
 
-The Notify PHP Client is installed with [Composer](https://getcomposer.org/).
+1. Use [Composer](https://getcomposer.org/)  [external link] to install the GOV.UK Notify PHP client. Run the following in the command line:
 
-Run the following in the command line to install the client:
+    ```sh
+    composer require php-http/guzzle6-adapter alphagov/notifications-php-client
+    ```
 
-```sh
-composer require php-http/guzzle6-adapter alphagov/notifications-php-client
-```
+    You can now use the [autoloader](https://getcomposer.org/doc/01-basic-usage.md#autoloading) [external link] to download the GOV.UK Notify PHP client.
 
-The Notify PHP Client is then available via the [autoloader](https://getcomposer.org/doc/01-basic-usage.md#autoloading) [external link].
+1. Add the following code to your application to create a new instance of the client:
 
-Add the following code to your application to create a new instance of the client:
-
-```sh
-$notifyClient = new \Alphagov\Notifications\Client([
-    'apiKey' => '{your api key}',
-    'httpClient' => new \Http\Adapter\Guzzle6\Client
-]);
-```
+    ```
+    $notifyClient = new \Alphagov\Notifications\Client([
+        'apiKey' => '{your api key}',
+        'httpClient' => new \Http\Adapter\Guzzle6\Client
+    ]);
+    ```
 
 To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. Refer to the [API keys](#api-keys) section of this documentation for more information.
 
 ## Guzzle v5
 
-The Notify PHP Client is installed with [Composer](https://getcomposer.org/).
+1. Use [Composer](https://getcomposer.org/)  [external link] to install the GOV.UK Notify PHP client. Run the following in the command line:
 
-Run the following in the command line to install the client:
+    ```sh
+    composer require php-http/guzzle5-adapter php-http/message alphagov/notifications-php-client
+    ```
 
-```sh
-composer require php-http/guzzle5-adapter php-http/message alphagov/notifications-php-client
-```
+    You can now use the [autoloader](https://getcomposer.org/doc/01-basic-usage.md#autoloading) [external link] to download the GOV.UK Notify PHP client.
 
-The Notify PHP Client is then available via the [autoloader](https://getcomposer.org/doc/01-basic-usage.md#autoloading) [external link].
+1. Add the following code to your application to create a new instance of the client:
 
-Add the following code to your application to create a new instance of the client:
+    ```
+    $notifyClient = new \Alphagov\Notifications\Client([
+        'serviceId'     => '{your service id}',
+        'apiKey'        => '{your api key}',
+        'httpClient'    => new \Http\Adapter\Guzzle5\Client(
+            new \GuzzleHttp\Client,
+            new \Http\Message\MessageFactory\GuzzleMessageFactory
+        ),
+    ]);
+    ```
 
-```sh
-$notifyClient = new \Alphagov\Notifications\Client([
-    'serviceId'     => '{your service id}',
-    'apiKey'        => '{your api key}',
-    'httpClient'    => new \Http\Adapter\Guzzle5\Client(
-        new \GuzzleHttp\Client,
-        new \Http\Message\MessageFactory\GuzzleMessageFactory
-    ),
-]);
-```
-
-Access the Notify API by running `$notifyClient`.
+1. Run `$notifyClient` to access the GOV.UK Notify API.
 
 To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. Refer to the [API keys](#api-keys) section of this documentation for more information.
 
-## Curl
+## cURL
 
-The Notify PHP Client is installed with [Composer](https://getcomposer.org/).
+1. Use [Composer](https://getcomposer.org/)  [external link] to install the GOV.UK Notify PHP client. Run the following in the command line:
 
-Run the following in the command line to install the client:
+    ```sh
+    composer require php-http/curl-client php-http/message alphagov/notifications-php-client
+    ```
 
-```sh
-composer require php-http/curl-client php-http/message alphagov/notifications-php-client
-```
+You can now use the [autoloader](https://getcomposer.org/doc/01-basic-usage.md#autoloading) [external link] to download the GOV.UK Notify PHP client.
 
-The Notify PHP Client is then available via the [autoloader](https://getcomposer.org/doc/01-basic-usage.md#autoloading) [external link].
+1. Add the following code to your application to create a new instance of the client:
 
-Add the following code to your application to create a new instance of the client:
+    ```
+    $notifyClient = new \Alphagov\Notifications\Client([
+        'serviceId'     => '{your service id}',
+        'apiKey'        => '{your api key}',
+        'httpClient'    => new \Http\Client\Curl\Client(
+            new \Http\Message\MessageFactory\GuzzleMessageFactory,
+            new \Http\Message\StreamFactory\GuzzleStreamFactory
+        ),
+    ]);
+    ```
 
-```sh
-$notifyClient = new \Alphagov\Notifications\Client([
-    'serviceId'     => '{your service id}',
-    'apiKey'        => '{your api key}',
-    'httpClient'    => new \Http\Client\Curl\Client(
-        new \Http\Message\MessageFactory\GuzzleMessageFactory,
-        new \Http\Message\StreamFactory\GuzzleStreamFactory
-    ),
-]);
-```
-
-Access the Notify API by running `$notifyClient`.
+1. Run `$notifyClient` to access the GOV.UK Notify API.
 
 To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. Refer to the [API keys](#api-keys) section of this documentation for more information.
 
@@ -103,7 +97,6 @@ For example:
 
 ```php
 try {
-
     $response = $notifyClient->sendSms(
         '+447777111222',
         'df10a23e-2c6d-4ea5-87fb-82e520cbf93a', [
@@ -112,17 +105,6 @@ try {
         ],
         'unique_ref123',
         '862bfaaf-9f89-43dd-aafa-2868ce2926a9'
-    );
-
-} catch (NotifyException $e){}
-```
-
-```php
-try {
-
-    $response = $notifyClient->sendSms(
-        '+447777111222',
-        'df10a23e-2c6d-4ea5-87fb-82e520cbf93a'
     );
 
 } catch (NotifyException $e){}
@@ -140,7 +122,7 @@ Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to 
 
 #### personalisation (optional)
 
-If a template has placeholder fields for personalised information such as name or reference number, you must provide their values in a dictionary with key value pairs. For example:
+If a template has placeholder fields for personalised information such as name or application date, you must provide their values in a dictionary with key value pairs. For example:
 
 ```php
 $personalisation = [
@@ -153,7 +135,7 @@ You can leave out this argument if a template does not have any placeholder fiel
 
 #### reference (optional)
 
-A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. For example:
+A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address. For example:
 
 ```php
 $reference = 'STRING',
@@ -164,9 +146,9 @@ You can leave out this argument if you do not have a reference.
 
 A unique identifier of the sender of the text message notification. You can find this information on the __Text Message sender__ settings screen:
 
-1. Sign into your GOV.UK Notify account.
+1. Sign in to your GOV.UK Notify account.
 1. Go to __Settings__.
-1. If you need to change to another service, select __Switch service__ in the top right corner of the screen and select the correct one.
+1. If you need to change to another service, select __Switch service__ and then select the correct service.
 1. Go to the __Text Messages__ section and select __Manage__ on the __Text Message sender__ row.
 
 You can then either:
@@ -201,22 +183,22 @@ If the request to the client is successful, the client returns an `array`:
 ];
 ```
 
-If you are using the [test API key](#test), all your messages will come back as delivered.
+If you are using the [test API key](#test), all your messages will come back with a `delivered` status.
 
 All messages sent using the [team and whitelist](#team-and-whitelist) or [live](#live) keys will appear on your dashboard.
 
 ### Error codes
 
-If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code.
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` object containing the relevant error code.
 
 |exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient using a team-only API key"`<br>`]}`|Use the correct type of [API key](#api-keys)|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
-|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM/TEST/LIVE of 3000 requests per 60 seconds"`<br>`}]`|Refer to [API rate limits](#api-rate-limits) for more information|
-|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient using a team-only API key"`<br>`]}`|Use the correct type of [API key](#api-keys).|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode).|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock.|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information.|
+|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM/TEST/LIVE of 3000 requests per 60 seconds"`<br>`}]`|Refer to [API rate limits](#api-rate-limits) for more information.|
+|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number.|
 |`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification.|
 
 ## Send an email
@@ -247,7 +229,7 @@ try {
 
 ### Arguments
 
-#### $emailAddress (required)
+#### emailAddress (required)
 
 The email address of the recipient.
 
@@ -270,7 +252,7 @@ You can leave out this argument if a template does not have any placeholder fiel
 
 #### reference (optional)
 
-A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications.
+A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
 
 ```php
 $reference = 'STRING',
@@ -280,11 +262,11 @@ You can leave out this argument if you do not have a reference.
 
 #### emailReplyToId (optional)
 
-This is an email reply-to address specified by you to receive replies from your users. Your service cannot go live until you set up at least one of these email addresses. To set up:
+This is an email reply-to address you can specify to receive replies from your users. Your service cannot go live until you set up at least one of these email addresses. To set up:
 
-1. Sign into your GOV.UK Notify account.
+1. Sign in to your GOV.UK Notify account.
 1. Go to __Settings__.
-1. If you need to change to another service, select __Switch service__ in the top right corner of the screen and select the correct one.
+1. If you need to change to another service, select __Switch service__ and then select the correct service.
 1. Go to the Email section and select __Manage__ on the __Email reply-to addresses__ row.
 1. Select __Change__ to specify the email address to receive replies, and select __Save__.
 
@@ -296,17 +278,17 @@ $emailReplyToId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 
 You can leave out this argument if your service only has one email reply-to address, or you want to use the default email address.
 
-### Send a document by email
+## Send a document by email
 
 Send files without the need for email attachments.
 
-To send a document by email, add a placeholder field to the template and then upload a file. The placeholder field will contain a secure link to download the document.
+This is an invitation-only feature. [Contact the GOV.UK Notify team](https://www.notifications.service.gov.uk/support) to enable this function for your service.
 
-[Contact the GOV.UK Notify team](https://www.notifications.service.gov.uk/support) to enable this function for your service.
+To send a document by email, add a placeholder field to the template and then upload a file. The placeholder field will contain a secure link to download the document.
 
 #### Add a placeholder field to the template
 
-1. Sign into [GOV.UK Notify](https://www.notifications.service.gov.uk/). 
+1. Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/).
 1. Go to the __Templates__ page and select the relevant email template.
 1. Add a placeholder field to the email template using double brackets. For example:
 
@@ -360,23 +342,26 @@ If the request to the client is successful, the client returns an `array`:
 
 ### Error codes
 
-If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code.
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` object containing the relevant error code.
 
 |exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient using a team-only API key"`<br>`]}`|Use the correct type of [API key](#api-keys)|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Unsupported document type '{}'. Supported types are: {}"`<br>`}]`|The document you upload must be a PDF file|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Document didn't pass the virus scan"`<br>`}]`|The document you upload must be virus free|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct type of [API key](#api-keys)|
-|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM/TEST/LIVE of 3000 requests per 60 seconds"`<br>`}]`|Refer to [API rate limits](#api-rate-limits) for more information|
-|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient using a team-only API key"`<br>`]}`|Use the correct type of [API key](#api-keys).|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode).|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Unsupported document type '{}'. Supported types are: {}"`<br>`}]`|The document you upload must be a PDF file.|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Document didn't pass the virus scan"`<br>`}]`|The document you upload must be virus free.|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Service is not allowed to send documents"`<br>`}]`|Contact the GOV.UK Notify team.|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock.|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct type of [API key](#api-keys).|
+|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM/TEST/LIVE of 3000 requests per 60 seconds"`<br>`}]`|Refer to [API rate limits](#api-rate-limits) for more information.|
+|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number.|
 |`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification.|
 
 ## Send a letter
 
-When your service first signs up to GOV.UK Notify, you’ll start in trial mode. You can only send letters in live mode. You must ask GOV.UK Notify to make your service live.
+### Prerequisites
+
+When your service first signs up to GOV.UK Notify, you’ll start in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode). You can only send letters in live mode. You must ask GOV.UK Notify to make your service live.
 
 1. Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/).
 1. Select __Using Notify__.
@@ -435,7 +420,7 @@ $personalisation =
 
 #### reference (optional)
 
-A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. For example:
+A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address. For example:
 
 ```php
 $reference = 'STRING',
@@ -446,7 +431,7 @@ $reference = 'STRING',
 The following parameters in the letter recipient's address are optional:
 
 ```php
-$personalisation = 
+$personalisation =
     [
     'address_line_3' => '123 High Street', 	
     'address_line_4' => 'Richmond upon Thames', 	
@@ -479,7 +464,7 @@ If the request to the client is successful, the client returns an `array`:
 
 ### Error codes
 
-If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code.
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` object containing the relevant error code.
 
 |exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
@@ -493,7 +478,7 @@ If the request is not successful, the client returns an `Alphagov\Notifications\
 |`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification.|
 
 
-## Send a precompiled Letter
+## Send a precompiled letter
 
 This is an invitation-only feature. Contact the GOV.UK Notify team on the [support page](https://www.notifications.service.gov.uk/support) or through the [Slack channel](https://ukgovernmentdigital.slack.com/messages/govuk-notify) for more information.
 
@@ -508,9 +493,9 @@ response = notifications_client.send_precompiled_letter_notification(
 
 ### Arguments
 
-##### reference (required)
+#### reference (required)
 
-A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
+A unique identifier you create if necessary. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
 
 ```php
 $reference = 'STRING',
@@ -545,24 +530,24 @@ If the request to the client is successful, the client returns an `array`:
 
 ### Error codes
 
-If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code.
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` object containing the relevant error code.
 
 |exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
-|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type live of 10 requests per 20 seconds"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
-|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (50) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters with a team api key"`<br>`]}`|Use the correct type of [API key](#api-keys)|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send precompiled letters"`<br>`]}`|This is an invitation-only feature. Contact the GOV.UK Notify team on the [support page](https://www.notifications.service.gov.uk/support) or through the [Slack channel](https://ukgovernmentdigital.slack.com/messages/govuk-notify) for more information|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Letter content is not a valid PDF"`<br>`]}`|PDF file format is required|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
-|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "reference is a required property"`<br>`}]`|Add a `reference` argument to the method call|
-
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters with a team api key"`<br>`]}`|Use the correct type of [API key](#api-keys).|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send precompiled letters"`<br>`]}`|This is an invitation-only feature. Contact the GOV.UK Notify team on the [support page](https://www.notifications.service.gov.uk/support) or through the [Slack channel](https://ukgovernmentdigital.slack.com/messages/govuk-notify) for more information.|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Letter content is not a valid PDF"`<br>`]}`|PDF file format is required.|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode).|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Service is not allowed to send precompiled letters"`<br>`}]`|Contact the GOV.UK Notify team.|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "reference is a required property"`<br>`}]`|Add a `reference` argument to the method call.|
+|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type live of 10 requests per 20 seconds"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information.|
+|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number.|
 
 # Get message status
 
 Message status depends on the type of message that you have sent.
 
-You can only get the status of messages that are 7 days old or less.
+You can only get the status of messages that are 7 days old or newer.
 
 ## Status - text and email
 
@@ -588,14 +573,16 @@ You can only get the status of messages that are 7 days old or less.
 |Accepted|GOV.UK Notify is printing and posting the letter.|
 |Received|The provider has received the letter to deliver.|
 
-## Status - pre-compiled letter
+## Status - precompiled letter
 
 |Status|information|
 |:---|:---|
-|pending-virus-check|GOV.UK Notify virus scan of the pre-compiled letter file is not yet complete.|
-|virus-scan-failed|GOV.UK Notify virus scan has identified a potential virus in the pre-compiled letter file.|
+|pending-virus-check|GOV.UK Notify virus scan of the precompiled letter file is not yet complete.|
+|virus-scan-failed|GOV.UK Notify virus scan has identified a potential virus in the precompiled letter file.|
 
 ## Get the status of one message
+
+You can only get the status of messages that are 7 days old or newer.
 
 ### Method
 
@@ -621,7 +608,7 @@ The ID of the notification. You can find the notification ID in the response to 
 
 You can also find it in your [GOV.UK Notify Dashboard](https://www.notifications.service.gov.uk).
 
-1. Sign into GOV.UK Notify and select __Dashboard__.
+1. Sign in to GOV.UK Notify and select __Dashboard__.
 1. Select either __emails sent__, __text messages sent__, or __letters sent__.
 1. Select the relevant notification.
 1. Copy the notification ID from the end of the page URL, for example `https://www.notifications.service.gov.uk/services/af90d4cb-ae88-4a7c-a197-5c30c7db423b/notification/ID`.
@@ -659,21 +646,21 @@ If the request to the client is successful, the client returns an `array`:
 
 ### Error codes
 
-If the request is not successful, the client will return an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code:
+If the request is not successful, the client will return an `Alphagov\Notifications\Exception\NotifyException` object containing the relevant error code:
 
 |exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
-|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "id is not a valid UUID"`<br>`}]`|Check the notification ID|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
-|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No result found"`<br>`}]`|Check the notification ID|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "id is not a valid UUID"`<br>`}]`|Check the notification ID.|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock.|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information.|
+|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No result found"`<br>`}]`|Check the notification ID.|
 
 
 ## Get the status of multiple messages
 
 This API call returns one page of up to 250 messages and statuses. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the `older_than` argument.
 
-You can only get the status of messages that are 7 days old or less.
+You can only get the status of messages that are 7 days old or newer.
 
 ### Method
 
@@ -692,7 +679,7 @@ listNotifications( array $filters = array() )
 
 You can leave out the `older_than` argument to get the 250 most recent messages.
 
-To get older messages, pass the ID of an older notification into the older_than argument. This returns the next 250 oldest messages from the specified notification ID.
+To get older messages, pass the ID of an older notification into the `older_than` argument. This returns the next 250 oldest messages from the specified notification ID.
 
 ### Arguments
 
@@ -705,6 +692,8 @@ You can filter by:
 * `email`
 * `sms`
 * `letter`
+
+You can leave out this argument to ignore this filter.
 
 #### status (optional)
 
@@ -722,23 +711,25 @@ You can filter by:
 
 #### reference (optional)
 
-A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications.
+A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
 
 ```php
 $reference = 'STRING',
 ```
 
+You can leave out this argument to ignore this filter.
+
 #### older_than (optional)
 
-Input the ID of a notification into this argument. If you use this argument, the method returns the next 250 received notifications older than the given ID.
+Input the ID of a notification into this argument. If you use this argument, the method returns the next 250 received notifications older than the specified ID.
 
 ```php
-older_than='740e5834-3a29-46b4-9a6f-16142fde533a' # optional string - notification ID
+older_than='740e5834-3a29-46b4-9a6f-16142fde533a'
 ```
 
 If you leave out this argument, the method returns the most recent 250 notifications.
 
-The client only returns notifications that are 7 days old or less. If the notification specified in this argument is older than 7 days, the client returns an empty response.
+The client only returns notifications that are 7 days old or newer. If the notification specified in this argument is older than 7 days, the client returns an empty response.
 
 ### Response
 
@@ -779,14 +770,14 @@ If the request to the client is successful, the client returns an `array`.
 
 ### Error codes
 
-If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code:
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` object containing the relevant error code:
 
 |exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
-|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "bad status is not one of [created, sending, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure]"`<br>`}]`|Contact the Notify team|
-|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "Apple is not one of [sms, email, letter]"`<br>`}]`|Contact the Notify team|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "bad status is not one of [created, sending, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure]"`<br>`}]`|Contact the GOV.UK Notify team.|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "Apple is not one of [sms, email, letter]"`<br>`}]`|Contact the GOV>UK Notify team.|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock.|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information.|
 
 
 # Get a template
@@ -805,7 +796,7 @@ $response = $notifyClient->getTemplate( 'templateId' );
 
 #### templateId (required)
 
-The ID of the template. Sign into GOV.UK Notify and go to the __Templates__ page to find this.
+The ID of the template. Sign in to GOV.UK Notify and go to the __Templates__ page to find this.
 
 ### Response
 
@@ -826,20 +817,18 @@ If the request to the client is successful, the client returns an `array`.
 
 ### Error codes
 
-If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code:
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` object containing the relevant error code:
 
 |exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
-|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No Result Found"`<br>`}]`|Check your [template ID](#get-a-template-by-id-arguments-template-id-required)|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock.|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information.|
+|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No Result Found"`<br>`}]`|Check your [template ID](#get-a-template-by-id-arguments-template-id-required).|
 
 
 ## Get a template by ID and version
 
 ### Method
-
-This returns the latest version of the template.
 
 ```php
 $response = $notifyClient->getTemplateVersion( 'templateId', 1 );
@@ -874,13 +863,13 @@ If the request to the client is successful, the client returns an `array`.
 
 ### Error codes
 
-If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code:
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` object containing the relevant error code:
 
 |exc->getCode()|exc->getErrors()|How to fix|
 |:---|:---|:---|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
-|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No Result Found"`<br>`}]`|Check your [template ID](#get-a-template-by-id-and-version-arguments-template-id-required) and [version](#version-required)|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock.|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information.|
+|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No Result Found"`<br>`}]`|Check your [template ID](#get-a-template-by-id-and-version-arguments-template-id-required) and [version](#version-required).|
 
 
 ## Get all templates
@@ -954,7 +943,7 @@ The parameters in the personalisation argument must match the placeholder fields
 
 #### template_id (required)
 
-The ID of the template. Sign into GOV.UK Notify and go to the __Templates__ page.
+The ID of the template. Sign in to GOV.UK Notify and go to the __Templates__ page.
 
 #### personalisation (required)
 
@@ -983,21 +972,21 @@ If the request to the client is successful, the client returns an `array`.
 
 ### Error codes
 
-If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` containing the relevant error code:
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` object containing the relevant error code:
 
 |exc->getCode()|exc->getErrors()|Notes|
 |:---|:---|:---|
-|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Missing personalisation: [PERSONALISATION FIELD]"`<br>`}]`|Check that the personalisation arguments in the method match the placeholder fields in the template|
-|`400`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No result found"`<br>`}]`|Check the [template ID](#generate-a-preview-template-arguments-template-id-required)|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
-|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Missing personalisation: [PERSONALISATION FIELD]"`<br>`}]`|Check that the personalisation arguments in the method match the placeholder fields in the template.|
+|`400`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No result found"`<br>`}]`|Check the [template ID](#generate-a-preview-template-arguments-template-id-required).|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock.|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information.|
 
 
 # Get received text messages
 
-This API call returns one page of up to 250 received text messages. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the older_than argument.
+This API call returns one page of up to 250 received text messages. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the `older_than` argument.
 
-You can only get the status of messages that are 7 days old or less.
+You can only get the status of messages that are 7 days old or newer.
 
 ### Method
 
@@ -1007,9 +996,9 @@ You can only get the status of messages that are 7 days old or less.
     );
 ```
 
-To get older messages, pass the ID of an older notification into the older_than argument. This returns the next oldest messages from the specified notification ID.
+To get older messages, pass the ID of an older notification into the `older_than` argument. This returns the next 250 oldest messages from the specified notification ID.
 
-If you leave out the older_than argument, the client returns the most recent 250 notifications.
+If you leave out the `older_than` argument, the client returns the most recent 250 notifications.
 
 ### Arguments
 
@@ -1021,9 +1010,9 @@ Input the ID of a received text message into this argument. If you use this argu
 $older_than = '8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
-If you leave out the older_than argument, the client returns the most recent 250 notifications.
+If you leave out the `older_than` argument, the client returns the most recent 250 notifications.
 
-The client only returns notifications that are 7 days old or less. If the notification specified in this argument is older than 7 days, the client returns an empty collection response.
+The client only returns notifications that are 7 days old or newer. If the notification specified in this argument is older than 7 days, the client returns an empty collection response.
 
 ### Response
 
@@ -1051,3 +1040,11 @@ If the request to the client is successful, the client returns an `array`.
   ]
 ];
 ```
+### Error codes
+
+If the request is not successful, the client returns an `Alphagov\Notifications\Exception\NotifyException` object containing the relevant error code:
+
+|exc->getCode()|exc->getErrors()|Notes|
+|:---|:---|:---|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock.|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information.|
