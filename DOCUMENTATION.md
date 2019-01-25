@@ -699,15 +699,15 @@ You can leave out this argument to ignore this filter.
 
 | status | description | text | email | letter |
 |:--- |:--- |:--- |:--- |:--- |
-|`created` |The message is queued to be sent to the provider|Yes|Yes||
-|`sending` |The message is queued to be sent to the recipient by the provider|Yes|Yes||
-|`delivered`|The message was successfully delivered|Yes|Yes||
-|`failed`|This will return all failure statuses:<br>- `permanent-failure`<br>- `temporary-failure`<br>- `technical-failure`|Yes|Yes||
-|`permanent-failure`|The provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list|Yes|Yes||
-|`temporary-failure`|The provider was unable to deliver message, email inbox was full or phone was turned off; you can try to send the message again|Yes|Yes||
-|`technical-failure`|Email or text message: Notify had a technical failure; you can try to send the message again. <br><br>Letter: Notify had an unexpected error while sending to our printing provider. <br><br>You can omit this argument to ignore this filter.|Yes|Yes||
-|`accepted`|Notify is printing and posting the letter|||Yes|
-|`received`|The provider has received the letter to deliver|||Yes|
+|created |The message is queued to be sent to the provider|Yes|Yes||
+|sending |The message is queued to be sent to the recipient by the provider|Yes|Yes||
+|delivered|The message was successfully delivered|Yes|Yes||
+|failed|This will return all failure statuses:<br>- `permanent-failure`<br>- `temporary-failure`<br>- `technical-failure`|Yes|Yes||
+|permanent-failure|The provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list|Yes|Yes||
+|temporary-failure|The provider was unable to deliver message, email inbox was full or phone was turned off; you can try to send the message again|Yes|Yes||
+|technical-failure|Email or text message: Notify had a technical failure; you can try to send the message again. <br><br>Letter: Notify had an unexpected error while sending to our printing provider. <br><br>You can omit this argument to ignore this filter.|Yes|Yes||
+|accepted|Notify is printing and posting the letter|||Yes|
+|received|The provider has received the letter to deliver|||Yes|
 
 #### reference (optional)
 
