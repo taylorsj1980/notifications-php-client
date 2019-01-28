@@ -1,3 +1,9 @@
+## [1.9.0] - 2019-01-28
+### Changed
+
+* Added a way to set postage when sending precompiled letters:
+  * set (optional) `$postage` argument on `sendPrecompiledLetter`
+
 ## [1.8.0] - 2018-11-01
 ### Changed
 
