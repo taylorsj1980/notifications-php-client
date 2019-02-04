@@ -25,7 +25,7 @@ class Client {
      * @const string Current version of this client.
      * This follows Semantic Versioning (http://semver.org/)
      */
-    const VERSION = '1.8.0';
+    const VERSION = '1.9.0';
 
     /**
      * @const string The API endpoint for Notify production.
@@ -228,11 +228,15 @@ class Client {
      *
      * @return array
      */
-    public function sendPrecompiledLetter( $reference, $pdf_data ){
+    public function sendPrecompiledLetter( $reference, $pdf_data, $postage = NULL ){
         $payload = [
           'reference' => $reference,
           'content' => base64_encode($pdf_data)
         ];
+
+        if ($postage != NULL) {
+          $payload['postage'] = $postage;
+        }
 
         return $this->httpPost(
             self::PATH_NOTIFICATION_SEND_LETTER,
