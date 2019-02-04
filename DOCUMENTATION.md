@@ -487,7 +487,7 @@ This is an invitation-only feature. Contact the GOV.UK Notify team on the [suppo
 ```php
 $response = $notifyClient->sendPrecompiledLetter(
     $reference,
-    $file_contents,
+    $pdf_data,
     $postage,
 );
 ```
@@ -502,29 +502,29 @@ A unique identifier you create if necessary. This reference identifies a single 
 $reference = 'STRING';
 ```
 
+#### pdf_data (required)
+
+The precompiled letter must be a PDF file. The method sends the contents of the file to GOV.UK Notify.
+
+```php
+$pdf_data = file_get_contents("path/to/pdf_file");
+try {
+
+    $response = $notifyClient->sendPrecompiledLetter(
+        'unique_ref123',
+        $pdf_data,
+        'first',
+    );
+
+} catch (NotifyException $e){}
+```
+
 #### postage (optional)
 
 You can choose first or second class postage for your precompiled letter. Set the value to `first` for first class, or `second` for second class. If you do not pass in this argument, the postage will default to second class.
 
 ```php
 $postage = 'first';
-```
-
-#### pdf_file (required)
-
-The precompiled letter must be a PDF file. The method sends the contents of the file to GOV.UK Notify.
-
-```php
-$file_contents = file_get_contents("path/to/pdf_file");
-try {
-
-    $response = $notifyClient->sendPrecompiledLetter(
-        'unique_ref123',
-        $file_contents,
-        'first',
-    );
-
-} catch (NotifyException $e){}
 ```
 
 
