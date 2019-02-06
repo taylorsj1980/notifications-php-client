@@ -138,7 +138,7 @@ You can leave out this argument if a template does not have any placeholder fiel
 A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address. For example:
 
 ```php
-$reference = 'STRING',
+$reference = 'STRING';
 ```
 You can leave out this argument if you do not have a reference.
 
@@ -255,7 +255,7 @@ You can leave out this argument if a template does not have any placeholder fiel
 A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
 
 ```php
-$reference = 'STRING',
+$reference = 'STRING';
 ```
 
 You can leave out this argument if you do not have a reference.
@@ -286,7 +286,7 @@ This is an invitation-only feature. [Contact the GOV.UK Notify team](https://www
 
 To send a document by email, add a placeholder field to the template and then upload a file. The placeholder field will contain a secure link to download the document.
 
-#### Add a placeholder field to the template
+### Add a placeholder field to the template
 
 1. Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/).
 1. Go to the __Templates__ page and select the relevant email template.
@@ -294,7 +294,7 @@ To send a document by email, add a placeholder field to the template and then up
 
 "Download your document at: ((link_to_document))"
 
-#### Upload your document
+### Upload your document
 
 The document you upload must be a PDF file smaller than 2MB.
 
@@ -423,7 +423,7 @@ $personalisation =
 A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address. For example:
 
 ```php
-$reference = 'STRING',
+$reference = 'STRING';
 ```
 
 #### personalisation (optional)
@@ -485,9 +485,10 @@ This is an invitation-only feature. Contact the GOV.UK Notify team on the [suppo
 ### Method
 
 ```php
-response = notifications_client.send_precompiled_letter_notification(
+$response = $notifyClient->sendPrecompiledLetter(
     $reference,
-    $pdf_file
+    $pdf_data,
+    $postage,
 );
 ```
 
@@ -498,24 +499,34 @@ response = notifications_client.send_precompiled_letter_notification(
 A unique identifier you create if necessary. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
 
 ```php
-$reference = 'STRING',
+$reference = 'STRING';
 ```
 
-#### pdf_file (required)
+#### pdf_data (required)
 
 The precompiled letter must be a PDF file. The method sends the contents of the file to GOV.UK Notify.
 
 ```php
-$file_contents = file_get_contents("path/to/pdf_file");
+$pdf_data = file_get_contents("path/to/pdf_file");
 try {
 
-    $response = $notifyClient->sendLetter(
+    $response = $notifyClient->sendPrecompiledLetter(
         'unique_ref123',
-        $file_contents
+        $pdf_data,
+        'first',
     );
 
 } catch (NotifyException $e){}
 ```
+
+#### postage (optional)
+
+You can choose first or second class postage for your precompiled letter. Set the value to `first` for first class, or `second` for second class. If you do not pass in this argument, the postage will default to second class.
+
+```php
+$postage = 'first';
+```
+
 
 ### Response
 
@@ -524,7 +535,8 @@ If the request to the client is successful, the client returns an `array`:
 ```php
 [
   "id" => "740e5834-3a29-46b4-9a6f-16142fde533a",
-  "reference" => "unique_ref123"
+  "reference" => "unique_ref123",
+  "postage" => "first"
 ];
 ```
 
@@ -540,6 +552,7 @@ If the request is not successful, the client returns an `Alphagov\Notifications\
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode).|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Service is not allowed to send precompiled letters"`<br>`}]`|Contact the GOV.UK Notify team.|
 |`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "reference is a required property"`<br>`}]`|Add a `reference` argument to the method call.|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "postage invalid. It must be either first or second."`<br>`}]`|Change the value of `postage` argument in the method call to either 'first' or 'second'|
 |`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type live of 10 requests per 20 seconds"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information.|
 |`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](#service-limits) for the limit number.|
 
@@ -633,6 +646,7 @@ If the request to the client is successful, the client returns an `array`:
     "line_5" => "Some county",
     "line_6" => "Something else",
     "postcode" => "postcode",
+    "postage" => "null|first|second",
     "type" => "sms|letter|email",
     "status" => "current status",
     "template" => [
@@ -720,7 +734,7 @@ You can leave out this argument to ignore this filter.
 A unique identifier you can create if necessary. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
 
 ```php
-$reference = 'STRING',
+$reference = 'STRING';
 ```
 
 You can leave out this argument to ignore this filter.
@@ -755,6 +769,7 @@ If the request to the client is successful, the client returns an `array`.
             "line_5" => "Some county",
             "line_6" => "Something else",
             "postcode" => "postcode",
+            "postage" => "null|first|second",
             "type" => "sms | letter | email",
             "status" => sending | delivered | permanent-failure | temporary-failure | technical-failure
             "template" => [
@@ -993,6 +1008,14 @@ If the request is not successful, the client returns an `Alphagov\Notifications\
 This API call returns one page of up to 250 received text messages. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the `older_than` argument.
 
 You can only get the status of messages that are 7 days old or newer.
+
+You can also set up [callbacks](/php.html#callbacks) for received text messages.
+
+## Enable received text messages
+
+Contact the GOV.UK Notify team on the [support page](https://www.notifications.service.gov.uk/support) or through the [Slack channel](https://ukgovernmentdigital.slack.com/messages/govuk-notify) to enable receiving text messages for your service.
+
+## Get a page of received text messages
 
 ### Method
 

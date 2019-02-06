@@ -624,13 +624,14 @@ class ClientSpec extends ObjectBehavior
     function it_receives_the_expected_response_when_sending_a_precompiled_letter_notification(){
 
       $reference = 'my_ref_1234';
+      $postage = 'first';
 
       //---------------------------------
       // Perform action
 
       $file_contents = file_get_contents( './spec/integration/one_page_pdf.pdf' );
 
-      $response = $this->sendPrecompiledLetter( $reference, $file_contents );
+      $response = $this->sendPrecompiledLetter( $reference, $file_contents, $postage);
 
       $response->shouldBeArray();
       $response->shouldHaveKey( 'id' );
@@ -638,6 +639,9 @@ class ClientSpec extends ObjectBehavior
 
       $response->shouldHaveKey( 'reference' );
       $response['reference']->shouldBe("my_ref_1234");
+
+      $response->shouldHaveKey( 'postage' );
+      $response['postage']->shouldBe("first");
     }
 
     function it_exposes_error_details() {
