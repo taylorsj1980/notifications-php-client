@@ -41,7 +41,6 @@ To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.
 
     ```
     $notifyClient = new \Alphagov\Notifications\Client([
-        'serviceId'     => '{your service id}',
         'apiKey'        => '{your api key}',
         'httpClient'    => new \Http\Adapter\Guzzle5\Client(
             new \GuzzleHttp\Client,
@@ -68,7 +67,6 @@ You can now use the [autoloader](https://getcomposer.org/doc/01-basic-usage.md#a
 
     ```
     $notifyClient = new \Alphagov\Notifications\Client([
-        'serviceId'     => '{your service id}',
         'apiKey'        => '{your api key}',
         'httpClient'    => new \Http\Client\Curl\Client(
             new \Http\Message\MessageFactory\GuzzleMessageFactory,
