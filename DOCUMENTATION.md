@@ -2,6 +2,8 @@
 
 This documentation is for developers interested in using the GOV.UK Notify PHP client to send emails, text messages or letters.
 
+We recommend that you use this client library rather than use the [GOV.UK Notify API](https://github.com/alphagov/notifications-api) directly, as there is no documentation for using the API in this way.
+
 # Set up the client
 
 The Notify PHP Client is based on a [PSR-7 HTTP model](https://www.php-fig.org/psr/psr-7/) [external link]. To install it, you must select your preferred HTTP client. You can follow these instructions to use [Guzzle v6 and v5](http://docs.guzzlephp.org/en/stable/) and [cURL](http://php.net/manual/en/book.curl.php) [external links].
