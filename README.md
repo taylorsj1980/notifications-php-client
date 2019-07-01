@@ -1,5 +1,8 @@
 # GOV.UK Notify PHP client
 
+##Forked by Steven Taylor for PSR-7 updates
+##Original project at [https://github.com/alphagov/notifications-php-client](https://github.com/alphagov/notifications-php-client)
+
 Use this client to send emails, text messages and letters using the [GOV.UK Notify](https://www.notifications.service.gov.uk) API.
 
 Useful links:
