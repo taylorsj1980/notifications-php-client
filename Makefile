@@ -13,7 +13,7 @@ help:
 
 .PHONY: dependencies
 dependencies:  ## Install build dependencies
-	/usr/local/bin/composer install
+	/usr/local/bin/composer update
 
 .PHONY: build
 build: dependencies ## Build project
